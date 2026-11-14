@@ -55,13 +55,116 @@ class StateManager {
 
 /**
  * Data Loader
- * Loads all JSON configuration files
+ * Loads all JSON configuration files with caching strategy
  */
 class DataLoader {
-  constructor(dataPath = 'data/') {
+  constructor(dataPath = 'data/', cacheTimeout = 3600000) {
     this.dataPath = dataPath;
+    this.cache = {};
+    this.cacheTimeout = cacheTimeout; // Cache expires after 1 hour (3600000ms)
+    this.cacheTimestamps = {};
   }
   
+  /**
+   * Check if data is cached and not expired
+   * @param {string} key - Data identifier
+   * @returns {boolean} - True if valid cache exists
+   */
+  isCached(key) {
+    if (!this.cache.hasOwnProperty(key)) {
+      return false;
+    }
+    
+    const timestamp = this.cacheTimestamps[key];
+    const now = Date.now();
+    const isExpired = (now - timestamp) > this.cacheTimeout;
+    
+    if (isExpired) {
+      delete this.cache[key];
+      delete this.cacheTimestamps[key];
+      return false;
+    }
+    
+    return true;
+  }
+  
+  /**
+   * Get cached data
+   * @param {string} key - Data identifier
+   * @returns {*} - Cached data or null
+   */
+  getFromCache(key) {
+    if (this.isCached(key)) {
+      return this.cache[key];
+    }
+    return null;
+  }
+  
+  /**
+   * Store data in cache
+   * @param {string} key - Data identifier
+   * @param {*} data - Data to cache
+   */
+  setCache(key, data) {
+    this.cache[key] = data;
+    this.cacheTimestamps[key] = Date.now();
+  }
+  
+  /**
+   * Clear specific cache entry
+   * @param {string} key - Data identifier
+   */
+  clearCache(key) {
+    delete this.cache[key];
+    delete this.cacheTimestamps[key];
+  }
+  
+  /**
+   * Clear all cache
+   */
+  clearAllCache() {
+    this.cache = {};
+    this.cacheTimestamps = {};
+  }
+  
+  /**
+   * Load single JSON file with caching
+   * @param {string} filename - Name of file without .json extension
+   * @returns {Promise<Array>} - Loaded data
+   */
+  async loadFile(filename) {
+    // Check cache first
+    const cached = this.getFromCache(filename);
+    if (cached !== null) {
+      console.log(`Loading ${filename} from cache`);
+      return cached;
+    }
+    
+    try {
+      console.log(`Fetching ${filename} from file`);
+      const response = await fetch(`${this.dataPath}${filename}.json`);
+      
+      if (!response.ok) {
+        console.warn(`Could not load ${filename}.json (HTTP ${response.status})`);
+        return [];
+      }
+      
+      const data = await response.json();
+      
+      // Store in cache
+      this.setCache(filename, data);
+      
+      return data;
+    } catch (error) {
+      console.warn(`Error loading ${filename}.json:`, error);
+      return [];
+    }
+  }
+  
+  /**
+   * Load all configuration files with caching
+   * @returns {Promise<Object>} - All loaded data
+   */
   async loadAll() {
     try {
       const tables = [
@@ -71,24 +174,25 @@ class DataLoader {
         'cultures',
         'birthplaces',
         'abilities',
-        'dimensions'
+        'dimensions',
+        'powerlevels',
+        'sides',
+        'motivations',
+        'origin_types',
+        'known_regions',
+        'lost_regions',
+        'other_worlds',
+        'other_dimensions',
+        'gender_identities',
+        'gender_expressions',
+        'biological_sexes',
+        'sexual_attractions'
       ];
       
       const data = {};
       
       for (const table of tables) {
-        try {
-          const response = await fetch(`${this.dataPath}${table}.json`);
-          if (!response.ok) {
-            console.warn(`Could not load ${table}.json`);
-            data[table] = [];
-          } else {
-            data[table] = await response.json();
-          }
-        } catch (error) {
-          console.warn(`Error loading ${table}.json:`, error);
-          data[table] = [];
-        }
+        data[table] = await this.loadFile(table);
       }
       
       return data;
