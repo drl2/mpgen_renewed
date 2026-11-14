@@ -5,24 +5,41 @@
  */
 
 export class ExcelExporter {
-  /**
-   * Load template file using XMLHttpRequest (synchronous)
-   * @returns {Object} XLSX workbook
-   */
-  static loadTemplateSync() {
-    try {
-      console.log('📋 Loading CharTemplate.xlsx...');
-      const xhr = new XMLHttpRequest();
-      xhr.open('GET', 'templates/CharTemplate.xlsx', false); // false = synchronous
-      xhr.responseType = 'arraybuffer';
-      xhr.send();
+  static templateCache = null;
 
-      if (xhr.status !== 200) {
-        throw new Error(`Failed to load template: ${xhr.status}`);
+  /**
+   * Load template file with fetch and timeout
+   * @returns {Promise<Object>} XLSX workbook
+   */
+  static async loadTemplate() {
+    try {
+      // Return cached template if available
+      if (this.templateCache) {
+        console.log('📋 Using cached template');
+        return this.templateCache;
       }
 
-      const workbook = XLSX.read(xhr.response, { type: 'array' });
-      console.log('✅ Template loaded. Sheets:', workbook.SheetNames);
+      console.log('📋 Loading CharTemplate.xlsx...');
+      
+      const controller = new AbortController();
+      const timeoutId = setTimeout(() => controller.abort(), 5000); // 5 second timeout
+
+      const response = await fetch('templates/CharTemplate.xlsx', {
+        signal: controller.signal
+      });
+
+      clearTimeout(timeoutId);
+
+      if (!response.ok) {
+        throw new Error(`HTTP ${response.status}`);
+      }
+
+      const arrayBuffer = await response.arrayBuffer();
+      const workbook = XLSX.read(arrayBuffer, { type: 'array' });
+      
+      // Cache the workbook
+      this.templateCache = workbook;
+      console.log('✅ Template loaded and cached. Sheets:', workbook.SheetNames);
       return workbook;
     } catch (error) {
       console.error('Template load failed:', error);
@@ -34,9 +51,9 @@ export class ExcelExporter {
    * Export character to Excel file
    * @param {Object} character - Character object with all properties
    * @param {string} characterName - Name for the exported file
-   * @returns {Object}
+   * @returns {Promise<Object>}
    */
-  static exportCharacter(character, characterName = 'MPGen_Character') {
+  static async exportCharacter(character, characterName = 'MPGen_Character') {
     try {
       // Check if XLSX library is available
       if (typeof XLSX === 'undefined') {
@@ -45,8 +62,8 @@ export class ExcelExporter {
 
       console.log('📊 Exporting character to Excel:', { characterName, character });
 
-      // Load template
-      const workbook = this.loadTemplateSync();
+      // Load template (cached or fresh)
+      const workbook = await this.loadTemplate();
 
       // Create data arrays for both sheets
       const sheet1Data = this.createExcelRecordSheet(character);

@@ -1206,7 +1206,7 @@ class Application {
 
       // Attempt Excel export first
       if (ExcelExporter.isXLSXAvailable()) {
-        const result = ExcelExporter.exportCharacter(character, characterName);
+        const result = await ExcelExporter.exportCharacter(character, characterName);
         
         exportBtn.textContent = originalText;
         exportBtn.disabled = false;
