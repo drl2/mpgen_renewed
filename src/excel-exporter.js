@@ -4,6 +4,8 @@
  * Uses SheetJS library for Excel generation
  */
 
+import { TEMPLATE_LABELS } from './excel-template-data.js';
+
 export class ExcelExporter {
   /**
    * Export character to Excel file with all template sheets
@@ -218,101 +220,135 @@ export class ExcelExporter {
   static createMPGenCharacterSheet(character) {
     console.log('📊 Creating MPGen Character Sheet with character:', character.name);
     
-    // Create 2D array - rows and columns
+    // Create 2D array - ensure at least 16 columns (0-15)
     const data = [];
     for (let i = 0; i < 41; i++) {
       data[i] = [];
-      for (let j = 0; j < 15; j++) {
+      for (let j = 0; j < 16; j++) {
         data[i][j] = '';
       }
     }
 
-    // Row 3 (index 2): Basic info line 1
-    data[2][3] = character.biological_sex || '';          // D3: Side
-    data[2][10] = character.birth_place || '';             // K3: Birthplace
-    data[2][13] = character.wealth || '';                  // N3: Wealth
+    // Template labels
+    const labels = TEMPLATE_LABELS.strings;
+    
+    // Row 1 (index 0): Title row
+    data[0][0] = labels[0];   // A1: Character Name
+    data[0][10] = labels[1];  // K1: Player
+
+    // Row 3 (index 2): Basic info line 1 - A,C,D on left; I,J,M on right
+    data[2][0] = labels[2];   // A3: Side
+    data[2][2] = labels[3];   // C3: Birthplace (label)
+    data[2][3] = character.biological_sex || '';  // D3: Side (data)
+    data[2][8] = labels[3];   // I3: Birthplace (label)
+    data[2][9] = character.birth_place || '';     // J3: Birthplace (data)
+    data[2][12] = labels[4];  // M3: Wealth (label)
+    data[2][13] = character.wealth || '';         // N3: Wealth (data)
 
     // Row 4 (index 3): Basic info line 2
-    data[3][3] = character.species || '';                  // D4: Species
-    data[3][10] = character.culture || '';                 // K4: Culture
-    data[3][13] = character.luck || '';                    // N4: Luck
+    data[3][0] = labels[5];   // A4: Species
+    data[3][2] = labels[6];   // C4: Culture (label)
+    data[3][3] = character.species || '';  // D4: Species (data)
+    data[3][8] = labels[6];   // I4: Culture (label)
+    data[3][9] = character.culture || '';  // J4: Culture (data)
+    data[3][12] = labels[7];  // M4: Luck (label)
+    data[3][13] = character.luck || '';    // N4: Luck (data)
 
     // Row 5 (index 4): Age / Gender
-    data[4][3] = parseInt(character.age || 0);             // D5: Age
-    data[4][10] = character.gender || '';                  // K5: Gender
+    data[4][0] = labels[8];   // A5: Age
+    data[4][2] = labels[9];   // C5: Gender (label)
+    data[4][3] = parseInt(character.age || 0);    // D5: Age (data)
+    data[4][8] = labels[9];   // I5: Gender (label)
+    data[4][9] = character.gender || '';   // J5: Gender (data)
 
     // Row 6 (index 5): Weight / Mass
-    data[5][3] = parseInt(character.weight || 0);          // D6: Weight
-    data[5][10] = character.mass || '';                    // K6: Mass
+    data[5][0] = labels[10];  // A6: Weight
+    data[5][2] = labels[11];  // C6: Mass (label)
+    data[5][3] = parseInt(character.weight || 0); // D6: Weight (data)
+    data[5][8] = labels[11];  // I6: Mass (label)
+    data[5][9] = character.mass || '';    // J6: Mass (data)
 
-    // Row 8-10 (index 7-9): Motivations
-    data[7][3] = character.motivation || '';               // D8: Motivation
-    data[8][3] = character.background || '';               // D9: Background
-    data[9][3] = character.origin_type || '';              // D10: Origin Type
+    // Row 8 (index 7): Motivation
+    data[7][0] = labels[12];  // A8: Motivation
+    data[7][3] = character.motivation || '';      // D8: Motivation (data)
 
-    // Rows 14-18 (index 13-17): Attributes (both sides)
-    data[13][0] = parseInt(character.strength || 0);       // A14: STR
-    data[14][0] = parseInt(character.endurance || 0);      // A15: END
-    data[15][0] = parseInt(character.agility || 0);        // A16: AGI
-    data[16][0] = parseInt(character.intelligence || 0);   // A17: INT
-    data[17][0] = parseInt(character.cool || 0);           // A18: COOL
+    // Row 9 (index 8): Background
+    data[8][0] = labels[13];  // A9: Background
+    data[8][3] = character.background || '';      // D9: Background (data)
 
-    // Copy to D column
-    data[13][3] = parseInt(character.strength || 0);       // D14
-    data[14][3] = parseInt(character.endurance || 0);      // D15
-    data[15][3] = parseInt(character.agility || 0);        // D16
-    data[16][3] = parseInt(character.intelligence || 0);   // D17
-    data[17][3] = parseInt(character.cool || 0);           // D18
+    // Row 10 (index 9): Origin Type
+    data[9][0] = labels[14];  // A10: Origin Type
+    data[9][3] = character.origin_type || '';     // D10: Origin Type (data)
 
-    // Attribute Saves (F column)
-    data[14][5] = parseInt(character.endurance_save || character.endurance || 0);    // F15
-    data[15][5] = parseInt(character.agility_save || character.agility || 0);        // F16
-    data[16][5] = parseInt(character.intelligence_save || character.intelligence || 0); // F17
-    data[17][5] = parseInt(character.cool_save || character.cool || 0);              // F18
+    // Row 13 (index 12): Attribute headers
+    data[12][0] = labels[15]; // A13: CP
+    data[12][2] = labels[16]; // C13: BC
+    data[12][3] = labels[17]; // D13: Score
+    data[12][5] = labels[18]; // F13: Save
+    data[12][8] = labels[19]; // I13: Power
+    data[12][12] = labels[20];// M13: Base HTH
 
-    // Rows 13-15 (index 12-14): Power stats
-    data[12][10] = parseInt(character.power_level || 0);   // K13: Power Level
-    data[13][10] = parseInt(character.hits || 0);          // K14: Hits
-    data[14][10] = character.initiative || '';             // K15: Initiative
+    // Row 14 (index 13): ST Attribute
+    data[13][2] = labels[21]; // C14: ST
+    data[13][3] = parseInt(character.strength || 0);     // D14: ST (data)
+    data[13][8] = labels[22]; // I14: Hits
+    data[13][9] = parseInt(character.hits || 0);         // J14: Hits (data)
+    data[13][12] = labels[23];// M14: Carrying Capacity
+    data[13][13] = parseInt(character.carrying_capacity || 0); // N14: CC (data)
 
-    // Rows 13-17 (index 12-16): Defenses
-    data[12][13] = character.base_hth || '';               // N13: Base HTH
-    data[13][13] = parseInt(character.carrying_capacity || 0); // N14
-    data[14][13] = parseInt(character.physical_defense || 0);  // N15
-    data[15][13] = parseInt(character.mental_defense || 0);    // N16
-    data[16][13] = parseInt(character.inventing_points || 0);  // N17
+    // Row 15 (index 14): EN Attribute
+    data[14][2] = labels[24]; // C15: EN
+    data[14][3] = parseInt(character.endurance || 0);    // D15: EN (data)
+    data[14][5] = parseInt(character.endurance_save || character.endurance || 0); // F15: EN save
+    data[14][8] = labels[25]; // I15: Initiative
+    data[14][9] = character.initiative || '';            // J15: Initiative (data)
+    data[14][12] = labels[26];// M15: Physical Defense
+    data[14][13] = parseInt(character.physical_defense || 0); // N15: PD (data)
 
-    // Rows 21/23 (index 20/22): Movement
-    data[20][13] = parseInt(character.move || 0);          // N21: Move
-    data[22][13] = parseFloat(character.healing_rate || 0); // N23: Healing Rate
+    // Row 16 (index 15): AG Attribute
+    data[15][2] = labels[27]; // C16: AG
+    data[15][3] = parseInt(character.agility || 0);      // D16: AG (data)
+    data[15][5] = parseInt(character.agility_save || character.agility || 0); // F16: AG save
+    data[15][8] = labels[28]; // I16: AG To Hit
+    data[15][12] = labels[29];// M16: Mental Defense
+    data[15][13] = parseInt(character.mental_defense || 0); // N16: MD (data)
 
-    // Rows 32-34 (index 31-33): Capacities
-    data[31][13] = parseInt(character.bc_capacity || 0);   // N32: BC Cap
-    data[32][13] = parseInt(character.ability_capacity || 0); // N33: Ability Cap
-    data[33][13] = parseInt(character.damage_capacity || 0);   // N34: Damage Cap
+    // Row 17 (index 16): IN Attribute
+    data[16][2] = labels[30]; // C17: IN
+    data[16][3] = parseInt(character.intelligence || 0); // D17: IN (data)
+    data[16][5] = parseInt(character.intelligence_save || character.intelligence || 0); // F17: IN save
+    data[16][8] = labels[31]; // I17: IN To Hit
+    data[16][12] = labels[32];// M17: Inventing Points
+    data[16][13] = parseInt(character.inventing_points || 0); // N17: IP (data)
+
+    // Row 18 (index 17): CL Attribute
+    data[17][2] = labels[33]; // C18: CL
+    data[17][3] = parseInt(character.cool || 0);         // D18: CL (data)
+    data[17][5] = parseInt(character.cool_save || character.cool || 0); // F18: CL save
+    data[17][8] = labels[34]; // I18: CL To Hit
+
+    // Row 21 (index 20): Ability
+    data[20][2] = labels[35]; // C21: Ability
+
+    // Row 21 (index 20): Movement (Ground)
+    data[20][12] = labels[36];// M21: Move (Ground)
+    data[20][13] = parseInt(character.move || 0);        // N21: Move (data)
+
+    // Row 22 (index 21): Leap
+    data[21][12] = labels[37];// M22: Move (Leap)
+    data[21][13] = parseFloat(character.healing_rate || 0); // N22: Leap (data)
 
     // Row 39 (index 38): Total CP
-    data[38][0] = parseInt(character.total_cp || 0);       // A39: Total CP
+    data[38][0] = labels[47]; // A39: Total CP
+    data[38][3] = parseInt(character.total_cp || 0);     // D39: Total CP (data)
 
     // Convert to worksheet
     const ws = XLSX.utils.aoa_to_sheet(data);
     
-    // Apply formatting to data cells
-    const cellsToFormat = [
-      'D3', 'K3', 'N3', 'D4', 'K4', 'N4', 'D5', 'K5', 'D6', 'K6',
-      'D8', 'D9', 'D10',
-      'A14', 'A15', 'A16', 'A17', 'A18',
-      'D14', 'D15', 'D16', 'D17', 'D18',
-      'F15', 'F16', 'F17', 'F18',
-      'K13', 'K14', 'K15',
-      'N13', 'N14', 'N15', 'N16', 'N17',
-      'N21', 'N23',
-      'N32', 'N33', 'N34',
-      'A39'
-    ];
-    
-    cellsToFormat.forEach(cellRef => {
-      if (ws[cellRef]) {
+    // Apply formatting to all cells with content
+    const allCells = Object.keys(ws).filter(k => !k.startsWith('!'));
+    allCells.forEach(cellRef => {
+      if (ws[cellRef] && typeof ws[cellRef] === 'object') {
         ws[cellRef].s = {
           border: {
             top: { style: 'thin', color: { rgb: '000000' } },
@@ -327,23 +363,8 @@ export class ExcelExporter {
       }
     });
     
-    // Set column widths
-    ws['!cols'] = [
-      { wch: 5 },  // A
-      { wch: 2 },  // B
-      { wch: 25 }, // C
-      { wch: 15 }, // D
-      { wch: 5 },  // E
-      { wch: 5 },  // F
-      { wch: 5 },  // G
-      { wch: 5 },  // H
-      { wch: 5 },  // I
-      { wch: 5 },  // J
-      { wch: 15 }, // K
-      { wch: 5 },  // L
-      { wch: 5 },  // M
-      { wch: 15 }, // N
-    ];
+    // Set column widths from template data
+    ws['!cols'] = TEMPLATE_LABELS.sheet1.columnWidths.map(w => ({ wch: w }));
     
     // Set row heights
     ws['!rows'] = [];
@@ -351,7 +372,7 @@ export class ExcelExporter {
       ws['!rows'][i] = { hpt: 15 };
     }
 
-    console.log('✅ Sheet 2 created with', data.length, 'rows and formatting applied');
+    console.log('✅ MPGen Character sheet created with template labels and formatting');
     return ws;
   }
 
