@@ -393,13 +393,15 @@ class LocalStorageManager {
   
   getCharacter(id) {
     const characters = this.getCharacters();
-    return characters.find(c => c.id === id);
+    // Handle both string and number IDs
+    return characters.find(c => c.id === id || c.id === parseInt(id));
   }
   
   deleteCharacter(id) {
     try {
       const characters = this.getCharacters();
-      const filtered = characters.filter(c => c.id !== id);
+      // Handle both string and number IDs
+      const filtered = characters.filter(c => c.id !== id && c.id !== parseInt(id));
       localStorage.setItem(this.storageKey, JSON.stringify(filtered));
       return true;
     } catch (error) {
@@ -1126,17 +1128,29 @@ class Application {
       return;
     }
     
+    console.log('🗑️ Attempting to delete character with ID:', id, 'type:', typeof id);
+    
+    // Get character name before deleting (for confirmation message)
     const character = this.storage.getCharacter(id);
+    if (!character) {
+      console.error('❌ Character not found. Available characters:', this.storage.getCharacters().map(c => ({ id: c.id, type: typeof c.id })));
+      this.showError('Character not found');
+      return;
+    }
+    
+    const characterName = character.name || 'Unknown';
+    
+    // Now delete
     this.storage.deleteCharacter(id);
     
     const savedCharacters = this.storage.getCharacters();
     this.state.setState({ savedCharacters });
     
     // Refresh list
-    this.handleLoadCharacterClick();
+    this.renderCharactersList();
     
-    this.showSuccess(`Character "${character.name}" deleted`);
-    console.log('✅ Character deleted:', character.name);
+    this.showSuccess(`Character "${characterName}" deleted`);
+    console.log('✅ Character deleted:', characterName);
   }
 
   /**
