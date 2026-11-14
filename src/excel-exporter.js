@@ -1,15 +1,32 @@
 /**
  * Excel Exporter Module
- * Converts character objects to Excel workbooks matching legacy MPGEN format
+ * Converts character objects to Excel workbooks using CharTemplate.xlsx
  * Uses SheetJS library for Excel generation
  */
 
 export class ExcelExporter {
   /**
-   * Export character to Excel file
+   * Load template file from templates folder
+   * @returns {Promise<ArrayBuffer>}
+   */
+  static async loadTemplate() {
+    try {
+      const response = await fetch('templates/CharTemplate.xlsx');
+      if (!response.ok) {
+        throw new Error(`Failed to load template: ${response.status}`);
+      }
+      return await response.arrayBuffer();
+    } catch (error) {
+      console.error('Template load failed:', error);
+      throw new Error('Could not load CharTemplate.xlsx template file');
+    }
+  }
+
+  /**
+   * Export character to Excel file using template
    * @param {Object} character - Character object with all properties
    * @param {string} characterName - Name for the exported file
-   * @returns {Promise<void>}
+   * @returns {Promise<Object>}
    */
   static async exportCharacter(character, characterName = 'MPGen_Character') {
     try {
@@ -18,20 +35,49 @@ export class ExcelExporter {
         throw new Error('SheetJS library not loaded. Please refresh the page.');
       }
 
-      console.log('📊 Exporting character to Excel:', { characterName, character });
+      console.log('📊 Exporting character to Excel using template:', { characterName, character });
 
-      // Create new workbook
-      const workbook = XLSX.utils.book_new();
+      // Load template
+      console.log('📋 Loading CharTemplate.xlsx...');
+      const templateBuffer = await this.loadTemplate();
+      const workbook = XLSX.read(templateBuffer, { type: 'array' });
 
-      // Create both sheets
-      const sheet1 = this.createExcelRecordSheet(character);
-      const sheet2 = this.createMPGenCharacterSheet(character);
+      console.log('📋 Template loaded. Sheet names:', workbook.SheetNames);
 
-      console.log('📋 Sheets created:', { sheet1Keys: Object.keys(sheet1).length, sheet2Keys: Object.keys(sheet2).length });
+      // Get first sheet (index 0) and third sheet (index 2) if it exists
+      const sheet1Name = workbook.SheetNames[0];
+      const sheet3Name = workbook.SheetNames[2] || sheet1Name; // Fallback to sheet1 if sheet3 doesn't exist
 
-      // Add sheets to workbook
-      XLSX.utils.book_append_sheet(workbook, sheet1, 'Excel Record Sheet');
-      XLSX.utils.book_append_sheet(workbook, sheet2, 'MPGen Character');
+      console.log(`📝 Using sheets: "${sheet1Name}" (first sheet) and "${sheet3Name}" (third sheet)`);
+
+      // Create data arrays for both sheets
+      const sheet1Data = this.createExcelRecordSheet(character);
+      const sheet3Data = this.createMPGenCharacterSheet(character);
+
+      // Clear existing data in sheets and insert new data
+      const ws1 = XLSX.utils.aoa_to_sheet(sheet1Data);
+      const ws3 = XLSX.utils.aoa_to_sheet(sheet3Data);
+
+      // Apply column widths
+      ws1['!cols'] = [
+        { wch: 3 }, { wch: 3 }, { wch: 3 }, { wch: 15 }, { wch: 3 },
+        { wch: 15 }, { wch: 15 }, { wch: 3 }, { wch: 3 }, { wch: 3 },
+        { wch: 3 }, { wch: 3 }, { wch: 3 }, { wch: 3 }, { wch: 3 },
+        { wch: 3 }, { wch: 20 }
+      ];
+
+      ws3['!cols'] = [
+        { wch: 3 }, { wch: 3 }, { wch: 3 }, { wch: 15 }, { wch: 3 },
+        { wch: 15 }, { wch: 15 }, { wch: 3 }, { wch: 3 }, { wch: 3 },
+        { wch: 3 }, { wch: 3 }, { wch: 3 }, { wch: 3 }, { wch: 3 },
+        { wch: 3 }, { wch: 20 }
+      ];
+
+      // Replace sheets in workbook
+      workbook.Sheets[sheet1Name] = ws1;
+      if (sheet3Name !== sheet1Name && workbook.SheetNames.length > 2) {
+        workbook.Sheets[sheet3Name] = ws3;
+      }
 
       // Generate filename with timestamp
       const timestamp = new Date().toISOString().split('T')[0];
