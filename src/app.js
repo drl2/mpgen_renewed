@@ -461,14 +461,23 @@ class UIController {
       exportBtn: document.getElementById('exportBtn'),
       characterCard: document.getElementById('characterCard'),
       charactersList: document.getElementById('charactersList'),
-      worldSelect: document.getElementById('worldSelect'),
-      timeperiodSelect: document.getElementById('timeperiodSelect'),
+      powerlevelSelect: document.getElementById('powerlevelSelect'),
+      sideSelect: document.getElementById('sideSelect'),
+      birthplaceSelect: document.getElementById('birthplaceSelect'),
       speciesSelect: document.getElementById('speciesSelect'),
       cultureSelect: document.getElementById('cultureSelect'),
-      birthplaceSelect: document.getElementById('birthplaceSelect'),
-      abilitySelect: document.getElementById('abilitySelect'),
-      dimensionSelect: document.getElementById('dimensionSelect'),
-      blogFeed: document.getElementById('blogFeed')
+      genderIdentitySelect: document.getElementById('genderIdentitySelect'),
+      genderExpressionSelect: document.getElementById('genderExpressionSelect'),
+      biologicalSexSelect: document.getElementById('biologicalSexSelect'),
+      sexualAttractionSelect: document.getElementById('sexualAttractionSelect'),
+      motivationSelect: document.getElementById('motivationSelect'),
+      originTypeSelect: document.getElementById('originTypeSelect'),
+      knownRegionSelect: document.getElementById('knownRegionSelect'),
+      lostRegionSelect: document.getElementById('lostRegionSelect'),
+      otherWorldSelect: document.getElementById('otherWorldSelect'),
+      otherDimensionSelect: document.getElementById('otherDimensionSelect'),
+      timePeriodSelect: document.getElementById('timePeriodSelect'),
+      allowDupesCheckbox: document.getElementById('allowDupesCheckbox')
     };
   }
   
@@ -585,61 +594,102 @@ class UIController {
   }
   
   populateSelects(data) {
-    // Map select field IDs to data table names
+    // Map select field IDs to data table names (MUST match HTML element IDs exactly)
     const selects = {
       powerlevelSelect: 'powerlevel',
       sideSelect: 'side',
       motivationSelect: 'motivation',
-      origintypeSelect: 'origintype',
+      originTypeSelect: 'origintype',
       birthplaceSelect: 'birthplace',
-      knownregionSelect: 'knownregion',
-      lostregionSelect: 'lostregion',
-      timeperiodSelect: 'timeperiod',
-      otherworldSelect: 'otherworld',
-      otherdimensionSelect: 'otherdimension',
+      knownRegionSelect: 'knownregion',
+      lostRegionSelect: 'lostregion',
+      timePeriodSelect: 'timeperiod',
+      otherWorldSelect: 'otherworld',
+      otherDimensionSelect: 'otherdimension',
       speciesSelect: 'species',
       cultureSelect: 'culture',
-      genderidentitySelect: 'genderidentity',
-      genderexpressionSelect: 'genderexpression',
-      biologicalsexSelect: 'biologicalsex',
-      sexualattractionSelect: 'sexualattraction'
+      genderIdentitySelect: 'genderidentity',
+      genderExpressionSelect: 'genderexpression',
+      biologicalSexSelect: 'biologicalsex',
+      sexualAttractionSelect: 'sexualattraction'
     };
     
-    // Map table names to display field names
+    // Map table names to display field names (correct field names from data files)
     const displayFields = {
       powerlevel: 'power_level',
       side: 'side',
       motivation: 'motivation',
       origintype: 'origin_type',
-      birthplace: 'birthplace',
-      knownregion: 'region',
-      lostregion: 'region',
+      birthplace: 'birth_place',
+      knownregion: 'region_name',
+      lostregion: 'region_name',
       timeperiod: 'time_period',
-      otherworld: 'world',
-      otherdimension: 'dimension',
+      otherworld: 'world_name',
+      otherdimension: 'dimension_name',
       species: 'species_name',
-      culture: 'culture',
+      culture: 'culture_name',
       genderidentity: 'gender_identity',
       genderexpression: 'gender_expression',
       biologicalsex: 'biological_sex',
       sexualattraction: 'sexual_attraction'
     };
     
+    console.log('📝 Populating form dropdowns...');
+    
     Object.entries(selects).forEach(([selectId, tableName]) => {
-      const select = this.elements[selectId];
-      if (!select) return;
+      const select = document.getElementById(selectId);
+      if (!select) {
+        console.warn(`⚠️  Element not found: ${selectId}`);
+        return;
+      }
       
       const items = data[tableName];
-      if (!items || !Array.isArray(items)) return;
+      if (!items || !Array.isArray(items)) {
+        console.warn(`⚠️  Data not found for: ${tableName}`);
+        return;
+      }
       
       const displayField = displayFields[tableName];
+      let populatedCount = 0;
       
       items.forEach(item => {
         const option = document.createElement('option');
         option.value = item.id;
-        option.textContent = displayField ? (item[displayField] || `ID: ${item.id}`) : `ID: ${item.id}`;
+        
+        // Try multiple field names to find the display text
+        let displayText = null;
+        if (displayField && item[displayField]) {
+          displayText = item[displayField];
+        } else if (item.power_level) {
+          displayText = item.power_level;
+        } else if (item.species_name) {
+          displayText = item.species_name;
+        } else if (item.culture_name) {
+          displayText = item.culture_name;
+        } else if (item.side) {
+          displayText = item.side;
+        } else if (item.birth_place) {
+          displayText = item.birth_place;
+        } else if (item.motivation) {
+          displayText = item.motivation;
+        } else if (item.origin_type) {
+          displayText = item.origin_type;
+        } else if (item.region_name) {
+          displayText = item.region_name;
+        } else if (item.time_period) {
+          displayText = item.time_period;
+        } else if (item.world_name) {
+          displayText = item.world_name;
+        } else if (item.dimension_name) {
+          displayText = item.dimension_name;
+        }
+        
+        option.textContent = displayText || `ID: ${item.id}`;
         select.appendChild(option);
+        populatedCount++;
       });
+      
+      console.log(`  ✅ ${selectId}: ${populatedCount} options`);
     });
   }
 }
