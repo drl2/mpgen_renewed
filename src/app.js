@@ -731,6 +731,9 @@ class Application {
       // Setup form event listeners
       this.setupFormHandlers();
       
+      // Initialize birthplace cascading logic
+      this.handleBirthplaceChange();
+      
       // Subscribe to state changes
       this.state.subscribe((state) => {
         console.log('State updated:', state);
@@ -756,6 +759,7 @@ class Application {
     const generateBtn = document.getElementById('generateBtn');
     const randomBtn = document.getElementById('randomBtn');
     const saveBtn = document.getElementById('saveBtn');
+    const birthplaceSelect = document.getElementById('birthplaceSelect');
 
     if (generateBtn) {
       generateBtn.addEventListener('click', () => this.handleGenerateClick());
@@ -769,7 +773,67 @@ class Application {
       saveBtn.addEventListener('click', () => this.handleSaveClick());
     }
 
+    // Setup birthplace cascading logic
+    if (birthplaceSelect) {
+      birthplaceSelect.addEventListener('change', () => this.handleBirthplaceChange());
+    }
+
     console.log('✓ Form handlers attached');
+  }
+
+  /**
+   * Handle birthplace selection change - show/hide appropriate region fields
+   */
+  handleBirthplaceChange() {
+    const birthplaceSelect = document.getElementById('birthplaceSelect');
+    const selectedOption = birthplaceSelect.options[birthplaceSelect.selectedIndex]?.text || '';
+    
+    // Get all region field groups
+    const knownRegionGroup = document.getElementById('knownRegionGroup');
+    const lostRegionGroup = document.getElementById('lostRegionGroup');
+    const timePeriodGroup = document.getElementById('timePeriodGroup');
+    const otherWorldGroup = document.getElementById('otherWorldGroup');
+    const otherDimensionGroup = document.getElementById('otherDimensionGroup');
+    
+    // Hide all region fields initially
+    if (knownRegionGroup) knownRegionGroup.style.display = 'none';
+    if (lostRegionGroup) lostRegionGroup.style.display = 'none';
+    if (timePeriodGroup) timePeriodGroup.style.display = 'none';
+    if (otherWorldGroup) otherWorldGroup.style.display = 'none';
+    if (otherDimensionGroup) otherDimensionGroup.style.display = 'none';
+    
+    // Show appropriate fields based on birthplace selection
+    if (selectedOption === 'Local') {
+      // Local: Show known region only
+      if (knownRegionGroup) knownRegionGroup.style.display = 'block';
+    } else if (selectedOption === 'Foreigner') {
+      // Foreigner: Show known region + time period
+      if (knownRegionGroup) knownRegionGroup.style.display = 'block';
+      if (timePeriodGroup) timePeriodGroup.style.display = 'block';
+    } else if (selectedOption === 'Stranger') {
+      // Stranger: Show lost region only
+      if (lostRegionGroup) lostRegionGroup.style.display = 'block';
+    } else if (selectedOption === 'Anachronism') {
+      // Anachronism: Show time period + lost region
+      if (timePeriodGroup) timePeriodGroup.style.display = 'block';
+      if (lostRegionGroup) lostRegionGroup.style.display = 'block';
+    } else if (selectedOption === 'Alien') {
+      // Alien: Show other world + other dimension
+      if (otherWorldGroup) otherWorldGroup.style.display = 'block';
+      if (otherDimensionGroup) otherDimensionGroup.style.display = 'block';
+    } else if (selectedOption === 'Extra-Dimensional') {
+      // Extra-Dimensional: Show other dimension only
+      if (otherDimensionGroup) otherDimensionGroup.style.display = 'block';
+    } else if (selectedOption === '') {
+      // Random: Show all region fields so user can pick
+      if (knownRegionGroup) knownRegionGroup.style.display = 'block';
+      if (lostRegionGroup) lostRegionGroup.style.display = 'block';
+      if (timePeriodGroup) timePeriodGroup.style.display = 'block';
+      if (otherWorldGroup) otherWorldGroup.style.display = 'block';
+      if (otherDimensionGroup) otherDimensionGroup.style.display = 'block';
+    }
+    
+    console.log(`🏘️  Birthplace changed to: "${selectedOption}"`);
   }
 
   /**
