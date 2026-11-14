@@ -6,6 +6,7 @@
 // Import modules (using ES6 modules)
 import { DiceRoller } from './diceroller.js';
 import { CharacterGenerator } from './character-generator.js';
+import { ExcelExporter } from './excel-exporter.js';
 
 /**
  * Application State Manager
@@ -784,6 +785,11 @@ class Application {
       loadBtn.addEventListener('click', () => this.handleLoadCharacterClick());
     }
 
+    const exportBtn = document.getElementById('exportBtn');
+    if (exportBtn) {
+      exportBtn.addEventListener('click', () => this.handleExportClick());
+    }
+
     // Setup birthplace cascading logic
     if (birthplaceSelect) {
       birthplaceSelect.addEventListener('change', () => this.handleBirthplaceChange());
@@ -1113,6 +1119,64 @@ class Application {
   }
 
   /**
+   * Handle character export to Excel
+   */
+  async handleExportClick() {
+    if (!this.state.state.currentCharacter) {
+      this.showError('No character to export. Please generate a character first.');
+      return;
+    }
+
+    try {
+      const character = this.state.state.currentCharacter;
+      const characterName = character.name || 'Character';
+
+      // Show loading state
+      const exportBtn = document.getElementById('exportBtn');
+      const originalText = exportBtn.textContent;
+      exportBtn.textContent = 'Exporting...';
+      exportBtn.disabled = true;
+
+      // Attempt Excel export first
+      if (ExcelExporter.isXLSXAvailable()) {
+        const result = await ExcelExporter.exportCharacter(character, characterName);
+        
+        exportBtn.textContent = originalText;
+        exportBtn.disabled = false;
+
+        if (result.success) {
+          this.showSuccess(`Exported to Excel: ${result.filename}`);
+          console.log('✅ Excel export successful:', result.filename);
+        } else {
+          this.showError(`Excel export failed: ${result.message}`);
+          console.error('❌ Excel export failed:', result.error);
+        }
+      } else {
+        // Fallback to JSON export
+        const result = ExcelExporter.exportCharacterJSON(character, characterName);
+        
+        exportBtn.textContent = originalText;
+        exportBtn.disabled = false;
+
+        if (result.success) {
+          this.showWarning(`Excel library not loaded. Exported to JSON: ${result.filename}`);
+          console.log('⚠️ JSON export (fallback):', result.filename);
+        } else {
+          this.showError(`Export failed: ${result.message}`);
+          console.error('❌ Export failed:', result.error);
+        }
+      }
+    } catch (error) {
+      const exportBtn = document.getElementById('exportBtn');
+      exportBtn.textContent = 'Export to Excel';
+      exportBtn.disabled = false;
+
+      this.showError(`Export error: ${error.message}`);
+      console.error('❌ Export error:', error);
+    }
+  }
+
+  /**
    * Collect all 18 form parameters from form fields
    * @returns {Object} - Parameters object for character generation
    */
@@ -1362,6 +1426,25 @@ class Application {
     setTimeout(() => {
       notification.remove();
     }, 3000);
+  }
+
+  /**
+   * Show warning message to user
+   * @param {string} message - Warning message
+   */
+  showWarning(message) {
+    console.warn('⚠️ Warning:', message);
+    
+    // Create and show warning notification
+    const notification = document.createElement('div');
+    notification.className = 'notification notification-warning';
+    notification.textContent = message;
+    document.body.appendChild(notification);
+
+    // Auto-remove after 4 seconds
+    setTimeout(() => {
+      notification.remove();
+    }, 4000);
   }
 }
 
