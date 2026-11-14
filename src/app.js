@@ -1146,8 +1146,29 @@ class Application {
     const savedCharacters = this.storage.getCharacters();
     this.state.setState({ savedCharacters });
     
-    // Refresh list
-    this.renderCharactersList();
+    // Refresh both character lists
+    this.renderCharactersList(); // Main "My Characters" section
+    
+    // Also refresh modal list if it's open
+    const modalList = document.getElementById('savedCharactersList');
+    if (modalList) {
+      if (savedCharacters.length === 0) {
+        modalList.innerHTML = '<p class="empty-state">No saved characters yet</p>';
+      } else {
+        modalList.innerHTML = savedCharacters.map(char => `
+          <div class="character-item">
+            <div class="character-item-name">${char.name || 'Unnamed'}</div>
+            <div class="character-item-meta">${char.species || 'Unknown'}</div>
+            <div class="character-item-meta">${new Date(char.createdAt).toLocaleDateString()}</div>
+            ${char.notes ? `<div class="character-item-meta"><em>${char.notes.substring(0, 50)}...</em></div>` : ''}
+            <div class="character-item-actions">
+              <button class="btn btn-load btn-sm" onclick="window.loadCharacterById(${char.id})">Load</button>
+              <button class="btn btn-delete btn-sm" onclick="window.deleteCharacterById(${char.id})">Delete</button>
+            </div>
+          </div>
+        `).join('');
+      }
+    }
     
     this.showSuccess(`Character "${characterName}" deleted`);
     console.log('✅ Character deleted:', characterName);
