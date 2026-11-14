@@ -1095,6 +1095,16 @@ class Application {
     this.state.setState({ currentCharacter: character });
     this.displayCharacter(character);
     
+    // Enable save/export/load buttons
+    const saveBtn = document.getElementById('saveBtn');
+    if (saveBtn) saveBtn.disabled = false;
+    
+    const exportBtn = document.getElementById('exportBtn');
+    if (exportBtn) exportBtn.disabled = false;
+    
+    const loadBtn = document.getElementById('loadBtn');
+    if (loadBtn) loadBtn.disabled = false;
+    
     // Close modal
     const modal = document.getElementById('loadCharacterModal');
     if (modal) modal.style.display = 'none';

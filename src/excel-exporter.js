@@ -18,12 +18,16 @@ export class ExcelExporter {
         throw new Error('SheetJS library not loaded. Please refresh the page.');
       }
 
+      console.log('📊 Exporting character to Excel:', { characterName, character });
+
       // Create new workbook
       const workbook = XLSX.utils.book_new();
 
       // Create both sheets
       const sheet1 = this.createExcelRecordSheet(character);
       const sheet2 = this.createMPGenCharacterSheet(character);
+
+      console.log('📋 Sheets created:', { sheet1Keys: Object.keys(sheet1).length, sheet2Keys: Object.keys(sheet2).length });
 
       // Add sheets to workbook
       XLSX.utils.book_append_sheet(workbook, sheet1, 'Excel Record Sheet');
@@ -35,6 +39,8 @@ export class ExcelExporter {
 
       // Write file
       XLSX.writeFile(workbook, filename);
+
+      console.log('✅ File written:', filename);
 
       return {
         success: true,
@@ -171,6 +177,9 @@ export class ExcelExporter {
       { wch: 10 }, // P
       { wch: 10 }, // Q
     ];
+
+    // Set worksheet dimensions
+    ws['!ref'] = 'A1:Q40';
 
     return ws;
   }
@@ -330,6 +339,9 @@ export class ExcelExporter {
       { wch: 5 },  // M
       { wch: 15 }, // N
     ];
+
+    // Set worksheet dimensions
+    ws['!ref'] = 'A1:N40';
 
     return ws;
   }
