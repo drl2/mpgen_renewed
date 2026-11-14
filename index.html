@@ -1,0 +1,262 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <meta name="description" content="MPGEN - Multi-dimensional Character Generator. Create unique characters with species, cultures, abilities, and more.">
+  <meta name="theme-color" content="#1a1a1a">
+  
+  <title>MPGEN - Character Generator</title>
+  
+  <!-- Stylesheets -->
+  <link rel="stylesheet" href="mpgen.css">
+  
+  <!-- Preconnect to external services -->
+  <link rel="preconnect" href="https://gaming.drl2.com">
+</head>
+<body>
+  <!-- Main Application Container -->
+  <div id="app" class="app-container">
+    <!-- Navigation Header -->
+    <header class="app-header">
+      <div class="header-content">
+        <h1 class="app-title">MPGEN</h1>
+        <p class="app-subtitle">Multi-dimensional Character Generator</p>
+      </div>
+      <nav class="app-nav">
+        <ul class="nav-menu">
+          <li><a href="#generator" class="nav-link active">Generator</a></li>
+          <li><a href="#characters" class="nav-link">Characters</a></li>
+          <li><a href="#blog" class="nav-link">Blog</a></li>
+          <li><a href="#about" class="nav-link">About</a></li>
+        </ul>
+      </nav>
+    </header>
+
+    <!-- Main Content Area -->
+    <main class="app-main">
+      <!-- Generator Section -->
+      <section id="generator" class="section-generator">
+        <div class="generator-container">
+          <!-- Left Panel: Input Controls -->
+          <div class="panel panel-input">
+            <h2>Presets</h2>
+            <p class="preset-help">Items without values will be chosen randomly</p>
+            
+            <!-- Column 1: Power Level, Side, Motivation, Origin Type, Allow Dupes -->
+            <div class="preset-column">
+              <div class="form-group">
+                <label for="powerlevelSelect">Power Level:</label>
+                <select id="powerlevelSelect" class="form-input">
+                  <option value="">Random</option>
+                </select>
+              </div>
+              <div class="form-group">
+                <label for="sideSelect">Side:</label>
+                <select id="sideSelect" class="form-input">
+                  <option value="">Random</option>
+                </select>
+              </div>
+              <div class="form-group">
+                <label for="motivationSelect">Motivation:</label>
+                <select id="motivationSelect" class="form-input">
+                  <option value="">Random</option>
+                </select>
+              </div>
+              <div class="form-group">
+                <label for="originTypeSelect">Origin Type:</label>
+                <select id="originTypeSelect" class="form-input">
+                  <option value="">Random</option>
+                </select>
+              </div>
+              <div class="form-group">
+                <label for="allowDupesCheckbox">
+                  <input type="checkbox" id="allowDupesCheckbox" class="form-checkbox">
+                  Allow Duplicate Backgrounds
+                </label>
+              </div>
+            </div>
+
+            <!-- Column 2: Birthplace, Species, Culture, Regional -->
+            <div class="preset-column">
+              <div class="form-group">
+                <label for="birthplaceSelect">Birthplace:</label>
+                <select id="birthplaceSelect" class="form-input">
+                  <option value="">Random</option>
+                </select>
+              </div>
+              <div class="form-group">
+                <label for="knownRegionSelect">Known Region:</label>
+                <select id="knownRegionSelect" class="form-input">
+                  <option value="">Random</option>
+                </select>
+              </div>
+              <div class="form-group">
+                <label for="lostRegionSelect">Lost Region:</label>
+                <select id="lostRegionSelect" class="form-input">
+                  <option value="">Random</option>
+                </select>
+              </div>
+              <div class="form-group">
+                <label for="timePeriodSelect">Time Period:</label>
+                <select id="timePeriodSelect" class="form-input">
+                  <option value="">Random</option>
+                </select>
+              </div>
+              <div class="form-group">
+                <label for="otherWorldSelect">Other World:</label>
+                <select id="otherWorldSelect" class="form-input">
+                  <option value="">Random</option>
+                </select>
+              </div>
+              <div class="form-group">
+                <label for="otherDimensionSelect">Other Dimension:</label>
+                <select id="otherDimensionSelect" class="form-input">
+                  <option value="">Random</option>
+                </select>
+              </div>
+              <div class="form-group">
+                <label for="speciesSelect">Species:</label>
+                <select id="speciesSelect" class="form-input">
+                  <option value="">Random</option>
+                </select>
+              </div>
+              <div class="form-group">
+                <label for="cultureSelect">Culture:</label>
+                <select id="cultureSelect" class="form-input">
+                  <option value="">Random</option>
+                </select>
+              </div>
+            </div>
+
+            <!-- Column 3: Gender, Biological, Sexual -->
+            <div class="preset-column">
+              <div class="form-group">
+                <label for="genderIdentitySelect">Gender Identity:</label>
+                <select id="genderIdentitySelect" class="form-input">
+                  <option value="">Random</option>
+                </select>
+              </div>
+              <div class="form-group">
+                <label for="genderExpressionSelect">Gender Expression:</label>
+                <select id="genderExpressionSelect" class="form-input">
+                  <option value="">Random</option>
+                </select>
+              </div>
+              <div class="form-group">
+                <label for="biologicalSexSelect">Biological Sex:</label>
+                <select id="biologicalSexSelect" class="form-input">
+                  <option value="">Random</option>
+                </select>
+              </div>
+              <div class="form-group">
+                <label for="sexualAttractionSelect">Sexual Attraction:</label>
+                <select id="sexualAttractionSelect" class="form-input">
+                  <option value="">Random</option>
+                </select>
+              </div>
+            </div>
+            
+            <div class="form-actions">
+              <button id="generateBtn" class="btn btn-primary">Generate Character</button>
+              <button id="randomBtn" class="btn btn-secondary">All Random</button>
+            </div>
+          </div>
+
+          <!-- Right Panel: Character Display -->
+          <div class="panel panel-output">
+            <h2>Generated Character</h2>
+            <div id="characterCard" class="character-card">
+              <div class="character-placeholder">
+                <p>Character will appear here...</p>
+              </div>
+            </div>
+            
+            <div class="character-actions">
+              <button id="saveBtn" class="btn btn-success" disabled>Save Character</button>
+              <button id="exportBtn" class="btn btn-info" disabled>Export to Excel</button>
+            </div>
+          </div>
+        </div>
+      </section>
+
+      <!-- Characters Section (Saved Characters) -->
+      <section id="characters" class="section-characters">
+        <div class="characters-container">
+          <h2>My Characters</h2>
+          <p class="section-description">Your saved characters are stored locally in your browser.</p>
+          
+          <div id="charactersList" class="characters-list">
+            <div class="empty-state">
+              <p>No saved characters yet. Generate and save your first character!</p>
+            </div>
+          </div>
+        </div>
+      </section>
+
+      <!-- Blog Section -->
+      <section id="blog" class="section-blog">
+        <div class="blog-container">
+          <h2>MPGEN Blog</h2>
+          <p class="section-description">Latest updates and articles from the MPGEN blog.</p>
+          
+          <div id="blogFeed" class="blog-feed">
+            <div class="loading">Loading blog posts...</div>
+          </div>
+        </div>
+      </section>
+
+      <!-- About Section -->
+      <section id="about" class="section-about">
+        <div class="about-container">
+          <h2>About MPGEN</h2>
+          <div class="about-content">
+            <p>MPGEN is a multi-dimensional character generator designed to create unique and compelling characters across multiple worlds, time periods, species, and cultures.</p>
+            
+            <h3>Features</h3>
+            <ul>
+              <li>Generate characters with customizable attributes</li>
+              <li>Save and manage your character library locally</li>
+              <li>Export characters to Excel format</li>
+              <li>Explore character generation algorithms</li>
+              <li>Access the latest blog updates</li>
+            </ul>
+            
+            <h3>Technology</h3>
+            <p>Built with vanilla HTML, CSS, and JavaScript for maximum performance and compatibility.</p>
+          </div>
+        </div>
+      </section>
+    </main>
+
+    <!-- Sidebar: Advertisement -->
+    <aside class="app-sidebar">
+      <div id="adContainer" class="ad-container">
+        <!-- Google AdSense will be injected here -->
+        <div class="ad-placeholder">Advertisement</div>
+      </div>
+    </aside>
+
+    <!-- Footer -->
+    <footer class="app-footer">
+      <div class="footer-content">
+        <p>&copy; 2026 MPGEN. All rights reserved.</p>
+        <div class="footer-links">
+          <a href="#privacy">Privacy Policy</a>
+          <a href="#terms">Terms of Service</a>
+          <a href="#contact">Contact</a>
+        </div>
+      </div>
+    </footer>
+  </div>
+
+  <!-- Scripts -->
+  <script src="src/app.js" type="module"></script>
+  
+  <!-- Google AdSense (will be configured during Phase 4) -->
+  <script async src="https://pagead2.googlesyndication.com/pagead/js/adsbygoogle.js?client=ca-pub-xxxxxxxxxxxxxxxx"></script>
+  
+  <!-- WordPress Blog Integration (will be configured during Phase 4) -->
+  <!-- Blog feed will be loaded via /wp-json/wp/v2/posts from gaming.drl2.com -->
+</body>
+</html>

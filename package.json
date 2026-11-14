@@ -1,0 +1,24 @@
+{
+  "name": "mpgen-renewed",
+  "version": "2.0.0",
+  "description": "MPGEN - Multi-dimensional Character Generator. Consolidated vanilla JavaScript SPA.",
+  "type": "module",
+  "main": "src/app.js",
+  "scripts": {
+    "build": "lessc less/mpgen.less mpgen.css",
+    "watch": "lessc --watch less/ .",
+    "serve": "python -m http.server 8000",
+    "dev": "npm run watch & npm run serve"
+  },
+  "keywords": [
+    "character-generator",
+    "mpgen",
+    "vanilla-javascript",
+    "spa"
+  ],
+  "author": "",
+  "license": "MIT",
+  "devDependencies": {
+    "less": "^4.1.3"
+  }
+}
