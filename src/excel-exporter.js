@@ -58,8 +58,8 @@ export class ExcelExporter {
   }
 
   /**
-   * Create "Excel Record Sheet" - Official Format
-   * Using array-of-arrays format for reliability
+   * Create "Excel Record Sheet" - Official Format with Formatting
+   * Using array-of-arrays format with cell styling
    * @param {Object} character - Character data
    * @returns {Object} XLSX worksheet
    */
@@ -111,6 +111,28 @@ export class ExcelExporter {
     // Convert array to XLSX worksheet
     const ws = XLSX.utils.aoa_to_sheet(data);
     
+    // Apply formatting to data cells
+    const cellsToFormat = [
+      'D4', 'Q4', 'D5', 'Q5', 'D6', 'Q6', 'D7', 'F8',
+      'G12', 'G13', 'A33', 'A34', 'A35', 'A36', 'A37', 'E40'
+    ];
+    
+    cellsToFormat.forEach(cellRef => {
+      if (ws[cellRef]) {
+        ws[cellRef].s = {
+          border: {
+            top: { style: 'thin', color: { rgb: '000000' } },
+            bottom: { style: 'thin', color: { rgb: '000000' } },
+            left: { style: 'thin', color: { rgb: '000000' } },
+            right: { style: 'thin', color: { rgb: '000000' } }
+          },
+          fill: { fgColor: { rgb: 'FFFFFF' } },
+          font: { name: 'Calibri', sz: 11 },
+          alignment: { horizontal: 'left', vertical: 'center', wrapText: false }
+        };
+      }
+    });
+    
     // Set column widths
     ws['!cols'] = [
       { wch: 5 },  // A
@@ -129,10 +151,16 @@ export class ExcelExporter {
       { wch: 10 }, // N
       { wch: 10 }, // O
       { wch: 10 }, // P
-      { wch: 10 }, // Q
+      { wch: 20 }, // Q
     ];
+    
+    // Set row heights
+    ws['!rows'] = [];
+    for (let i = 0; i < 41; i++) {
+      ws['!rows'][i] = { hpt: 15 };
+    }
 
-    console.log('✅ Sheet 1 created with', data.length, 'rows');
+    console.log('✅ Sheet 1 created with', data.length, 'rows and formatting applied');
     return ws;
   }
 
@@ -224,6 +252,36 @@ export class ExcelExporter {
     // Convert to worksheet
     const ws = XLSX.utils.aoa_to_sheet(data);
     
+    // Apply formatting to data cells
+    const cellsToFormat = [
+      'D3', 'K3', 'N3', 'D4', 'K4', 'N4', 'D5', 'K5', 'D6', 'K6',
+      'D8', 'D9', 'D10',
+      'A14', 'A15', 'A16', 'A17', 'A18',
+      'D14', 'D15', 'D16', 'D17', 'D18',
+      'F15', 'F16', 'F17', 'F18',
+      'K13', 'K14', 'K15',
+      'N13', 'N14', 'N15', 'N16', 'N17',
+      'N21', 'N23',
+      'N32', 'N33', 'N34',
+      'A39'
+    ];
+    
+    cellsToFormat.forEach(cellRef => {
+      if (ws[cellRef]) {
+        ws[cellRef].s = {
+          border: {
+            top: { style: 'thin', color: { rgb: '000000' } },
+            bottom: { style: 'thin', color: { rgb: '000000' } },
+            left: { style: 'thin', color: { rgb: '000000' } },
+            right: { style: 'thin', color: { rgb: '000000' } }
+          },
+          fill: { fgColor: { rgb: 'FFFFFF' } },
+          font: { name: 'Calibri', sz: 11 },
+          alignment: { horizontal: 'left', vertical: 'center', wrapText: false }
+        };
+      }
+    });
+    
     // Set column widths
     ws['!cols'] = [
       { wch: 5 },  // A
@@ -241,8 +299,14 @@ export class ExcelExporter {
       { wch: 5 },  // M
       { wch: 15 }, // N
     ];
+    
+    // Set row heights
+    ws['!rows'] = [];
+    for (let i = 0; i < 41; i++) {
+      ws['!rows'][i] = { hpt: 15 };
+    }
 
-    console.log('✅ Sheet 2 created with', data.length, 'rows');
+    console.log('✅ Sheet 2 created with', data.length, 'rows and formatting applied');
     return ws;
   }
 
