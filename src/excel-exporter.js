@@ -6,7 +6,7 @@
 
 export class ExcelExporter {
   /**
-   * Export character to Excel file
+   * Export character to Excel file with all template sheets
    * @param {Object} character - Character object with all properties
    * @param {string} characterName - Name for the exported file
    * @returns {Object}
@@ -23,15 +23,22 @@ export class ExcelExporter {
       // Create new workbook
       const workbook = XLSX.utils.book_new();
 
-      // Create both sheets
-      const sheet1 = this.createExcelRecordSheet(character);
-      const sheet2 = this.createMPGenCharacterSheet(character);
+      // Create all sheets matching template structure:
+      // 1. MPGen Character - populated with extended data
+      const sheet1 = this.createMPGenCharacterSheet(character);
+      
+      // 2. Excel Record Sheet Instructions - empty/placeholder
+      const sheet2 = this.createInstructionsSheet();
+      
+      // 3. Excel Record Sheet - populated with basic data
+      const sheet3 = this.createExcelRecordSheet(character);
 
-      console.log('📋 Sheets created');
+      console.log('📋 All sheets created');
 
-      // Add sheets to workbook
-      XLSX.utils.book_append_sheet(workbook, sheet1, 'Excel Record Sheet');
-      XLSX.utils.book_append_sheet(workbook, sheet2, 'MPGen Character');
+      // Add sheets to workbook in template order
+      XLSX.utils.book_append_sheet(workbook, sheet1, 'MPGen Character');
+      XLSX.utils.book_append_sheet(workbook, sheet2, 'Excel Record Sheet Instructions');
+      XLSX.utils.book_append_sheet(workbook, sheet3, 'Excel Record Sheet');
 
       // Generate filename with timestamp
       const timestamp = new Date().toISOString().split('T')[0];
@@ -40,7 +47,7 @@ export class ExcelExporter {
       // Write file
       XLSX.writeFile(workbook, filename);
 
-      console.log('✅ File written:', filename);
+      console.log('✅ File written with 3 sheets:', filename);
 
       return {
         success: true,
@@ -55,6 +62,44 @@ export class ExcelExporter {
         error: error
       };
     }
+  }
+
+  /**
+   * Create "Excel Record Sheet Instructions" - Information sheet
+   * Placeholder sheet with formatting
+   * @returns {Object} XLSX worksheet
+   */
+  static createInstructionsSheet() {
+    console.log('📊 Creating Excel Record Sheet Instructions sheet');
+    
+    // Create simple placeholder data
+    const data = [];
+    for (let i = 0; i < 5; i++) {
+      data[i] = [];
+      for (let j = 0; j < 10; j++) {
+        data[i][j] = '';
+      }
+    }
+
+    // Convert to worksheet
+    const ws = XLSX.utils.aoa_to_sheet(data);
+    
+    // Set column widths
+    ws['!cols'] = [
+      { wch: 15 }, // A
+      { wch: 15 }, // B
+      { wch: 15 }, // C
+      { wch: 15 }, // D
+      { wch: 15 }, // E
+      { wch: 15 }, // F
+      { wch: 15 }, // G
+      { wch: 15 }, // H
+      { wch: 15 }, // I
+      { wch: 15 }, // J
+    ];
+
+    console.log('✅ Instructions sheet created');
+    return ws;
   }
 
   /**
