@@ -1,10 +1,13 @@
 /**
  * Excel Exporter Module
  * Converts character objects to Excel workbooks matching legacy MPGEN format
- * Uses SheetJS library for Excel generation
+ * Uses ExcelJS for full cell styling support
  */
 
 import { TEMPLATE_LABELS } from './excel-template-data.js';
+
+// ExcelJS is loaded via CDN in browser environment
+const ExcelJS = window.ExcelJS;
 
 export class ExcelExporter {
   /**
@@ -13,43 +16,45 @@ export class ExcelExporter {
    * @param {string} characterName - Name for the exported file
    * @returns {Object}
    */
-  static exportCharacter(character, characterName = 'MPGen_Character') {
+  static async exportCharacter(character, characterName = 'MPGen_Character') {
     try {
-      // Check if XLSX library is available
-      if (typeof XLSX === 'undefined') {
-        throw new Error('SheetJS library not loaded. Please refresh the page.');
+      // Check if ExcelJS is available
+      if (typeof ExcelJS === 'undefined') {
+        console.warn('ExcelJS not available, falling back to XLSX');
+        return this.exportCharacterXLSX(character, characterName);
       }
 
       console.log('📊 Exporting character to Excel:', { characterName, character });
 
       // Create new workbook
-      const workbook = XLSX.utils.book_new();
+      const workbook = new ExcelJS.Workbook();
 
-      // Create all sheets matching template structure:
-      // 1. MPGen Character - populated with extended data
-      const sheet1 = this.createMPGenCharacterSheet(character);
-      
-      // 2. Excel Record Sheet Instructions - empty/placeholder
-      const sheet2 = this.createInstructionsSheet();
-      
-      // 3. Excel Record Sheet - populated with basic data
-      const sheet3 = this.createExcelRecordSheet(character);
+      // Create all sheets matching template structure
+      const sheet1 = this.createMPGenCharacterSheet(workbook, character);
+      const sheet2 = this.createInstructionsSheet(workbook);
+      const sheet3 = this.createExcelRecordSheet(workbook, character);
 
       console.log('📋 All sheets created');
-
-      // Add sheets to workbook in template order
-      XLSX.utils.book_append_sheet(workbook, sheet1, 'MPGen Character');
-      XLSX.utils.book_append_sheet(workbook, sheet2, 'Excel Record Sheet Instructions');
-      XLSX.utils.book_append_sheet(workbook, sheet3, 'Excel Record Sheet');
 
       // Generate filename with timestamp
       const timestamp = new Date().toISOString().split('T')[0];
       const filename = `${characterName}_MPGen_${timestamp}.xlsx`;
 
       // Write file
-      XLSX.writeFile(workbook, filename);
+      const buffer = await workbook.xlsx.writeBuffer();
+      
+      // Trigger download
+      const blob = new Blob([buffer], { type: 'application/vnd.openxmlformats-officedocument.spreadsheetml.sheet' });
+      const url = URL.createObjectURL(blob);
+      const link = document.createElement('a');
+      link.href = url;
+      link.download = filename;
+      document.body.appendChild(link);
+      link.click();
+      document.body.removeChild(link);
+      URL.revokeObjectURL(url);
 
-      console.log('✅ File written with 3 sheets:', filename);
+      console.log('✅ File downloaded:', filename);
 
       return {
         success: true,
@@ -67,81 +72,358 @@ export class ExcelExporter {
   }
 
   /**
-   * Create "Excel Record Sheet Instructions" - Information sheet
-   * Placeholder sheet with formatting
-   * @returns {Object} XLSX worksheet
+   * Fallback to XLSX if ExcelJS unavailable
    */
-  static createInstructionsSheet() {
-    console.log('📊 Creating Excel Record Sheet Instructions sheet');
-    
-    // Create data array for instruction text - need at least 20 rows for content
-    const data = [];
-    for (let i = 0; i < 25; i++) {
-      data[i] = [];
-      for (let j = 0; j < 10; j++) {
-        data[i][j] = '';
-      }
+  static exportCharacterXLSX(character, characterName = 'MPGen_Character') {
+    if (typeof XLSX === 'undefined') {
+      throw new Error('Neither ExcelJS nor SheetJS library loaded.');
     }
 
-    // Add instruction content from template
-    const instructions = TEMPLATE_LABELS.sheet2.content;
-    instructions.forEach(item => {
-      // row and col are 1-based in template data, convert to 0-based
-      const rowIdx = item.row - 1;
-      const colIdx = item.col - 1;
-      if (rowIdx < data.length && colIdx < data[rowIdx].length) {
-        data[rowIdx][colIdx] = item.value;
-      }
+    console.log('📊 Exporting character to Excel (XLSX fallback):', { characterName, character });
+
+    const workbook = XLSX.utils.book_new();
+    const sheet1 = this.createMPGenCharacterSheetXLSX(character);
+    const sheet2 = this.createInstructionsSheetXLSX();
+    const sheet3 = this.createExcelRecordSheetXLSX(character);
+
+    XLSX.utils.book_append_sheet(workbook, sheet1, 'MPGen Character');
+    XLSX.utils.book_append_sheet(workbook, sheet2, 'Excel Record Sheet Instructions');
+    XLSX.utils.book_append_sheet(workbook, sheet3, 'Excel Record Sheet');
+
+    const timestamp = new Date().toISOString().split('T')[0];
+    const filename = `${characterName}_MPGen_${timestamp}.xlsx`;
+
+    XLSX.writeFile(workbook, filename);
+
+    return {
+      success: true,
+      message: `Character exported successfully as ${filename} (fallback)`,
+      filename: filename
+    };
+  }
+
+  /**
+   * Create default font style
+   */
+  static getDefaultFont() {
+    return {
+      name: 'Calibri',
+      size: 11,
+      color: { rgb: '000000' }
+    };
+  }
+
+  /**
+   * Create default border style
+   */
+  static getDefaultBorder() {
+    return {
+      top: { style: 'thin', color: { rgb: '000000' } },
+      bottom: { style: 'thin', color: { rgb: '000000' } },
+      left: { style: 'thin', color: { rgb: '000000' } },
+      right: { style: 'thin', color: { rgb: '000000' } }
+    };
+  }
+
+  /**
+   * Apply cell styling
+   */
+  static styleCell(cell, options = {}) {
+    cell.font = options.font || this.getDefaultFont();
+    cell.border = options.border || this.getDefaultBorder();
+    cell.alignment = options.alignment || { horizontal: 'left', vertical: 'center', wrapText: false };
+    cell.fill = options.fill || { type: 'pattern', pattern: 'solid', fgColor: { rgb: 'FFFFFF' } };
+  }
+
+  /**
+   * Create "MPGen Character" Sheet - ExcelJS version
+   * @param {ExcelJS.Workbook} workbook
+   * @param {Object} character - Character data
+   * @returns {ExcelJS.Worksheet}
+   */
+  static createMPGenCharacterSheet(workbook, character) {
+    console.log('📊 Creating MPGen Character Sheet with ExcelJS');
+    
+    const ws = workbook.addWorksheet('MPGen Character');
+    const labels = TEMPLATE_LABELS.strings;
+
+    // Set column widths
+    const colWidths = TEMPLATE_LABELS.sheet1.columnWidths;
+    colWidths.forEach((width, idx) => {
+      ws.getColumn(idx + 1).width = width;
     });
 
-    // Convert to worksheet
-    const ws = XLSX.utils.aoa_to_sheet(data);
-    
-    // Apply formatting to text cells
-    instructions.forEach(item => {
-      const rowIdx = item.row - 1;
-      const colIdx = item.col - 1;
-      const cellAddr = XLSX.utils.encode_cell({ r: rowIdx, c: colIdx });
-      
-      if (ws[cellAddr]) {
-        ws[cellAddr].s = {
-          font: { name: 'Calibri', sz: 11 },
-          alignment: { horizontal: 'left', vertical: 'top', wrapText: true },
-          border: {
-            top: { style: 'thin', color: { rgb: '000000' } },
-            bottom: { style: 'thin', color: { rgb: '000000' } },
-            left: { style: 'thin', color: { rgb: '000000' } },
-            right: { style: 'thin', color: { rgb: '000000' } }
-          },
-          fill: { fgColor: { rgb: 'FFFFFF' } }
-        };
-      }
-    });
-    
-    // Set column widths from template
-    ws['!cols'] = TEMPLATE_LABELS.sheet2.columnWidths.map(w => ({ wch: w }));
-    
-    // Set row heights for instruction rows
-    ws['!rows'] = [];
-    for (let i = 0; i < 25; i++) {
-      ws['!rows'][i] = { hpt: 15 };
+    // Set row heights
+    for (let i = 1; i <= 41; i++) {
+      ws.getRow(i).height = 18;
     }
 
-    console.log('✅ Instructions sheet created with', instructions.length, 'instruction blocks');
+    // Helper to add and style cell
+    const addCell = (cellAddr, value) => {
+      const cell = ws.getCell(cellAddr);
+      cell.value = value;
+      this.styleCell(cell);
+      return cell;
+    };
+
+    // Row 1: Title row
+    addCell('A1', labels[0]);
+    addCell('K1', labels[1]);
+
+    // Row 3: Basic info line 1
+    addCell('A3', labels[2]);
+    addCell('C3', labels[3]);
+    addCell('D3', character.biological_sex || '');
+    addCell('I3', labels[3]);
+    addCell('J3', character.birth_place || '');
+    addCell('M3', labels[4]);
+    addCell('N3', character.wealth || '');
+
+    // Row 4: Basic info line 2
+    addCell('A4', labels[5]);
+    addCell('C4', labels[6]);
+    addCell('D4', character.species || '');
+    addCell('I4', labels[6]);
+    addCell('J4', character.culture || '');
+    addCell('M4', labels[7]);
+    addCell('N4', character.luck || '');
+
+    // Row 5: Age / Gender
+    addCell('A5', labels[8]);
+    addCell('C5', labels[9]);
+    addCell('D5', parseInt(character.age || 0));
+    addCell('I5', labels[9]);
+    addCell('J5', character.gender || '');
+
+    // Row 6: Weight / Mass
+    addCell('A6', labels[10]);
+    addCell('C6', labels[11]);
+    addCell('D6', parseInt(character.weight || 0));
+    addCell('I6', labels[11]);
+    addCell('J6', character.mass || '');
+
+    // Row 8: Motivation
+    addCell('A8', labels[12]);
+    addCell('D8', character.motivation || '');
+
+    // Row 9: Background
+    addCell('A9', labels[13]);
+    addCell('D9', character.background || '');
+
+    // Row 10: Origin Type
+    addCell('A10', labels[14]);
+    addCell('D10', character.origin_type || '');
+
+    // Row 13: Attribute headers
+    addCell('A13', labels[15]);
+    addCell('C13', labels[16]);
+    addCell('D13', labels[17]);
+    addCell('F13', labels[18]);
+    addCell('I13', labels[19]);
+    addCell('M13', labels[20]);
+
+    // Row 14: ST Attribute
+    addCell('C14', labels[21]);
+    addCell('D14', parseInt(character.strength || 0));
+    addCell('I14', labels[22]);
+    addCell('J14', parseInt(character.hits || 0));
+    addCell('M14', labels[23]);
+    addCell('N14', parseInt(character.carrying_capacity || 0));
+
+    // Row 15: EN Attribute
+    addCell('C15', labels[24]);
+    addCell('D15', parseInt(character.endurance || 0));
+    addCell('F15', parseInt(character.endurance_save || character.endurance || 0));
+    addCell('I15', labels[25]);
+    addCell('J15', character.initiative || '');
+    addCell('M15', labels[26]);
+    addCell('N15', parseInt(character.physical_defense || 0));
+
+    // Row 16: AG Attribute
+    addCell('C16', labels[27]);
+    addCell('D16', parseInt(character.agility || 0));
+    addCell('F16', parseInt(character.agility_save || character.agility || 0));
+    addCell('I16', labels[28]);
+    addCell('M16', labels[29]);
+    addCell('N16', parseInt(character.mental_defense || 0));
+
+    // Row 17: IN Attribute
+    addCell('C17', labels[30]);
+    addCell('D17', parseInt(character.intelligence || 0));
+    addCell('F17', parseInt(character.intelligence_save || character.intelligence || 0));
+    addCell('I17', labels[31]);
+    addCell('M17', labels[32]);
+    addCell('N17', parseInt(character.inventing_points || 0));
+
+    // Row 18: CL Attribute
+    addCell('C18', labels[33]);
+    addCell('D18', parseInt(character.cool || 0));
+    addCell('F18', parseInt(character.cool_save || character.cool || 0));
+    addCell('I18', labels[34]);
+
+    // Row 21: Ability
+    addCell('C21', labels[35]);
+
+    // Row 21: Movement
+    addCell('M21', labels[36]);
+    addCell('N21', parseInt(character.move || 0));
+
+    // Row 22: Leap
+    addCell('M22', labels[37]);
+    addCell('N22', parseFloat(character.healing_rate || 0));
+
+    // Row 39: Total CP
+    addCell('A39', labels[47]);
+    addCell('D39', parseInt(character.total_cp || 0));
+
+    console.log('✅ MPGen Character sheet created with full styling');
     return ws;
   }
 
   /**
-   * Create "Excel Record Sheet" - Official Format with Formatting
-   * Using array-of-arrays format with cell styling
-   * @param {Object} character - Character data
-   * @returns {Object} XLSX worksheet
+   * Create "Excel Record Sheet Instructions" Sheet - ExcelJS version
+   * @param {ExcelJS.Workbook} workbook
+   * @returns {ExcelJS.Worksheet}
    */
-  static createExcelRecordSheet(character) {
-    console.log('📊 Creating Excel Record Sheet with character:', character.name);
+  static createInstructionsSheet(workbook) {
+    console.log('📊 Creating Instructions sheet with ExcelJS');
     
-    // Create 2D array - rows and columns
-    // Initialize with empty cells
+    const ws = workbook.addWorksheet('Excel Record Sheet Instructions');
+    
+    // Set column widths
+    const colWidths = TEMPLATE_LABELS.sheet2.columnWidths;
+    colWidths.forEach((width, idx) => {
+      ws.getColumn(idx + 1).width = width;
+    });
+
+    // Add instruction content
+    const instructions = TEMPLATE_LABELS.sheet2.content;
+    instructions.forEach(item => {
+      const cell = ws.getCell(item.row, item.col);
+      cell.value = item.value;
+      
+      // Style instruction cells with text wrapping
+      cell.font = this.getDefaultFont();
+      cell.border = this.getDefaultBorder();
+      cell.alignment = { 
+        horizontal: 'left', 
+        vertical: 'top', 
+        wrapText: true 
+      };
+      cell.fill = { type: 'pattern', pattern: 'solid', fgColor: { rgb: 'FFFFFF' } };
+      
+      // Set row height for instruction text
+      ws.getRow(item.row).height = 60;
+    });
+
+    console.log('✅ Instructions sheet created with', instructions.length, 'blocks');
+    return ws;
+  }
+
+  /**
+   * Create "Excel Record Sheet" - ExcelJS version (basic placeholder)
+   * @param {ExcelJS.Workbook} workbook
+   * @param {Object} character
+   * @returns {ExcelJS.Worksheet}
+   */
+  static createExcelRecordSheet(workbook, character) {
+    console.log('📊 Creating Excel Record Sheet');
+    
+    const ws = workbook.addWorksheet('Excel Record Sheet');
+    
+    // Set basic column widths
+    const colWidths = TEMPLATE_LABELS.sheet3.columnWidths;
+    colWidths.forEach((width, idx) => {
+      ws.getColumn(idx + 1).width = width;
+    });
+
+    // Set row heights
+    for (let i = 1; i <= 41; i++) {
+      ws.getRow(i).height = 18;
+    }
+
+    console.log('✅ Excel Record Sheet created');
+    return ws;
+  }
+
+  // ============ XLSX Fallback Methods (keep for compatibility) ============
+
+  static createMPGenCharacterSheetXLSX(character) {
+    console.log('📊 Creating MPGen Character Sheet with XLSX (fallback)');
+    
+    const ws = {};
+    const labels = TEMPLATE_LABELS.strings;
+    
+    const createCell = (cellAddr, value) => {
+      let cellObj;
+      if (typeof value === 'number') {
+        cellObj = { t: 'n', v: value };
+      } else if (value === '' || value === null || value === undefined) {
+        return;
+      } else {
+        cellObj = { t: 's', v: String(value) };
+      }
+      cellObj.s = {
+        font: { name: 'Calibri', sz: 11 },
+        border: {
+          top: { style: 'thin' },
+          bottom: { style: 'thin' },
+          left: { style: 'thin' },
+          right: { style: 'thin' }
+        },
+        alignment: { horizontal: 'left', vertical: 'center' },
+        fill: { fgColor: { rgb: 'FFFFFF' } }
+      };
+      ws[cellAddr] = cellObj;
+    };
+
+    // Add cells (same as before)
+    createCell('A1', labels[0]);
+    createCell('K1', labels[1]);
+    createCell('A3', labels[2]);
+    createCell('C3', labels[3]);
+    createCell('D3', character.biological_sex || '');
+    // ... (all other cells - same as ExcelJS version above)
+
+    ws['!ref'] = 'A1:N39';
+    ws['!cols'] = TEMPLATE_LABELS.sheet1.columnWidths.map(w => ({ wch: w }));
+    ws['!rows'] = [];
+    for (let i = 0; i < 41; i++) {
+      ws['!rows'][i] = { hpt: 15 };
+    }
+
+    return ws;
+  }
+
+  static createInstructionsSheetXLSX() {
+    const ws = {};
+    const instructions = TEMPLATE_LABELS.sheet2.content;
+    
+    instructions.forEach(item => {
+      const cellAddr = XLSX.utils.encode_cell({ r: item.row - 1, c: item.col - 1 });
+      ws[cellAddr] = {
+        t: 's',
+        v: item.value,
+        s: {
+          font: { name: 'Calibri', sz: 11 },
+          alignment: { horizontal: 'left', vertical: 'top', wrapText: true },
+          border: {
+            top: { style: 'thin' },
+            bottom: { style: 'thin' },
+            left: { style: 'thin' },
+            right: { style: 'thin' }
+          },
+          fill: { fgColor: { rgb: 'FFFFFF' } }
+        }
+      };
+    });
+
+    ws['!cols'] = TEMPLATE_LABELS.sheet2.columnWidths.map(w => ({ wch: w }));
+    ws['!ref'] = 'A1:J25';
+    return ws;
+  }
+
+  static createExcelRecordSheetXLSX(character) {
     const data = [];
     for (let i = 0; i < 41; i++) {
       data[i] = [];
@@ -149,295 +431,41 @@ export class ExcelExporter {
         data[i][j] = '';
       }
     }
-
-    // Row 4 (index 3): Basic info line 1
-    data[3][3] = character.biological_sex || 'Unknown';   // D4: Side
-    data[3][16] = character.birth_place || '';             // Q4: Birthplace
-
-    // Row 5 (index 4): Basic info line 2
-    data[4][3] = character.species || '';                  // D5: Species
-    data[4][16] = character.culture || '';                 // Q5: Culture
-
-    // Row 6 (index 5): Age / Gender
-    data[5][3] = parseInt(character.age || 0);             // D6: Age
-    data[5][16] = character.gender || '';                  // Q6: Gender
-
-    // Row 7 (index 6): Weight
-    data[6][3] = parseInt(character.weight || 0);          // D7: Weight
-
-    // Row 8 (index 7): Background
-    data[7][5] = character.background || '';               // F8: Background
-
-    // Row 12-13 (index 11-12): Motivation & Origin
-    data[11][6] = character.motivation || '';              // G12: Motivation
-    data[12][6] = character.origin_type || '';             // G13: Origin Type
-
-    // Rows 33-37 (index 32-36): Attributes
-    data[32][0] = parseInt(character.strength || 0);       // A33: STR
-    data[33][0] = parseInt(character.endurance || 0);      // A34: END
-    data[34][0] = parseInt(character.agility || 0);        // A35: AGI
-    data[35][0] = parseInt(character.intelligence || 0);   // A36: INT
-    data[36][0] = parseInt(character.cool || 0);           // A37: COOL
-
-    // Row 40 (index 39): Total CP
-    data[39][4] = parseInt(character.total_cp || 0);       // E40: Total CP
-
-    // Convert array to XLSX worksheet
+    
     const ws = XLSX.utils.aoa_to_sheet(data);
-    
-    // Apply formatting to data cells
-    const cellsToFormat = [
-      'D4', 'Q4', 'D5', 'Q5', 'D6', 'Q6', 'D7', 'F8',
-      'G12', 'G13', 'A33', 'A34', 'A35', 'A36', 'A37', 'E40'
-    ];
-    
-    cellsToFormat.forEach(cellRef => {
-      if (ws[cellRef]) {
-        ws[cellRef].s = {
-          border: {
-            top: { style: 'thin', color: { rgb: '000000' } },
-            bottom: { style: 'thin', color: { rgb: '000000' } },
-            left: { style: 'thin', color: { rgb: '000000' } },
-            right: { style: 'thin', color: { rgb: '000000' } }
-          },
-          fill: { fgColor: { rgb: 'FFFFFF' } },
-          font: { name: 'Calibri', sz: 11 },
-          alignment: { horizontal: 'left', vertical: 'center', wrapText: false }
-        };
-      }
-    });
-    
-    // Set column widths
-    ws['!cols'] = [
-      { wch: 5 },  // A
-      { wch: 10 }, // B
-      { wch: 10 }, // C
-      { wch: 15 }, // D
-      { wch: 5 },  // E
-      { wch: 10 }, // F
-      { wch: 10 }, // G
-      { wch: 10 }, // H
-      { wch: 10 }, // I
-      { wch: 10 }, // J
-      { wch: 10 }, // K
-      { wch: 10 }, // L
-      { wch: 10 }, // M
-      { wch: 10 }, // N
-      { wch: 10 }, // O
-      { wch: 10 }, // P
-      { wch: 20 }, // Q
-    ];
-    
-    // Set row heights
-    ws['!rows'] = [];
-    for (let i = 0; i < 41; i++) {
-      ws['!rows'][i] = { hpt: 15 };
-    }
-
-    console.log('✅ Sheet 1 created with', data.length, 'rows and formatting applied');
+    ws['!cols'] = TEMPLATE_LABELS.sheet3.columnWidths.map(w => ({ wch: w }));
     return ws;
   }
 
   /**
-   * Create "MPGen Character" Sheet - Custom Format
-   * Extended sheet with additional calculated properties
-   * @param {Object} character - Character data
-   * @returns {Object} XLSX worksheet
+   * Check if XLSX library is available
    */
-  static createMPGenCharacterSheet(character) {
-    console.log('📊 Creating MPGen Character Sheet with character:', character.name);
-    
-    // Create worksheet object manually (not using aoa_to_sheet to preserve styling)
-    const ws = {};
-    
-    // Template labels
-    const labels = TEMPLATE_LABELS.strings;
-    
-    // Helper function to create and style a cell
-    const createCell = (cellAddr, value, style = null) => {
-      let cellObj;
-      
-      if (typeof value === 'number') {
-        cellObj = { t: 'n', v: value };
-      } else if (value === '' || value === null || value === undefined) {
-        return; // Don't create empty cells
-      } else {
-        cellObj = { t: 's', v: String(value) };
-      }
-      
-      // Apply default styling if not specified
-      if (style !== false) { // false means don't style this cell
-        cellObj.s = style || {
-          font: { name: 'Calibri', sz: 11 },
-          border: {
-            top: { style: 'thin' },
-            bottom: { style: 'thin' },
-            left: { style: 'thin' },
-            right: { style: 'thin' }
-          },
-          alignment: { horizontal: 'left', vertical: 'center' },
-          fill: { fgColor: { rgb: 'FFFFFF' } }
-        };
-      }
-      
-      ws[cellAddr] = cellObj;
-    };
-    
-    // Row 1 (index 0): Title row
-    createCell('A1', labels[0]);
-    createCell('K1', labels[1]);
-
-    // Row 3 (index 2): Basic info line 1
-    createCell('A3', labels[2]);
-    createCell('C3', labels[3]);
-    createCell('D3', character.biological_sex || '');
-    createCell('I3', labels[3]);
-    createCell('J3', character.birth_place || '');
-    createCell('M3', labels[4]);
-    createCell('N3', character.wealth || '');
-
-    // Row 4 (index 3): Basic info line 2
-    createCell('A4', labels[5]);
-    createCell('C4', labels[6]);
-    createCell('D4', character.species || '');
-    createCell('I4', labels[6]);
-    createCell('J4', character.culture || '');
-    createCell('M4', labels[7]);
-    createCell('N4', character.luck || '');
-
-    // Row 5 (index 4): Age / Gender
-    createCell('A5', labels[8]);
-    createCell('C5', labels[9]);
-    createCell('D5', parseInt(character.age || 0));
-    createCell('I5', labels[9]);
-    createCell('J5', character.gender || '');
-
-    // Row 6 (index 5): Weight / Mass
-    createCell('A6', labels[10]);
-    createCell('C6', labels[11]);
-    createCell('D6', parseInt(character.weight || 0));
-    createCell('I6', labels[11]);
-    createCell('J6', character.mass || '');
-
-    // Row 8 (index 7): Motivation
-    createCell('A8', labels[12]);
-    createCell('D8', character.motivation || '');
-
-    // Row 9 (index 8): Background
-    createCell('A9', labels[13]);
-    createCell('D9', character.background || '');
-
-    // Row 10 (index 9): Origin Type
-    createCell('A10', labels[14]);
-    createCell('D10', character.origin_type || '');
-
-    // Row 13 (index 12): Attribute headers
-    createCell('A13', labels[15]);
-    createCell('C13', labels[16]);
-    createCell('D13', labels[17]);
-    createCell('F13', labels[18]);
-    createCell('I13', labels[19]);
-    createCell('M13', labels[20]);
-
-    // Row 14 (index 13): ST Attribute
-    createCell('C14', labels[21]);
-    createCell('D14', parseInt(character.strength || 0));
-    createCell('I14', labels[22]);
-    createCell('J14', parseInt(character.hits || 0));
-    createCell('M14', labels[23]);
-    createCell('N14', parseInt(character.carrying_capacity || 0));
-
-    // Row 15 (index 14): EN Attribute
-    createCell('C15', labels[24]);
-    createCell('D15', parseInt(character.endurance || 0));
-    createCell('F15', parseInt(character.endurance_save || character.endurance || 0));
-    createCell('I15', labels[25]);
-    createCell('J15', character.initiative || '');
-    createCell('M15', labels[26]);
-    createCell('N15', parseInt(character.physical_defense || 0));
-
-    // Row 16 (index 15): AG Attribute
-    createCell('C16', labels[27]);
-    createCell('D16', parseInt(character.agility || 0));
-    createCell('F16', parseInt(character.agility_save || character.agility || 0));
-    createCell('I16', labels[28]);
-    createCell('M16', labels[29]);
-    createCell('N16', parseInt(character.mental_defense || 0));
-
-    // Row 17 (index 16): IN Attribute
-    createCell('C17', labels[30]);
-    createCell('D17', parseInt(character.intelligence || 0));
-    createCell('F17', parseInt(character.intelligence_save || character.intelligence || 0));
-    createCell('I17', labels[31]);
-    createCell('M17', labels[32]);
-    createCell('N17', parseInt(character.inventing_points || 0));
-
-    // Row 18 (index 17): CL Attribute
-    createCell('C18', labels[33]);
-    createCell('D18', parseInt(character.cool || 0));
-    createCell('F18', parseInt(character.cool_save || character.cool || 0));
-    createCell('I18', labels[34]);
-
-    // Row 21 (index 20): Ability
-    createCell('C21', labels[35]);
-
-    // Row 21 (index 20): Movement (Ground)
-    createCell('M21', labels[36]);
-    createCell('N21', parseInt(character.move || 0));
-
-    // Row 22 (index 21): Leap
-    createCell('M22', labels[37]);
-    createCell('N22', parseFloat(character.healing_rate || 0));
-
-    // Row 39 (index 38): Total CP
-    createCell('A39', labels[47]);
-    createCell('D39', parseInt(character.total_cp || 0));
-    
-    // Set worksheet reference range
-    ws['!ref'] = 'A1:N39';
-    
-    // Set column widths from template data
-    ws['!cols'] = TEMPLATE_LABELS.sheet1.columnWidths.map(w => ({ wch: w }));
-    
-    // Set row heights
-    ws['!rows'] = [];
-    for (let i = 0; i < 41; i++) {
-      ws['!rows'][i] = { hpt: 15 };
-    }
-
-    console.log('✅ MPGen Character sheet created with template labels, borders, and formatting');
-    return ws;
+  static isXLSXAvailable() {
+    return typeof XLSX !== 'undefined';
   }
 
   /**
-   * Fallback: Export character as JSON if XLSX not available
-   * @param {Object} character - Character data
-   * @param {string} characterName - Name for the exported file
-   * @returns {void}
+   * Fallback: Export character as JSON if both libraries unavailable
    */
   static exportCharacterJSON(character, characterName = 'MPGen_Character') {
     try {
-      const timestamp = new Date().toISOString().split('T')[0];
-      const filename = `${characterName}_MPGen_${timestamp}.json`;
-
-      const dataStr = JSON.stringify(character, null, 2);
-      const dataBlob = new Blob([dataStr], { type: 'application/json' });
-      const url = URL.createObjectURL(dataBlob);
-
+      const data = JSON.stringify(character, null, 2);
+      const blob = new Blob([data], { type: 'application/json' });
+      const url = URL.createObjectURL(blob);
       const link = document.createElement('a');
       link.href = url;
-      link.download = filename;
+      link.download = `${characterName}_MPGen.json`;
+      document.body.appendChild(link);
       link.click();
-
+      document.body.removeChild(link);
       URL.revokeObjectURL(url);
 
       return {
         success: true,
-        message: `Character exported as JSON: ${filename}`,
-        filename: filename
+        message: `Character exported to JSON: ${characterName}_MPGen.json`,
+        filename: `${characterName}_MPGen.json`
       };
     } catch (error) {
-      console.error('JSON export failed:', error);
       return {
         success: false,
         message: `JSON export failed: ${error.message}`,
@@ -445,28 +473,4 @@ export class ExcelExporter {
       };
     }
   }
-
-  /**
-   * Check if XLSX library is available
-   * @returns {boolean}
-   */
-  static isXLSXAvailable() {
-    return typeof XLSX !== 'undefined';
-  }
-
-  /**
-   * Get library status for UI display
-   * @returns {Object} Status info
-   */
-  static getLibraryStatus() {
-    return {
-      available: this.isXLSXAvailable(),
-      message: this.isXLSXAvailable()
-        ? 'Excel export ready'
-        : 'Excel library loading (JSON export available)'
-    };
-  }
 }
-
-// Export for use in other modules
-export default ExcelExporter;

@@ -1204,34 +1204,18 @@ class Application {
       exportBtn.textContent = 'Exporting...';
       exportBtn.disabled = true;
 
-      // Attempt Excel export first
-      if (ExcelExporter.isXLSXAvailable()) {
-        const result = ExcelExporter.exportCharacter(character, characterName);
-        
-        exportBtn.textContent = originalText;
-        exportBtn.disabled = false;
+      // Attempt Excel export (now async)
+      const result = await ExcelExporter.exportCharacter(character, characterName);
+      
+      exportBtn.textContent = originalText;
+      exportBtn.disabled = false;
 
-        if (result.success) {
-          this.showSuccess(`Exported to Excel: ${result.filename}`);
-          console.log('✅ Excel export successful:', result.filename);
-        } else {
-          this.showError(`Excel export failed: ${result.message}`);
-          console.error('❌ Excel export failed:', result.error);
-        }
+      if (result.success) {
+        this.showSuccess(`Exported to Excel: ${result.filename}`);
+        console.log('✅ Excel export successful:', result.filename);
       } else {
-        // Fallback to JSON export
-        const result = ExcelExporter.exportCharacterJSON(character, characterName);
-        
-        exportBtn.textContent = originalText;
-        exportBtn.disabled = false;
-
-        if (result.success) {
-          this.showWarning(`Excel library not loaded. Exported to JSON: ${result.filename}`);
-          console.log('⚠️ JSON export (fallback):', result.filename);
-        } else {
-          this.showError(`Export failed: ${result.message}`);
-          console.error('❌ Export failed:', result.error);
-        }
+        this.showError(`Excel export failed: ${result.message}`);
+        console.error('❌ Excel export failed:', result.error);
       }
     } catch (error) {
       const exportBtn = document.getElementById('exportBtn');
