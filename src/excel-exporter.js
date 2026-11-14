@@ -74,33 +74,60 @@ export class ExcelExporter {
   static createInstructionsSheet() {
     console.log('📊 Creating Excel Record Sheet Instructions sheet');
     
-    // Create simple placeholder data
+    // Create data array for instruction text - need at least 20 rows for content
     const data = [];
-    for (let i = 0; i < 5; i++) {
+    for (let i = 0; i < 25; i++) {
       data[i] = [];
       for (let j = 0; j < 10; j++) {
         data[i][j] = '';
       }
     }
 
+    // Add instruction content from template
+    const instructions = TEMPLATE_LABELS.sheet2.content;
+    instructions.forEach(item => {
+      // row and col are 1-based in template data, convert to 0-based
+      const rowIdx = item.row - 1;
+      const colIdx = item.col - 1;
+      if (rowIdx < data.length && colIdx < data[rowIdx].length) {
+        data[rowIdx][colIdx] = item.value;
+      }
+    });
+
     // Convert to worksheet
     const ws = XLSX.utils.aoa_to_sheet(data);
     
-    // Set column widths
-    ws['!cols'] = [
-      { wch: 15 }, // A
-      { wch: 15 }, // B
-      { wch: 15 }, // C
-      { wch: 15 }, // D
-      { wch: 15 }, // E
-      { wch: 15 }, // F
-      { wch: 15 }, // G
-      { wch: 15 }, // H
-      { wch: 15 }, // I
-      { wch: 15 }, // J
-    ];
+    // Apply formatting to text cells
+    instructions.forEach(item => {
+      const rowIdx = item.row - 1;
+      const colIdx = item.col - 1;
+      const cellAddr = XLSX.utils.encode_cell({ r: rowIdx, c: colIdx });
+      
+      if (ws[cellAddr]) {
+        ws[cellAddr].s = {
+          font: { name: 'Calibri', sz: 11 },
+          alignment: { horizontal: 'left', vertical: 'top', wrapText: true },
+          border: {
+            top: { style: 'thin', color: { rgb: '000000' } },
+            bottom: { style: 'thin', color: { rgb: '000000' } },
+            left: { style: 'thin', color: { rgb: '000000' } },
+            right: { style: 'thin', color: { rgb: '000000' } }
+          },
+          fill: { fgColor: { rgb: 'FFFFFF' } }
+        };
+      }
+    });
+    
+    // Set column widths from template
+    ws['!cols'] = TEMPLATE_LABELS.sheet2.columnWidths.map(w => ({ wch: w }));
+    
+    // Set row heights for instruction rows
+    ws['!rows'] = [];
+    for (let i = 0; i < 25; i++) {
+      ws['!rows'][i] = { hpt: 15 };
+    }
 
-    console.log('✅ Instructions sheet created');
+    console.log('✅ Instructions sheet created with', instructions.length, 'instruction blocks');
     return ws;
   }
 

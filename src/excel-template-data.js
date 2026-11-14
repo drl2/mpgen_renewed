@@ -98,11 +98,25 @@ export const TEMPLATE_LABELS = {
       'C21': 35,  // Ability
       'M22': 37   // Move (Leap) - has formula
     },
-    columnWidths: [5.28, 1.66, 6.23, 6.67, 4.58, 4.58, 5.09, 4.58, 4.58, 4.58, 4.58, 4.58, 4.58, 4.58, 4.58, 4.58]
+    // Column widths from template XML (columns 1-14 have specific widths)
+    columnWidths: [5.28, 1.66, 6.23, 6.67, 2.36, 7.92, 4.86, 2.08, 7.36, 4.71, 13.47, 3.05, 16.81, 5.42]
   },
 
-  // Sheet 2: Instructions (mostly empty template)
+  // Sheet 2: Instructions - Contains user-friendly instructions for using the export
   sheet2: {
+    // Instructions text content - instructions are in column B, rows 2-20
+    content: [
+      { row: 2, col: 2, value: 'The "Excel Record Sheet" tab is designed to allow MPGen-erated characters to be easily pasted into the character sheet from the official Mighty Protectors Excel Record Sheet Pack from Monkey House Games.  This package is not (quite) free but it\'s so useful that it\'s hard to imagine creating and maintaining characters without it.' },
+      { row: 4, col: 2, value: 'Unfortunately the steps described here may vary between different spreadsheet apps (and different versions of the same app), so the instructions below will require some familiarity with your choice of spreadsheet software.  (For those in need of spreadsheet software, Google Docs and LibreOffice are excellent free choices for Windows.)' },
+      { row: 6, col: 2, value: 'The MPGen discussion page will include gradually-added links to picture-heavy instructions for specific popular software.  Links will also be added under the MHG forum thread.' },
+      { row: 8, col: 2, value: 'You will need a copy of the Official MP sheet where protection on the character sheet has been turned off.  By default there are limited limited areas on the sheet that you can edit, but you\'re going to need to be able to select the upper left corner of the character sheet.' },
+      { row: 10, col: 2, value: 'Step 1:  If you\'ve created a character in MPGen, downloaded this tile, and opened it in your spreadsheet program, you\'re already done step 1.  Congratulations!' },
+      { row: 12, col: 2, value: 'Step 2:  Navigate to the Excel Record Sheet tab and click on the upper-left corner of the grid area – the box to the left of the row letters - to select the entire contents of the tab.  Use your menus or shortcuts (Ctrl-C on Windows) to copy the data.' },
+      { row: 14, col: 2, value: 'Step 3:  Make a copy of the MP character sheet file with a new name and open it.  Navigate to the Character Sheet tab and make sure it\'s unprotected.  Click the upper-left-most cell in the grid – not the whole grid this time, but just cell A1.  Effectively you\'ll be selecting the Mighty Protectors logo across the top, which is anchored in that cell.' },
+      { row: 16, col: 2, value: 'Step 4:  This is where it can get a little tricky.  In addition to a normal "paste" operation, most spreadsheets have a "paste special" operation.  You\'ll need to "paste special" using whatever option on your software will paste only the data from the clipboard, ignoring formatting information and blank areas (i.e. not overwriting anything important on the character sheet).  Paste into the corner you\'ve selected and all the necessary values should be deposited in the correct locations to let the formulas built into the character sheet do their magic.' },
+      { row: 18, col: 2, value: 'Step 5:  Save!' },
+      { row: 20, col: 2, value: 'Step 6:  Finish your character!  MPGen does the random work up to section 2.1.1.6 in the manual – you\'ll still need to work out the details of your powers and weaknesses, as well as thinking about an overall character concept and back-story.  Also note that MPGen does not fill out the right-hand sections of the character sheet regarding bonuses and attack Bcs; those will ultimately need to be filled out after you\'ve set up all your powers and allocated all your weakness points.' }
+    ],
     columnWidths: [15, 15, 15, 15, 15, 15, 15, 15, 15, 15]
   },
 

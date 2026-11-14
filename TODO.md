@@ -5,3 +5,6 @@
 - readme file
 - "notes" section from old site?
 - disclaimer w/monkeyhouse link
+- check stats generation
+- minification
+- deployment
