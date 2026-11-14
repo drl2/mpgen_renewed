@@ -743,6 +743,12 @@ class Application {
       const savedCharacters = this.storage.getCharacters();
       this.state.setState({ savedCharacters });
       
+      // Enable load button if there are saved characters
+      const loadBtn = document.getElementById('loadBtn');
+      if (loadBtn && savedCharacters.length > 0) {
+        loadBtn.disabled = false;
+      }
+      
       console.log('✅ MPGEN Application initialized successfully');
     } catch (error) {
       console.error('❌ Error initializing application:', error);
@@ -759,6 +765,7 @@ class Application {
     const generateBtn = document.getElementById('generateBtn');
     const randomBtn = document.getElementById('randomBtn');
     const saveBtn = document.getElementById('saveBtn');
+    const loadBtn = document.getElementById('loadBtn');
     const birthplaceSelect = document.getElementById('birthplaceSelect');
 
     if (generateBtn) {
@@ -773,10 +780,18 @@ class Application {
       saveBtn.addEventListener('click', () => this.handleSaveClick());
     }
 
+    if (loadBtn) {
+      loadBtn.addEventListener('click', () => this.handleLoadCharacterClick());
+    }
+
     // Setup birthplace cascading logic
     if (birthplaceSelect) {
       birthplaceSelect.addEventListener('change', () => this.handleBirthplaceChange());
     }
+
+    // Export functions globally for modal onclick handlers
+    window.loadCharacterById = (id) => this.loadCharacterById(id);
+    window.deleteCharacterById = (id) => this.deleteCharacterById(id);
 
     console.log('✓ Form handlers attached');
   }
@@ -876,6 +891,12 @@ class Application {
         saveBtn.disabled = false;
       }
       
+      // Always enable load button
+      const loadBtn = document.getElementById('loadBtn');
+      if (loadBtn) {
+        loadBtn.disabled = false;
+      }
+      
       console.log('✅ Character generated successfully:', character);
       
       // Restore button
@@ -925,34 +946,170 @@ class Application {
    * Handle Save button click - save character to localStorage
    */
   async handleSaveClick() {
-    try {
-      const character = this.state.state.currentCharacter;
+    // Open save modal
+    const modal = document.getElementById('saveCharacterModal');
+    const form = document.getElementById('saveCharacterForm');
+    const nameInput = document.getElementById('characterNameInput');
+    const notesInput = document.getElementById('characterNotesInput');
+    
+    // Clear form
+    form.reset();
+    nameInput.focus();
+    
+    // Show modal
+    if (modal) modal.style.display = 'flex';
+    
+    // Setup modal handlers
+    const handleSubmit = async (e) => {
+      e.preventDefault();
       
-      if (!character) {
-        this.showError('No character to save');
-        return;
+      try {
+        const character = this.state.state.currentCharacter;
+        
+        if (!character) {
+          this.showError('No character to save');
+          return;
+        }
+        
+        // Add metadata
+        character.name = nameInput.value || `Character ${Date.now()}`;
+        character.notes = notesInput.value || '';
+        character.createdAt = new Date().toISOString();
+        character.id = character.id || Date.now();
+        
+        // Save to localStorage
+        this.storage.saveCharacter(character);
+        
+        // Update state
+        const savedCharacters = this.storage.getCharacters();
+        this.state.setState({ savedCharacters });
+        
+        // Enable load button
+        const loadBtn = document.getElementById('loadBtn');
+        if (loadBtn) {
+          loadBtn.disabled = false;
+        }
+        
+        // Refresh character list
+        this.ui.renderCharactersList();
+        
+        // Close modal
+        if (modal) modal.style.display = 'none';
+        
+        this.showSuccess(`Character "${character.name}" saved successfully!`);
+        console.log('✅ Character saved:', character.name);
+        
+        // Detach listener
+        form.removeEventListener('submit', handleSubmit);
+        
+      } catch (error) {
+        console.error('❌ Error saving character:', error);
+        this.showError(`Failed to save character: ${error.message}`);
       }
-      
-      // Add timestamp
-      character.createdAt = new Date().toISOString();
-      
-      // Save to localStorage
-      this.storage.saveCharacter(character);
-      
-      // Update state
-      const savedCharacters = this.storage.getCharacters();
-      this.state.setState({ savedCharacters });
-      
-      // Refresh character list
-      this.ui.renderCharactersList();
-      
-      this.showSuccess('Character saved successfully!');
-      console.log('✅ Character saved:', character);
-      
-    } catch (error) {
-      console.error('❌ Error saving character:', error);
-      this.showError(`Failed to save character: ${error.message}`);
+    };
+    
+    form.addEventListener('submit', handleSubmit);
+    
+    // Setup cancel button
+    const cancelBtn = document.getElementById('saveCancelBtn');
+    if (cancelBtn) {
+      cancelBtn.onclick = () => {
+        if (modal) modal.style.display = 'none';
+        form.removeEventListener('submit', handleSubmit);
+      };
     }
+    
+    // Setup close button
+    const closeBtn = document.getElementById('saveCharacterModalClose');
+    if (closeBtn) {
+      closeBtn.onclick = () => {
+        if (modal) modal.style.display = 'none';
+        form.removeEventListener('submit', handleSubmit);
+      };
+    }
+  }
+
+  /**
+   * Show load character modal with list of saved characters
+   */
+  async handleLoadCharacterClick() {
+    const modal = document.getElementById('loadCharacterModal');
+    const list = document.getElementById('savedCharactersList');
+    
+    if (!modal) return;
+    
+    const characters = this.storage.getCharacters();
+    
+    if (characters.length === 0) {
+      list.innerHTML = '<p class="empty-state">No saved characters yet</p>';
+    } else {
+      list.innerHTML = characters.map(char => `
+        <div class="character-item">
+          <div class="character-item-name">${char.name || 'Unnamed'}</div>
+          <div class="character-item-meta">${char.species || 'Unknown'}</div>
+          <div class="character-item-meta">${new Date(char.createdAt).toLocaleDateString()}</div>
+          ${char.notes ? `<div class="character-item-meta"><em>${char.notes.substring(0, 50)}...</em></div>` : ''}
+          <div class="character-item-actions">
+            <button class="btn btn-load btn-sm" onclick="window.loadCharacterById(${char.id})">Load</button>
+            <button class="btn btn-delete btn-sm" onclick="window.deleteCharacterById(${char.id})">Delete</button>
+          </div>
+        </div>
+      `).join('');
+    }
+    
+    // Show modal
+    modal.style.display = 'flex';
+    
+    // Setup close button
+    const closeBtn = document.getElementById('loadCharacterModalClose');
+    if (closeBtn) {
+      closeBtn.onclick = () => {
+        modal.style.display = 'none';
+      };
+    }
+  }
+
+  /**
+   * Load a character by ID and display it
+   */
+  loadCharacterById(id) {
+    const character = this.storage.getCharacter(id);
+    
+    if (!character) {
+      this.showError('Character not found');
+      return;
+    }
+    
+    this.state.setState({ currentCharacter: character });
+    this.displayCharacter(character);
+    
+    // Close modal
+    const modal = document.getElementById('loadCharacterModal');
+    if (modal) modal.style.display = 'none';
+    
+    this.showSuccess(`Loaded character "${character.name}"`);
+    console.log('✅ Character loaded:', character.name);
+  }
+
+  /**
+   * Delete a character by ID
+   */
+  deleteCharacterById(id) {
+    if (!confirm('Are you sure you want to delete this character?')) {
+      return;
+    }
+    
+    const character = this.storage.getCharacter(id);
+    this.storage.deleteCharacter(id);
+    
+    const savedCharacters = this.storage.getCharacters();
+    this.state.setState({ savedCharacters });
+    
+    // Refresh list
+    this.handleLoadCharacterClick();
+    
+    this.showSuccess(`Character "${character.name}" deleted`);
+    console.log('✅ Character deleted:', character.name);
   }
 
   /**
