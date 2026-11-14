@@ -21,7 +21,7 @@ const LABEL_STYLE = {
   bold: true,
   fontSize: 11,
   fontFamily: 'Calibri',
-  fill: 'd9e1f2',  // Light blue background from template
+  // NO fill/background color for labels - they should be plain white
   border: {
     top: { style: 'thin', color: '000000' },
     bottom: { style: 'thin', color: '000000' },
@@ -181,11 +181,13 @@ function configureSheet2(sheet) {
   // Set column widths if available
   if (sheet2Widths) {
     sheet2Widths.slice(0, 10).forEach((width, index) => {
-      sheet.column(index + 1).width(width);
+      // Column B (index 1) needs to be wider for wrapped text instructions
+      const columnWidth = index === 1 ? 80 : width;
+      sheet.column(index + 1).width(columnWidth);
     });
   } else {
     // Default widths for sheet 2
-    sheet.column(2).width(50);
+    sheet.column(2).width(80); // Column B for instructions
   }
   
   // Add title in B1
