@@ -1196,7 +1196,6 @@ class Application {
 
     try {
       const character = this.state.state.currentCharacter;
-      const characterName = character.name || 'Character';
 
       // Show loading state
       const exportBtn = document.getElementById('exportBtn');
@@ -1204,19 +1203,13 @@ class Application {
       exportBtn.textContent = 'Exporting...';
       exportBtn.disabled = true;
 
-      // Attempt Excel export (now async)
-      const result = await ExcelExporter.exportCharacter(character, characterName);
+      // Perform Excel export (async, throws on error)
+      await ExcelExporter.exportCharacter(character);
       
       exportBtn.textContent = originalText;
       exportBtn.disabled = false;
-
-      if (result.success) {
-        this.showSuccess(`Exported to Excel: ${result.filename}`);
-        console.log('✅ Excel export successful:', result.filename);
-      } else {
-        this.showError(`Excel export failed: ${result.message}`);
-        console.error('❌ Excel export failed:', result.error);
-      }
+      this.showSuccess(`Exported character: ${character.name || 'Character'}`);
+      console.log('✅ Excel export successful');
     } catch (error) {
       const exportBtn = document.getElementById('exportBtn');
       exportBtn.textContent = 'Export to Excel';
