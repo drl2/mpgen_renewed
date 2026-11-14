@@ -1134,7 +1134,7 @@ class Application {
     const character = this.storage.getCharacter(id);
     if (!character) {
       console.error('❌ Character not found. Available characters:', this.storage.getCharacters().map(c => ({ id: c.id, type: typeof c.id })));
-      this.ui.showError('Character not found');
+      this.showError('Character not found');
       return;
     }
     
@@ -1170,7 +1170,7 @@ class Application {
       }
     }
     
-    this.ui.showSuccess(`Character "${characterName}" deleted`);
+    this.showSuccess(`Character "${characterName}" deleted`);
     console.log('✅ Character deleted:', characterName);
   }
 
