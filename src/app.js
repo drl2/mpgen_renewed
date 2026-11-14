@@ -910,10 +910,11 @@ class Application {
         exportBtn.disabled = false;
       }
       
-      // Always enable load button
+      // Enable load button only if there are saved characters
       const loadBtn = document.getElementById('loadBtn');
       if (loadBtn) {
-        loadBtn.disabled = false;
+        const savedCharacters = this.storage.getCharacters();
+        loadBtn.disabled = savedCharacters.length === 0;
       }
       
       console.log('✅ Character generated successfully:', character);
@@ -1109,8 +1110,12 @@ class Application {
     const exportBtn = document.getElementById('exportBtn');
     if (exportBtn) exportBtn.disabled = false;
     
+    // Load button state depends on whether there are saved characters
     const loadBtn = document.getElementById('loadBtn');
-    if (loadBtn) loadBtn.disabled = false;
+    if (loadBtn) {
+      const savedCharacters = this.storage.getCharacters();
+      loadBtn.disabled = savedCharacters.length === 0;
+    }
     
     // Close modal
     const modal = document.getElementById('loadCharacterModal');
