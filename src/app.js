@@ -580,9 +580,14 @@ class UIController {
     
     const html = characters.map(char => `
       <div class="character-card-preview">
-        <div class="character-card-name">${char.name}</div>
-        <div class="character-card-meta">${char.species || 'Unknown'}</div>
-        <div class="character-card-meta">${new Date(char.createdAt).toLocaleDateString()}</div>
+        <div class="character-card-content">
+          <div class="character-card-name">${char.name}</div>
+          <div class="character-card-meta">${char.species || 'Unknown'}</div>
+          <div class="character-card-meta">${new Date(char.createdAt).toLocaleDateString()}</div>
+        </div>
+        <button class="character-card-delete" onclick="window.deleteCharacterById(${char.id})" title="Delete character">
+          <span class="trash-icon">🗑️</span>
+        </button>
       </div>
     `).join('');
     
