@@ -1,0 +1,884 @@
+[
+  {
+    "id": 1,
+    "min_roll": 1,
+    "max_roll": 2,
+    "ability": "Absorption",
+    "ability_type_id": 1
+  },
+  {
+    "id": 2,
+    "min_roll": 3,
+    "max_roll": 4,
+    "ability": "Chemical Abilities",
+    "ability_type_id": 1
+  },
+  {
+    "id": 3,
+    "min_roll": 5,
+    "max_roll": 8,
+    "ability": "DeathTouch",
+    "ability_type_id": 1
+  },
+  {
+    "id": 4,
+    "min_roll": 9,
+    "max_roll": 12,
+    "ability": "Devitalization Ray",
+    "ability_type_id": 1
+  },
+  {
+    "id": 5,
+    "min_roll": 13,
+    "max_roll": 14,
+    "ability": "Disintegration",
+    "ability_type_id": 1
+  },
+  {
+    "id": 6,
+    "min_roll": 15,
+    "max_roll": 18,
+    "ability": "Emotion Control",
+    "ability_type_id": 1
+  },
+  {
+    "id": 7,
+    "min_roll": 19,
+    "max_roll": 19,
+    "ability": "Experience Levels",
+    "ability_type_id": 1
+  },
+  {
+    "id": 8,
+    "min_roll": 20,
+    "max_roll": 21,
+    "ability": "Flame Abilities",
+    "ability_type_id": 1
+  },
+  {
+    "id": 9,
+    "min_roll": 22,
+    "max_roll": 23,
+    "ability": "Force Field",
+    "ability_type_id": 1
+  },
+  {
+    "id": 10,
+    "min_roll": 24,
+    "max_roll": 25,
+    "ability": "Grapnel",
+    "ability_type_id": 1
+  },
+  {
+    "id": 11,
+    "min_roll": 26,
+    "max_roll": 27,
+    "ability": "Gravity Control",
+    "ability_type_id": 1
+  },
+  {
+    "id": 12,
+    "min_roll": 28,
+    "max_roll": 29,
+    "ability": "Heightened Agility",
+    "ability_type_id": 1
+  },
+  {
+    "id": 13,
+    "min_roll": 30,
+    "max_roll": 33,
+    "ability": "Heightened Attack",
+    "ability_type_id": 1
+  },
+  {
+    "id": 14,
+    "min_roll": 34,
+    "max_roll": 37,
+    "ability": "Heightened Expertise",
+    "ability_type_id": 1
+  },
+  {
+    "id": 15,
+    "min_roll": 38,
+    "max_roll": 41,
+    "ability": "Heightened Strength",
+    "ability_type_id": 1
+  },
+  {
+    "id": 16,
+    "min_roll": 42,
+    "max_roll": 43,
+    "ability": "Ice Abilities",
+    "ability_type_id": 1
+  },
+  {
+    "id": 17,
+    "min_roll": 44,
+    "max_roll": 45,
+    "ability": "Light Control",
+    "ability_type_id": 1
+  },
+  {
+    "id": 18,
+    "min_roll": 46,
+    "max_roll": 47,
+    "ability": "Lightning Control",
+    "ability_type_id": 1
+  },
+  {
+    "id": 19,
+    "min_roll": 48,
+    "max_roll": 48,
+    "ability": "Magnetism",
+    "ability_type_id": 1
+  },
+  {
+    "id": 20,
+    "min_roll": 49,
+    "max_roll": 52,
+    "ability": "Mind Control",
+    "ability_type_id": 1
+  },
+  {
+    "id": 21,
+    "min_roll": 53,
+    "max_roll": 56,
+    "ability": "Natural Weaponry",
+    "ability_type_id": 1
+  },
+  {
+    "id": 22,
+    "min_roll": 57,
+    "max_roll": 60,
+    "ability": "Paralysis Ray",
+    "ability_type_id": 1
+  },
+  {
+    "id": 23,
+    "min_roll": 61,
+    "max_roll": 64,
+    "ability": "Poison/Venom",
+    "ability_type_id": 1
+  },
+  {
+    "id": 24,
+    "min_roll": 65,
+    "max_roll": 69,
+    "ability": "Power Blast",
+    "ability_type_id": 1
+  },
+  {
+    "id": 25,
+    "min_roll": 70,
+    "max_roll": 71,
+    "ability": "Reflection",
+    "ability_type_id": 1
+  },
+  {
+    "id": 26,
+    "min_roll": 72,
+    "max_roll": 75,
+    "ability": "Repulsion Blast",
+    "ability_type_id": 1
+  },
+  {
+    "id": 27,
+    "min_roll": 76,
+    "max_roll": 77,
+    "ability": "Shaping",
+    "ability_type_id": 1
+  },
+  {
+    "id": 28,
+    "min_roll": 78,
+    "max_roll": 81,
+    "ability": "Siphon",
+    "ability_type_id": 1
+  },
+  {
+    "id": 29,
+    "min_roll": 82,
+    "max_roll": 83,
+    "ability": "Sonic Abilities",
+    "ability_type_id": 1
+  },
+  {
+    "id": 30,
+    "min_roll": 84,
+    "max_roll": 87,
+    "ability": "Special Weapon",
+    "ability_type_id": 1
+  },
+  {
+    "id": 31,
+    "min_roll": 88,
+    "max_roll": 88,
+    "ability": "Telekinesis",
+    "ability_type_id": 1
+  },
+  {
+    "id": 32,
+    "min_roll": 89,
+    "max_roll": 92,
+    "ability": "Transmutation",
+    "ability_type_id": 1
+  },
+  {
+    "id": 33,
+    "min_roll": 93,
+    "max_roll": 94,
+    "ability": "Vibration Abilities",
+    "ability_type_id": 1
+  },
+  {
+    "id": 34,
+    "min_roll": 95,
+    "max_roll": 98,
+    "ability": "Weakness Detection",
+    "ability_type_id": 1
+  },
+  {
+    "id": 35,
+    "min_roll": 99,
+    "max_roll": 100,
+    "ability": "Weather Control",
+    "ability_type_id": 1
+  },
+  {
+    "id": 36,
+    "min_roll": 1,
+    "max_roll": 3,
+    "ability": "Absorption",
+    "ability_type_id": 2
+  },
+  {
+    "id": 37,
+    "min_roll": 4,
+    "max_roll": 8,
+    "ability": "Adaptation",
+    "ability_type_id": 2
+  },
+  {
+    "id": 38,
+    "min_roll": 9,
+    "max_roll": 14,
+    "ability": "Armor",
+    "ability_type_id": 2
+  },
+  {
+    "id": 39,
+    "min_roll": 15,
+    "max_roll": 17,
+    "ability": "Astral Projection",
+    "ability_type_id": 2
+  },
+  {
+    "id": 40,
+    "min_roll": 18,
+    "max_roll": 19,
+    "ability": "Chemical Abilities",
+    "ability_type_id": 2
+  },
+  {
+    "id": 41,
+    "min_roll": 20,
+    "max_roll": 24,
+    "ability": "Darkness Control",
+    "ability_type_id": 2
+  },
+  {
+    "id": 42,
+    "min_roll": 25,
+    "max_roll": 28,
+    "ability": "Density Change",
+    "ability_type_id": 2
+  },
+  {
+    "id": 43,
+    "min_roll": 29,
+    "max_roll": 30,
+    "ability": "Disintegration",
+    "ability_type_id": 2
+  },
+  {
+    "id": 44,
+    "min_roll": 31,
+    "max_roll": 35,
+    "ability": "Durability",
+    "ability_type_id": 2
+  },
+  {
+    "id": 45,
+    "min_roll": 36,
+    "max_roll": 37,
+    "ability": "Experience Levels",
+    "ability_type_id": 2
+  },
+  {
+    "id": 46,
+    "min_roll": 38,
+    "max_roll": 38,
+    "ability": "Flame Abilities",
+    "ability_type_id": 2
+  },
+  {
+    "id": 47,
+    "min_roll": 39,
+    "max_roll": 41,
+    "ability": "Force Field",
+    "ability_type_id": 2
+  },
+  {
+    "id": 48,
+    "min_roll": 42,
+    "max_roll": 43,
+    "ability": "Gravity Control",
+    "ability_type_id": 2
+  },
+  {
+    "id": 49,
+    "min_roll": 44,
+    "max_roll": 46,
+    "ability": "Heightened Agility",
+    "ability_type_id": 2
+  },
+  {
+    "id": 50,
+    "min_roll": 47,
+    "max_roll": 51,
+    "ability": "Heightened Defense",
+    "ability_type_id": 2
+  },
+  {
+    "id": 51,
+    "min_roll": 52,
+    "max_roll": 56,
+    "ability": "Heightened Endurance",
+    "ability_type_id": 2
+  },
+  {
+    "id": 52,
+    "min_roll": 57,
+    "max_roll": 57,
+    "ability": "Ice Abilities",
+    "ability_type_id": 2
+  },
+  {
+    "id": 53,
+    "min_roll": 58,
+    "max_roll": 62,
+    "ability": "Invisibility",
+    "ability_type_id": 2
+  },
+  {
+    "id": 54,
+    "min_roll": 63,
+    "max_roll": 67,
+    "ability": "Invulnerability",
+    "ability_type_id": 2
+  },
+  {
+    "id": 55,
+    "min_roll": 68,
+    "max_roll": 72,
+    "ability": "Life Support",
+    "ability_type_id": 2
+  },
+  {
+    "id": 56,
+    "min_roll": 73,
+    "max_roll": 73,
+    "ability": "Light Control",
+    "ability_type_id": 2
+  },
+  {
+    "id": 57,
+    "min_roll": 74,
+    "max_roll": 74,
+    "ability": "Lightning Control",
+    "ability_type_id": 2
+  },
+  {
+    "id": 58,
+    "min_roll": 75,
+    "max_roll": 76,
+    "ability": "Magnetism",
+    "ability_type_id": 2
+  },
+  {
+    "id": 59,
+    "min_roll": 77,
+    "max_roll": 81,
+    "ability": "Non-Corporealness",
+    "ability_type_id": 2
+  },
+  {
+    "id": 60,
+    "min_roll": 82,
+    "max_roll": 84,
+    "ability": "Reflection",
+    "ability_type_id": 2
+  },
+  {
+    "id": 61,
+    "min_roll": 85,
+    "max_roll": 89,
+    "ability": "Regeneration",
+    "ability_type_id": 2
+  },
+  {
+    "id": 62,
+    "min_roll": 90,
+    "max_roll": 94,
+    "ability": "Shield",
+    "ability_type_id": 2
+  },
+  {
+    "id": 63,
+    "min_roll": 95,
+    "max_roll": 95,
+    "ability": "Stretching Abilities",
+    "ability_type_id": 2
+  },
+  {
+    "id": 64,
+    "min_roll": 96,
+    "max_roll": 97,
+    "ability": "Telekinesis",
+    "ability_type_id": 2
+  },
+  {
+    "id": 65,
+    "min_roll": 98,
+    "max_roll": 100,
+    "ability": "Vibration Abilities",
+    "ability_type_id": 2
+  },
+  {
+    "id": 66,
+    "min_roll": 1,
+    "max_roll": 5,
+    "ability": "Diminished Senses",
+    "ability_type_id": 3
+  },
+  {
+    "id": 67,
+    "min_roll": 6,
+    "max_roll": 10,
+    "ability": "Distinctive",
+    "ability_type_id": 3
+  },
+  {
+    "id": 68,
+    "min_roll": 11,
+    "max_roll": 15,
+    "ability": "Low Self-control",
+    "ability_type_id": 3
+  },
+  {
+    "id": 69,
+    "min_roll": 16,
+    "max_roll": 20,
+    "ability": "Lowered Intelligence",
+    "ability_type_id": 3
+  },
+  {
+    "id": 70,
+    "min_roll": 21,
+    "max_roll": 25,
+    "ability": "Nemesis",
+    "ability_type_id": 3
+  },
+  {
+    "id": 71,
+    "min_roll": 26,
+    "max_roll": 30,
+    "ability": "Personal Problem",
+    "ability_type_id": 3
+  },
+  {
+    "id": 72,
+    "min_roll": 31,
+    "max_roll": 35,
+    "ability": "Phobia",
+    "ability_type_id": 3
+  },
+  {
+    "id": 73,
+    "min_roll": 36,
+    "max_roll": 40,
+    "ability": "Physical Disability",
+    "ability_type_id": 3
+  },
+  {
+    "id": 74,
+    "min_roll": 41,
+    "max_roll": 45,
+    "ability": "Poverty",
+    "ability_type_id": 3
+  },
+  {
+    "id": 75,
+    "min_roll": 46,
+    "max_roll": 50,
+    "ability": "Prejudice",
+    "ability_type_id": 3
+  },
+  {
+    "id": 76,
+    "min_roll": 51,
+    "max_roll": 55,
+    "ability": "Psychosis",
+    "ability_type_id": 3
+  },
+  {
+    "id": 77,
+    "min_roll": 56,
+    "max_roll": 60,
+    "ability": "Reduced Agility",
+    "ability_type_id": 3
+  },
+  {
+    "id": 78,
+    "min_roll": 61,
+    "max_roll": 65,
+    "ability": "Reduced Cool",
+    "ability_type_id": 3
+  },
+  {
+    "id": 79,
+    "min_roll": 66,
+    "max_roll": 70,
+    "ability": "Reduced Endurance",
+    "ability_type_id": 3
+  },
+  {
+    "id": 80,
+    "min_roll": 71,
+    "max_roll": 75,
+    "ability": "Reduced Strength",
+    "ability_type_id": 3
+  },
+  {
+    "id": 81,
+    "min_roll": 76,
+    "max_roll": 80,
+    "ability": "Special Requirement",
+    "ability_type_id": 3
+  },
+  {
+    "id": 82,
+    "min_roll": 81,
+    "max_roll": 85,
+    "ability": "Susceptibility",
+    "ability_type_id": 3
+  },
+  {
+    "id": 83,
+    "min_roll": 86,
+    "max_roll": 90,
+    "ability": "Uneducated",
+    "ability_type_id": 3
+  },
+  {
+    "id": 84,
+    "min_roll": 91,
+    "max_roll": 95,
+    "ability": "Unliving",
+    "ability_type_id": 3
+  },
+  {
+    "id": 85,
+    "min_roll": 96,
+    "max_roll": 100,
+    "ability": "Vulnerability",
+    "ability_type_id": 3
+  },
+  {
+    "id": 86,
+    "min_roll": 1,
+    "max_roll": 2,
+    "ability": "Animal/Plant Abilities",
+    "ability_type_id": 4
+  },
+  {
+    "id": 87,
+    "min_roll": 3,
+    "max_roll": 4,
+    "ability": "Arsenal",
+    "ability_type_id": 4
+  },
+  {
+    "id": 88,
+    "min_roll": 5,
+    "max_roll": 5,
+    "ability": "Astral Projection",
+    "ability_type_id": 4
+  },
+  {
+    "id": 89,
+    "min_roll": 6,
+    "max_roll": 7,
+    "ability": "Base",
+    "ability_type_id": 4
+  },
+  {
+    "id": 90,
+    "min_roll": 8,
+    "max_roll": 9,
+    "ability": "Communication",
+    "ability_type_id": 4
+  },
+  {
+    "id": 91,
+    "min_roll": 10,
+    "max_roll": 11,
+    "ability": "Companion",
+    "ability_type_id": 4
+  },
+  {
+    "id": 92,
+    "min_roll": 12,
+    "max_roll": 13,
+    "ability": "Cosmic Awareness",
+    "ability_type_id": 4
+  },
+  {
+    "id": 93,
+    "min_roll": 14,
+    "max_roll": 15,
+    "ability": "Cybernetics",
+    "ability_type_id": 4
+  },
+  {
+    "id": 94,
+    "min_roll": 16,
+    "max_roll": 17,
+    "ability": "Dimensional Travel",
+    "ability_type_id": 4
+  },
+  {
+    "id": 95,
+    "min_roll": 18,
+    "max_roll": 19,
+    "ability": "Duplication",
+    "ability_type_id": 4
+  },
+  {
+    "id": 96,
+    "min_roll": 20,
+    "max_roll": 21,
+    "ability": "Energy",
+    "ability_type_id": 4
+  },
+  {
+    "id": 97,
+    "min_roll": 22,
+    "max_roll": 23,
+    "ability": "Experience Levels",
+    "ability_type_id": 4
+  },
+  {
+    "id": 98,
+    "min_roll": 24,
+    "max_roll": 26,
+    "ability": "Flight",
+    "ability_type_id": 4
+  },
+  {
+    "id": 99,
+    "min_roll": 27,
+    "max_roll": 27,
+    "ability": "Grapnel",
+    "ability_type_id": 4
+  },
+  {
+    "id": 100,
+    "min_roll": 28,
+    "max_roll": 29,
+    "ability": "Healing",
+    "ability_type_id": 4
+  },
+  {
+    "id": 101,
+    "min_roll": 30,
+    "max_roll": 31,
+    "ability": "Heightend Cool",
+    "ability_type_id": 4
+  },
+  {
+    "id": 102,
+    "min_roll": 32,
+    "max_roll": 33,
+    "ability": "Heightened Initiative",
+    "ability_type_id": 4
+  },
+  {
+    "id": 103,
+    "min_roll": 34,
+    "max_roll": 35,
+    "ability": "Heightened Intelligence",
+    "ability_type_id": 4
+  },
+  {
+    "id": 104,
+    "min_roll": 36,
+    "max_roll": 37,
+    "ability": "Heightened Senses",
+    "ability_type_id": 4
+  },
+  {
+    "id": 105,
+    "min_roll": 38,
+    "max_roll": 39,
+    "ability": "Illusions",
+    "ability_type_id": 4
+  },
+  {
+    "id": 106,
+    "min_roll": 40,
+    "max_roll": 41,
+    "ability": "Inventing",
+    "ability_type_id": 4
+  },
+  {
+    "id": 107,
+    "min_roll": 42,
+    "max_roll": 47,
+    "ability": "Knowledge",
+    "ability_type_id": 4
+  },
+  {
+    "id": 108,
+    "min_roll": 48,
+    "max_roll": 49,
+    "ability": "Luck",
+    "ability_type_id": 4
+  },
+  {
+    "id": 109,
+    "min_roll": 50,
+    "max_roll": 55,
+    "ability": "Mental Ability",
+    "ability_type_id": 4
+  },
+  {
+    "id": 110,
+    "min_roll": 56,
+    "max_roll": 57,
+    "ability": "Negation",
+    "ability_type_id": 4
+  },
+  {
+    "id": 111,
+    "min_roll": 58,
+    "max_roll": 63,
+    "ability": "Physical Ability",
+    "ability_type_id": 4
+  },
+  {
+    "id": 112,
+    "min_roll": 64,
+    "max_roll": 65,
+    "ability": "Revivification",
+    "ability_type_id": 4
+  },
+  {
+    "id": 113,
+    "min_roll": 66,
+    "max_roll": 67,
+    "ability": "Shapre=Shifting",
+    "ability_type_id": 4
+  },
+  {
+    "id": 114,
+    "min_roll": 68,
+    "max_roll": 68,
+    "ability": "Shaping",
+    "ability_type_id": 4
+  },
+  {
+    "id": 115,
+    "min_roll": 69,
+    "max_roll": 70,
+    "ability": "Size Change",
+    "ability_type_id": 4
+  },
+  {
+    "id": 116,
+    "min_roll": 71,
+    "max_roll": 73,
+    "ability": "Speed",
+    "ability_type_id": 4
+  },
+  {
+    "id": 117,
+    "min_roll": 74,
+    "max_roll": 76,
+    "ability": "Stretching Abilities",
+    "ability_type_id": 4
+  },
+  {
+    "id": 118,
+    "min_roll": 77,
+    "max_roll": 78,
+    "ability": "Summoning",
+    "ability_type_id": 4
+  },
+  {
+    "id": 119,
+    "min_roll": 79,
+    "max_roll": 81,
+    "ability": "Super Speed",
+    "ability_type_id": 4
+  },
+  {
+    "id": 120,
+    "min_roll": 82,
+    "max_roll": 83,
+    "ability": "Telepathy",
+    "ability_type_id": 4
+  },
+  {
+    "id": 121,
+    "min_roll": 84,
+    "max_roll": 86,
+    "ability": "Teleportation",
+    "ability_type_id": 4
+  },
+  {
+    "id": 122,
+    "min_roll": 87,
+    "max_roll": 88,
+    "ability": "Transformation",
+    "ability_type_id": 4
+  },
+  {
+    "id": 123,
+    "min_roll": 89,
+    "max_roll": 91,
+    "ability": "Vehicle",
+    "ability_type_id": 4
+  },
+  {
+    "id": 124,
+    "min_roll": 92,
+    "max_roll": 93,
+    "ability": "Wealth",
+    "ability_type_id": 4
+  },
+  {
+    "id": 125,
+    "min_roll": 94,
+    "max_roll": 94,
+    "ability": "Weather Control",
+    "ability_type_id": 4
+  },
+  {
+    "id": 126,
+    "min_roll": 95,
+    "max_roll": 100,
+    "ability": "Willpower",
+    "ability_type_id": 4
+  }
+]

@@ -1,0 +1,140 @@
+[
+  {
+    "id": 1,
+    "min_roll": 1,
+    "max_roll": 5,
+    "background": "Medicine"
+  },
+  {
+    "id": 2,
+    "min_roll": 6,
+    "max_roll": 9,
+    "background": "Law"
+  },
+  {
+    "id": 3,
+    "min_roll": 10,
+    "max_roll": 14,
+    "background": "Engineering/Technology"
+  },
+  {
+    "id": 4,
+    "min_roll": 15,
+    "max_roll": 19,
+    "background": "Security/Law Enforcement"
+  },
+  {
+    "id": 5,
+    "min_roll": 20,
+    "max_roll": 20,
+    "background": "Fine Art"
+  },
+  {
+    "id": 6,
+    "min_roll": 21,
+    "max_roll": 23,
+    "background": "Commercial Art"
+  },
+  {
+    "id": 7,
+    "min_roll": 24,
+    "max_roll": 26,
+    "background": "Performing Art"
+  },
+  {
+    "id": 8,
+    "min_roll": 27,
+    "max_roll": 31,
+    "background": "Social Work/Charity"
+  },
+  {
+    "id": 9,
+    "min_roll": 32,
+    "max_roll": 36,
+    "background": "Media/Communications"
+  },
+  {
+    "id": 10,
+    "min_roll": 37,
+    "max_roll": 40,
+    "background": "Sports"
+  },
+  {
+    "id": 11,
+    "min_roll": 41,
+    "max_roll": 44,
+    "background": "Education/Academia"
+  },
+  {
+    "id": 12,
+    "min_roll": 45,
+    "max_roll": 49,
+    "background": "Crime"
+  },
+  {
+    "id": 13,
+    "min_roll": 50,
+    "max_roll": 53,
+    "background": "Military"
+  },
+  {
+    "id": 14,
+    "min_roll": 54,
+    "max_roll": 58,
+    "background": "Government"
+  },
+  {
+    "id": 15,
+    "min_roll": 59,
+    "max_roll": 63,
+    "background": "Agriculture"
+  },
+  {
+    "id": 16,
+    "min_roll": 64,
+    "max_roll": 67,
+    "background": "Research/Science"
+  },
+  {
+    "id": 17,
+    "min_roll": 68,
+    "max_roll": 71,
+    "background": "Religion/Mysticism"
+  },
+  {
+    "id": 18,
+    "min_roll": 72,
+    "max_roll": 75,
+    "background": "Psychology"
+  },
+  {
+    "id": 19,
+    "min_roll": 76,
+    "max_roll": 80,
+    "background": "Labor/Manufacturing"
+  },
+  {
+    "id": 20,
+    "min_roll": 81,
+    "max_roll": 85,
+    "background": "Business/Sales"
+  },
+  {
+    "id": 21,
+    "min_roll": 86,
+    "max_roll": 90,
+    "background": "Accounting/Finance"
+  },
+  {
+    "id": 22,
+    "min_roll": 91,
+    "max_roll": 95,
+    "background": "Travel/Transportation"
+  },
+  {
+    "id": 23,
+    "min_roll": 96,
+    "max_roll": 100,
+    "background": "Hunting/Survival"
+  }
+]

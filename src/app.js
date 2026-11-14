@@ -167,26 +167,41 @@ class DataLoader {
    */
   async loadAll() {
     try {
+      // All 33 data tables extracted from Python database
       const tables = [
-        'worlds',
-        'timePeriods',
+        'ability',
+        'abilitytype',
+        'background',
+        'bcdetail',
+        'bcpowerlevelminmax',
+        'biologicalsex',
+        'birthplace',
+        'bodytype',
+        'culture',
+        'genderexpression',
+        'genderidentity',
+        'knownregion',
+        'lostregion',
+        'lostregionculture',
+        'lostregionspecies',
+        'motivation',
+        'origintype',
+        'otherdimension',
+        'otherdimensionculture',
+        'otherdimensionspecies',
+        'otherworld',
+        'otherworldculture',
+        'otherworldspecies',
+        'powerlevel',
+        'sexualattraction',
+        'side',
         'species',
-        'cultures',
-        'birthplaces',
-        'abilities',
-        'dimensions',
-        'powerlevels',
-        'sides',
-        'motivations',
-        'origin_types',
-        'known_regions',
-        'lost_regions',
-        'other_worlds',
-        'other_dimensions',
-        'gender_identities',
-        'gender_expressions',
-        'biological_sexes',
-        'sexual_attractions'
+        'speciesability',
+        'stat',
+        'timeperiod',
+        'timeperiodculture',
+        'timeperiodspecies',
+        'weightroll'
       ];
       
       const data = {};
@@ -200,6 +215,109 @@ class DataLoader {
       console.error('Error loading data:', error);
       throw error;
     }
+  }
+
+  /**
+   * Find entry by ID
+   * Pattern: Direct lookup in any table by id field
+   * @param {string} tableName - Name of data table
+   * @param {number} id - Record ID to find
+   * @returns {Object|null} - Record if found, null otherwise
+   */
+  findById(tableName, id) {
+    const table = this.cache[tableName];
+    if (!table || !Array.isArray(table)) return null;
+    
+    return table.find(record => record.id === id) || null;
+  }
+
+  /**
+   * Find entry within a roll range
+   * Pattern: Range-based lookup using min_roll and max_roll fields (D100 tables)
+   * @param {string} tableName - Name of data table
+   * @param {number} roll - Roll value to lookup
+   * @returns {Object|null} - Record where min_roll <= roll <= max_roll, null if not found
+   */
+  findByRoll(tableName, roll) {
+    const table = this.cache[tableName];
+    if (!table || !Array.isArray(table)) return null;
+    
+    return table.find(record => 
+      record.min_roll <= roll && roll <= record.max_roll
+    ) || null;
+  }
+
+  /**
+   * Find entry by context and roll
+   * Pattern: Contextual lookup using foreign key + roll range
+   * Example: Find region-specific species by region_id and roll
+   * @param {string} tableName - Name of data table
+   * @param {string|number} contextId - Context identifier (region_id, world_id, dimension_id, etc.)
+   * @param {number} roll - Roll value to lookup
+   * @returns {Object|null} - Record matching context and roll range, null if not found
+   */
+  findByContextAndRoll(tableName, contextId, roll) {
+    const table = this.cache[tableName];
+    if (!table || !Array.isArray(table)) return null;
+    
+    // Try common context field names
+    const contextFields = ['region_id', 'world_id', 'dimension_id', 'birthplace_id', 
+                           'species_id', 'culture_id', 'timeperiod_id', 'side_id'];
+    
+    for (const fieldName of contextFields) {
+      const match = table.find(record => 
+        record[fieldName] === contextId && 
+        record.min_roll <= roll && 
+        roll <= record.max_roll
+      );
+      if (match) return match;
+    }
+    
+    return null;
+  }
+
+  /**
+   * Filter records by a field value
+   * Pattern: Get all records matching a specific field value
+   * @param {string} tableName - Name of data table
+   * @param {string} fieldName - Field to filter by
+   * @param {*} fieldValue - Value to match
+   * @returns {Array} - Array of matching records
+   */
+  filterByField(tableName, fieldName, fieldValue) {
+    const table = this.cache[tableName];
+    if (!table || !Array.isArray(table)) return [];
+    
+    return table.filter(record => record[fieldName] === fieldValue);
+  }
+
+  /**
+   * Find record by name field (case-insensitive)
+   * @param {string} tableName - Name of data table
+   * @param {string} name - Name to find
+   * @returns {Object|null} - Record if found, null otherwise
+   */
+  findByName(tableName, name) {
+    const table = this.cache[tableName];
+    if (!table || !Array.isArray(table)) return null;
+    
+    const nameLower = name.toLowerCase();
+    return table.find(record => {
+      // Try common name field names
+      const nameValue = record.name || record.ability_type || record.side || 
+                        record.power_level || record.stat_name || '';
+      return nameValue.toLowerCase() === nameLower;
+    }) || null;
+  }
+
+  /**
+   * Get all records from a table
+   * @param {string} tableName - Name of data table
+   * @returns {Array} - All records in table
+   */
+  getTable(tableName) {
+    const table = this.cache[tableName];
+    return Array.isArray(table) ? table : [];
   }
 }
 

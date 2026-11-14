@@ -1,0 +1,62 @@
+[
+  {
+    "id": 1,
+    "min_roll": 1,
+    "max_roll": 10,
+    "world": "The Core"
+  },
+  {
+    "id": 2,
+    "min_roll": 11,
+    "max_roll": 25,
+    "world": "The Psynax Empire"
+  },
+  {
+    "id": 3,
+    "min_roll": 26,
+    "max_roll": 40,
+    "world": "The Technocracy"
+  },
+  {
+    "id": 4,
+    "min_roll": 41,
+    "max_roll": 60,
+    "world": "The Spherical Confederation"
+  },
+  {
+    "id": 5,
+    "min_roll": 61,
+    "max_roll": 70,
+    "world": "Darkworld"
+  },
+  {
+    "id": 6,
+    "min_roll": 71,
+    "max_roll": 75,
+    "world": "Factorum"
+  },
+  {
+    "id": 7,
+    "min_roll": 76,
+    "max_roll": 80,
+    "world": "Frankenstein Galaxy"
+  },
+  {
+    "id": 8,
+    "min_roll": 81,
+    "max_roll": 85,
+    "world": "Chronangeles"
+  },
+  {
+    "id": 9,
+    "min_roll": 86,
+    "max_roll": 90,
+    "world": "Omnopolis"
+  },
+  {
+    "id": 10,
+    "min_roll": 91,
+    "max_roll": 100,
+    "world": "Other"
+  }
+]

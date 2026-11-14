@@ -1,0 +1,86 @@
+[
+  {
+    "id": 1,
+    "min_roll": 1,
+    "max_roll": 5,
+    "time_period": "Primordial"
+  },
+  {
+    "id": 2,
+    "min_roll": 6,
+    "max_roll": 10,
+    "time_period": "Age of Dinosaurs"
+  },
+  {
+    "id": 3,
+    "min_roll": 11,
+    "max_roll": 15,
+    "time_period": "Stone Age"
+  },
+  {
+    "id": 4,
+    "min_roll": 16,
+    "max_roll": 20,
+    "time_period": "Age of Legends"
+  },
+  {
+    "id": 5,
+    "min_roll": 21,
+    "max_roll": 25,
+    "time_period": "Ancient"
+  },
+  {
+    "id": 6,
+    "min_roll": 26,
+    "max_roll": 30,
+    "time_period": "Classical"
+  },
+  {
+    "id": 7,
+    "min_roll": 31,
+    "max_roll": 35,
+    "time_period": "Dark Ages"
+  },
+  {
+    "id": 8,
+    "min_roll": 36,
+    "max_roll": 40,
+    "time_period": "Renaissance"
+  },
+  {
+    "id": 9,
+    "min_roll": 41,
+    "max_roll": 45,
+    "time_period": "Victorian"
+  },
+  {
+    "id": 10,
+    "min_roll": 46,
+    "max_roll": 50,
+    "time_period": "Industrial"
+  },
+  {
+    "id": 11,
+    "min_roll": 51,
+    "max_roll": 60,
+    "time_period": "Modern"
+  },
+  {
+    "id": 12,
+    "min_roll": 61,
+    "max_roll": 70,
+    "time_period": "Near Future"
+  },
+  {
+    "id": 13,
+    "min_roll": 71,
+    "max_roll": 85,
+    "time_period": "Far Future"
+  },
+  {
+    "id": 14,
+    "min_roll": 86,
+    "max_roll": 100,
+    "time_period": "Extreme Future"
+  }
+]

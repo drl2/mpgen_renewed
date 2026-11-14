@@ -1,0 +1,22 @@
+[
+  {
+    "id": 1,
+    "bodytype": "Smallest"
+  },
+  {
+    "id": 2,
+    "bodytype": "Teen"
+  },
+  {
+    "id": 3,
+    "bodytype": "Adult"
+  },
+  {
+    "id": 4,
+    "bodytype": "Large"
+  },
+  {
+    "id": 5,
+    "bodytype": "Heroic"
+  }
+]

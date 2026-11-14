@@ -1,0 +1,44 @@
+[
+  {
+    "id": 1,
+    "min_roll": 1,
+    "max_roll": 20,
+    "origin_type": "Mutated or Evolved"
+  },
+  {
+    "id": 2,
+    "min_roll": 21,
+    "max_roll": 40,
+    "origin_type": "Science Accident"
+  },
+  {
+    "id": 3,
+    "min_roll": 41,
+    "max_roll": 45,
+    "origin_type": "Mystical Accident"
+  },
+  {
+    "id": 4,
+    "min_roll": 46,
+    "max_roll": 65,
+    "origin_type": "Science Project"
+  },
+  {
+    "id": 5,
+    "min_roll": 66,
+    "max_roll": 80,
+    "origin_type": "Mystical Project"
+  },
+  {
+    "id": 6,
+    "min_roll": 81,
+    "max_roll": 90,
+    "origin_type": "Physical Training"
+  },
+  {
+    "id": 7,
+    "min_roll": 91,
+    "max_roll": 100,
+    "origin_type": "Mystical Training"
+  }
+]

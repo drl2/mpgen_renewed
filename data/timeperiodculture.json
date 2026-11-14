@@ -1,0 +1,198 @@
+[
+  {
+    "id": 1,
+    "min_roll": 1,
+    "max_roll": 34,
+    "culture_id": 5,
+    "time_period_id": 1
+  },
+  {
+    "id": 2,
+    "min_roll": 35,
+    "max_roll": 67,
+    "culture_id": 3,
+    "time_period_id": 1
+  },
+  {
+    "id": 3,
+    "min_roll": 68,
+    "max_roll": 100,
+    "culture_id": 2,
+    "time_period_id": 1
+  },
+  {
+    "id": 4,
+    "min_roll": 1,
+    "max_roll": 34,
+    "culture_id": 5,
+    "time_period_id": 2
+  },
+  {
+    "id": 5,
+    "min_roll": 35,
+    "max_roll": 67,
+    "culture_id": 3,
+    "time_period_id": 2
+  },
+  {
+    "id": 6,
+    "min_roll": 68,
+    "max_roll": 100,
+    "culture_id": 2,
+    "time_period_id": 2
+  },
+  {
+    "id": 7,
+    "min_roll": 1,
+    "max_roll": 100,
+    "culture_id": 2,
+    "time_period_id": 3
+  },
+  {
+    "id": 8,
+    "min_roll": 1,
+    "max_roll": 33,
+    "culture_id": 2,
+    "time_period_id": 4
+  },
+  {
+    "id": 9,
+    "min_roll": 34,
+    "max_roll": 66,
+    "culture_id": 1,
+    "time_period_id": 4
+  },
+  {
+    "id": 10,
+    "min_roll": 67,
+    "max_roll": 100,
+    "culture_id": 3,
+    "time_period_id": 4
+  },
+  {
+    "id": 11,
+    "min_roll": 1,
+    "max_roll": 50,
+    "culture_id": 2,
+    "time_period_id": 5
+  },
+  {
+    "id": 12,
+    "min_roll": 51,
+    "max_roll": 100,
+    "culture_id": 1,
+    "time_period_id": 5
+  },
+  {
+    "id": 13,
+    "min_roll": 1,
+    "max_roll": 50,
+    "culture_id": 2,
+    "time_period_id": 6
+  },
+  {
+    "id": 14,
+    "min_roll": 51,
+    "max_roll": 100,
+    "culture_id": 1,
+    "time_period_id": 6
+  },
+  {
+    "id": 15,
+    "min_roll": 1,
+    "max_roll": 50,
+    "culture_id": 2,
+    "time_period_id": 7
+  },
+  {
+    "id": 16,
+    "min_roll": 51,
+    "max_roll": 100,
+    "culture_id": 1,
+    "time_period_id": 7
+  },
+  {
+    "id": 17,
+    "min_roll": 1,
+    "max_roll": 20,
+    "culture_id": 1,
+    "time_period_id": 8
+  },
+  {
+    "id": 18,
+    "min_roll": 21,
+    "max_roll": 100,
+    "culture_id": 4,
+    "time_period_id": 8
+  },
+  {
+    "id": 19,
+    "min_roll": 1,
+    "max_roll": 100,
+    "culture_id": 4,
+    "time_period_id": 9
+  },
+  {
+    "id": 20,
+    "min_roll": 1,
+    "max_roll": 100,
+    "culture_id": 4,
+    "time_period_id": 10
+  },
+  {
+    "id": 21,
+    "min_roll": 1,
+    "max_roll": 100,
+    "culture_id": 4,
+    "time_period_id": 11
+  },
+  {
+    "id": 22,
+    "min_roll": 1,
+    "max_roll": 100,
+    "culture_id": 5,
+    "time_period_id": 12
+  },
+  {
+    "id": 23,
+    "min_roll": 1,
+    "max_roll": 80,
+    "culture_id": 5,
+    "time_period_id": 13
+  },
+  {
+    "id": 24,
+    "min_roll": 81,
+    "max_roll": 95,
+    "culture_id": 4,
+    "time_period_id": 13
+  },
+  {
+    "id": 25,
+    "min_roll": 96,
+    "max_roll": 100,
+    "culture_id": 2,
+    "time_period_id": 13
+  },
+  {
+    "id": 26,
+    "min_roll": 1,
+    "max_roll": 80,
+    "culture_id": 5,
+    "time_period_id": 14
+  },
+  {
+    "id": 27,
+    "min_roll": 81,
+    "max_roll": 95,
+    "culture_id": 4,
+    "time_period_id": 14
+  },
+  {
+    "id": 28,
+    "min_roll": 96,
+    "max_roll": 100,
+    "culture_id": 2,
+    "time_period_id": 14
+  }
+]

@@ -1,0 +1,18 @@
+[
+  {
+    "id": 1,
+    "ability_type": "Offensive"
+  },
+  {
+    "id": 2,
+    "ability_type": "Defensive"
+  },
+  {
+    "id": 3,
+    "ability_type": "Weakness"
+  },
+  {
+    "id": 4,
+    "ability_type": "Miscellaneous"
+  }
+]

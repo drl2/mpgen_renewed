@@ -1,0 +1,42 @@
+[
+  {
+    "id": 1,
+    "stat_name": "Strength",
+    "abbrev": "ST",
+    "is_base": 1,
+    "max_roll": 2,
+    "min_roll": 1
+  },
+  {
+    "id": 2,
+    "stat_name": "Endurance",
+    "abbrev": "EN",
+    "is_base": 1,
+    "max_roll": 4,
+    "min_roll": 3
+  },
+  {
+    "id": 3,
+    "stat_name": "Agility",
+    "abbrev": "AG",
+    "is_base": 1,
+    "max_roll": 6,
+    "min_roll": 5
+  },
+  {
+    "id": 4,
+    "stat_name": "Intelligence",
+    "abbrev": "IN",
+    "is_base": 1,
+    "max_roll": 8,
+    "min_roll": 7
+  },
+  {
+    "id": 5,
+    "stat_name": "Cool",
+    "abbrev": "CL",
+    "is_base": 1,
+    "max_roll": 10,
+    "min_roll": 9
+  }
+]

@@ -1,0 +1,186 @@
+[
+  {
+    "id": 1,
+    "min_roll": 0,
+    "max_roll": 0,
+    "species_name": "Alien",
+    "cp_adjustment": 0,
+    "extra_cp_as_normal": 0
+  },
+  {
+    "id": 2,
+    "min_roll": 0,
+    "max_roll": 0,
+    "species_name": "Atlantian",
+    "cp_adjustment": -5,
+    "extra_cp_as_normal": 20
+  },
+  {
+    "id": 3,
+    "min_roll": 0,
+    "max_roll": 0,
+    "species_name": "Cro-Magnon",
+    "cp_adjustment": 0,
+    "extra_cp_as_normal": 0
+  },
+  {
+    "id": 4,
+    "min_roll": 0,
+    "max_roll": 0,
+    "species_name": "Dakodaran",
+    "cp_adjustment": -5,
+    "extra_cp_as_normal": 20
+  },
+  {
+    "id": 5,
+    "min_roll": 0,
+    "max_roll": 0,
+    "species_name": "Darkling",
+    "cp_adjustment": -5,
+    "extra_cp_as_normal": 20
+  },
+  {
+    "id": 6,
+    "min_roll": 0,
+    "max_roll": 0,
+    "species_name": "Farashi",
+    "cp_adjustment": -5,
+    "extra_cp_as_normal": 20
+  },
+  {
+    "id": 7,
+    "min_roll": 0,
+    "max_roll": 0,
+    "species_name": "Geosian",
+    "cp_adjustment": 0,
+    "extra_cp_as_normal": 0
+  },
+  {
+    "id": 8,
+    "min_roll": 1,
+    "max_roll": 80,
+    "species_name": "Human",
+    "cp_adjustment": 0,
+    "extra_cp_as_normal": 0
+  },
+  {
+    "id": 9,
+    "min_roll": 0,
+    "max_roll": 0,
+    "species_name": "Lemurian",
+    "cp_adjustment": -5,
+    "extra_cp_as_normal": 20
+  },
+  {
+    "id": 10,
+    "min_roll": 89,
+    "max_roll": 92,
+    "species_name": "Mystical Construct",
+    "cp_adjustment": 0,
+    "extra_cp_as_normal": 0
+  },
+  {
+    "id": 11,
+    "min_roll": 99,
+    "max_roll": 100,
+    "species_name": "Mixed",
+    "cp_adjustment": 0,
+    "extra_cp_as_normal": 0
+  },
+  {
+    "id": 12,
+    "min_roll": 93,
+    "max_roll": 98,
+    "species_name": "Monster",
+    "cp_adjustment": 0,
+    "extra_cp_as_normal": 0
+  },
+  {
+    "id": 13,
+    "min_roll": 0,
+    "max_roll": 0,
+    "species_name": "Neanderthal",
+    "cp_adjustment": 0,
+    "extra_cp_as_normal": 0
+  },
+  {
+    "id": 14,
+    "min_roll": 0,
+    "max_roll": 0,
+    "species_name": "Peratonian",
+    "cp_adjustment": -5,
+    "extra_cp_as_normal": 20
+  },
+  {
+    "id": 15,
+    "min_roll": 0,
+    "max_roll": 0,
+    "species_name": "Psynax",
+    "cp_adjustment": 0,
+    "extra_cp_as_normal": 0
+  },
+  {
+    "id": 16,
+    "min_roll": 0,
+    "max_roll": 0,
+    "species_name": "Saurid",
+    "cp_adjustment": -5,
+    "extra_cp_as_normal": 20
+  },
+  {
+    "id": 17,
+    "min_roll": 0,
+    "max_roll": 0,
+    "species_name": "Silicoid",
+    "cp_adjustment": -5,
+    "extra_cp_as_normal": 20
+  },
+  {
+    "id": 18,
+    "min_roll": 81,
+    "max_roll": 88,
+    "species_name": "Tech Construct",
+    "cp_adjustment": 0,
+    "extra_cp_as_normal": 0
+  },
+  {
+    "id": 19,
+    "min_roll": 0,
+    "max_roll": 0,
+    "species_name": "Troglodyte",
+    "cp_adjustment": 0,
+    "extra_cp_as_normal": 0
+  },
+  {
+    "id": 20,
+    "min_roll": 0,
+    "max_roll": 0,
+    "species_name": "Vandari",
+    "cp_adjustment": 0,
+    "extra_cp_as_normal": 0
+  },
+  {
+    "id": 21,
+    "min_roll": 0,
+    "max_roll": 0,
+    "species_name": "Choose (Lost Region)",
+    "cp_adjustment": 0,
+    "extra_cp_as_normal": 0
+  },
+  {
+    "id": 22,
+    "min_roll": 0,
+    "max_roll": 0,
+    "species_name": "Choose (Other World)",
+    "cp_adjustment": 0,
+    "extra_cp_as_normal": 0
+  },
+  {
+    "id": 23,
+    "min_roll": 0,
+    "max_roll": 0,
+    "species_name": "Choose (Other Dimension)",
+    "cp_adjustment": 0,
+    "extra_cp_as_normal": 0
+  }
+]

@@ -1,0 +1,44 @@
+[
+  {
+    "id": 1,
+    "min_roll": 1,
+    "max_roll": 5,
+    "dimension": "The Interdimensional Library"
+  },
+  {
+    "id": 2,
+    "min_roll": 6,
+    "max_roll": 25,
+    "dimension": "Mythical Realm"
+  },
+  {
+    "id": 3,
+    "min_roll": 26,
+    "max_roll": 45,
+    "dimension": "Alternate Earth"
+  },
+  {
+    "id": 4,
+    "min_roll": 46,
+    "max_roll": 60,
+    "dimension": "Internet/Virtual Reality"
+  },
+  {
+    "id": 5,
+    "min_roll": 61,
+    "max_roll": 70,
+    "dimension": "The Abomination Realm"
+  },
+  {
+    "id": 6,
+    "min_roll": 71,
+    "max_roll": 90,
+    "dimension": "Fictional World"
+  },
+  {
+    "id": 7,
+    "min_roll": 91,
+    "max_roll": 100,
+    "dimension": "Other"
+  }
+]

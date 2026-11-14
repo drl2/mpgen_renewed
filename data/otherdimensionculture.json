@@ -1,0 +1,16 @@
+[
+  {
+    "id": 1,
+    "min_roll": 1,
+    "max_roll": 100,
+    "culture_id": 3,
+    "dimension_id": 1
+  },
+  {
+    "id": 2,
+    "min_roll": 1,
+    "max_roll": 100,
+    "culture_id": 3,
+    "dimension_id": 5
+  }
+]

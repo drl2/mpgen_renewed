@@ -1,0 +1,30 @@
+[
+  {
+    "id": 1,
+    "power_level": "Normal (50 CP, No powers)",
+    "core_ability_cps": 0,
+    "bc_points": 50,
+    "total_cps": 50
+  },
+  {
+    "id": 2,
+    "power_level": "Low (100 CP)",
+    "core_ability_cps": 10,
+    "bc_points": 60,
+    "total_cps": 100
+  },
+  {
+    "id": 3,
+    "power_level": "Standard (150 CP)",
+    "core_ability_cps": 20,
+    "bc_points": 70,
+    "total_cps": 150
+  },
+  {
+    "id": 4,
+    "power_level": "High (200 CP)",
+    "core_ability_cps": 30,
+    "bc_points": 80,
+    "total_cps": 200
+  }
+]

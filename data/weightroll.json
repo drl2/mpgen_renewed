@@ -1,0 +1,92 @@
+[
+  {
+    "id": 1,
+    "weight_roll": "3d4",
+    "bodytype_id": 1,
+    "gender_id": 1
+  },
+  {
+    "id": 2,
+    "weight_roll": "4d4",
+    "bodytype_id": 2,
+    "gender_id": 1
+  },
+  {
+    "id": 3,
+    "weight_roll": "5d4",
+    "bodytype_id": 3,
+    "gender_id": 1
+  },
+  {
+    "id": 4,
+    "weight_roll": "6d4",
+    "bodytype_id": 4,
+    "gender_id": 1
+  },
+  {
+    "id": 5,
+    "weight_roll": "7d4",
+    "bodytype_id": 5,
+    "gender_id": 1
+  },
+  {
+    "id": 6,
+    "weight_roll": "3d6",
+    "bodytype_id": 1,
+    "gender_id": 2
+  },
+  {
+    "id": 7,
+    "weight_roll": "4d6",
+    "bodytype_id": 2,
+    "gender_id": 2
+  },
+  {
+    "id": 8,
+    "weight_roll": "5d6",
+    "bodytype_id": 3,
+    "gender_id": 2
+  },
+  {
+    "id": 9,
+    "weight_roll": "6d6",
+    "bodytype_id": 4,
+    "gender_id": 2
+  },
+  {
+    "id": 10,
+    "weight_roll": "7d6",
+    "bodytype_id": 5,
+    "gender_id": 2
+  },
+  {
+    "id": 11,
+    "weight_roll": "3d6",
+    "bodytype_id": 1,
+    "gender_id": 3
+  },
+  {
+    "id": 12,
+    "weight_roll": "4d6",
+    "bodytype_id": 2,
+    "gender_id": 3
+  },
+  {
+    "id": 13,
+    "weight_roll": "5d6",
+    "bodytype_id": 3,
+    "gender_id": 3
+  },
+  {
+    "id": 14,
+    "weight_roll": "6d6",
+    "bodytype_id": 4,
+    "gender_id": 3
+  },
+  {
+    "id": 15,
+    "weight_roll": "7d6",
+    "bodytype_id": 5,
+    "gender_id": 3
+  }
+]

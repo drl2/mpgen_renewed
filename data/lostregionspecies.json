@@ -1,0 +1,86 @@
+[
+  {
+    "id": 1,
+    "min_roll": 1,
+    "max_roll": 34,
+    "region_id": 1,
+    "species_id": 3
+  },
+  {
+    "id": 2,
+    "min_roll": 35,
+    "max_roll": 67,
+    "region_id": 1,
+    "species_id": 13
+  },
+  {
+    "id": 3,
+    "min_roll": 68,
+    "max_roll": 100,
+    "region_id": 1,
+    "species_id": 16
+  },
+  {
+    "id": 4,
+    "min_roll": 1,
+    "max_roll": 100,
+    "region_id": 2,
+    "species_id": 2
+  },
+  {
+    "id": 5,
+    "min_roll": 1,
+    "max_roll": 20,
+    "region_id": 3,
+    "species_id": 18
+  },
+  {
+    "id": 6,
+    "min_roll": 21,
+    "max_roll": 80,
+    "region_id": 3,
+    "species_id": 1
+  },
+  {
+    "id": 7,
+    "min_roll": 81,
+    "max_roll": 100,
+    "region_id": 3,
+    "species_id": 8
+  },
+  {
+    "id": 8,
+    "min_roll": 1,
+    "max_roll": 100,
+    "region_id": 4,
+    "species_id": 8
+  },
+  {
+    "id": 9,
+    "min_roll": 1,
+    "max_roll": 33,
+    "region_id": 5,
+    "species_id": 17
+  },
+  {
+    "id": 10,
+    "min_roll": 34,
+    "max_roll": 66,
+    "region_id": 5,
+    "species_id": 19
+  },
+  {
+    "id": 11,
+    "min_roll": 67,
+    "max_roll": 100,
+    "region_id": 5,
+    "species_id": 12
+  },
+  {
+    "id": 12,
+    "min_roll": 1,
+    "max_roll": 100,
+    "region_id": 6,
+    "species_id": 12
+  }
+]

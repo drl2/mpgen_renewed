@@ -1,0 +1,72 @@
+[
+  {
+    "id": 1,
+    "min_roll": 1,
+    "max_roll": 80,
+    "culture_id": 5,
+    "world_id": 1
+  },
+  {
+    "id": 2,
+    "min_roll": 81,
+    "max_roll": 95,
+    "culture_id": 4,
+    "world_id": 1
+  },
+  {
+    "id": 3,
+    "min_roll": 96,
+    "max_roll": 100,
+    "culture_id": 2,
+    "world_id": 1
+  },
+  {
+    "id": 4,
+    "min_roll": 1,
+    "max_roll": 100,
+    "culture_id": 5,
+    "world_id": 2
+  },
+  {
+    "id": 5,
+    "min_roll": 1,
+    "max_roll": 100,
+    "culture_id": 5,
+    "world_id": 3
+  },
+  {
+    "id": 6,
+    "min_roll": 1,
+    "max_roll": 100,
+    "culture_id": 3,
+    "world_id": 5
+  },
+  {
+    "id": 7,
+    "min_roll": 1,
+    "max_roll": 100,
+    "culture_id": 3,
+    "world_id": 6
+  },
+  {
+    "id": 8,
+    "min_roll": 1,
+    "max_roll": 100,
+    "culture_id": 5,
+    "world_id": 7
+  },
+  {
+    "id": 9,
+    "min_roll": 1,
+    "max_roll": 100,
+    "culture_id": 3,
+    "world_id": 8
+  },
+  {
+    "id": 10,
+    "min_roll": 1,
+    "max_roll": 100,
+    "culture_id": 3,
+    "world_id": 9
+  }
+]

@@ -1,0 +1,30 @@
+[
+  {
+    "id": 1,
+    "min_roll": 1,
+    "max_roll": 87,
+    "gender_expression": "Same as gender identity",
+    "short_form": null
+  },
+  {
+    "id": 2,
+    "min_roll": 88,
+    "max_roll": 93,
+    "gender_expression": "Different from gender identity",
+    "short_form": "Diff"
+  },
+  {
+    "id": 3,
+    "min_roll": 94,
+    "max_roll": 97,
+    "gender_expression": "Androgynous",
+    "short_form": "Androg"
+  },
+  {
+    "id": 4,
+    "min_roll": 98,
+    "max_roll": 100,
+    "gender_expression": "Gender Neutral",
+    "short_form": "GenNeut"
+  }
+]

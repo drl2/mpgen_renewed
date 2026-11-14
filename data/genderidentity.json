@@ -1,0 +1,23 @@
+[
+  {
+    "id": 1,
+    "min_roll": 1,
+    "max_roll": 48,
+    "gender_identity": "Woman",
+    "short_form": "F"
+  },
+  {
+    "id": 2,
+    "min_roll": 49,
+    "max_roll": 96,
+    "gender_identity": "Man",
+    "short_form": "M"
+  },
+  {
+    "id": 3,
+    "min_roll": 97,
+    "max_roll": 100,
+    "gender_identity": "Nonbinary",
+    "short_form": "Non-bin"
+  }
+]

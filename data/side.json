@@ -1,0 +1,14 @@
+[
+  {
+    "id": 1,
+    "side": "Good"
+  },
+  {
+    "id": 2,
+    "side": "Evil"
+  },
+  {
+    "id": 3,
+    "side": "Neutral"
+  }
+]

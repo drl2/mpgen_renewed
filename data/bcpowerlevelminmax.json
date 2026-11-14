@@ -1,0 +1,26 @@
+[
+  {
+    "id": 1,
+    "min": 3,
+    "max": 15,
+    "power_level_id": 1
+  },
+  {
+    "id": 2,
+    "min": 3,
+    "max": 18,
+    "power_level_id": 2
+  },
+  {
+    "id": 3,
+    "min": 3,
+    "max": 21,
+    "power_level_id": 3
+  },
+  {
+    "id": 4,
+    "min": 3,
+    "max": 24,
+    "power_level_id": 4
+  }
+]

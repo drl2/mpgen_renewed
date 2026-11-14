@@ -1,0 +1,30 @@
+[
+  {
+    "id": 1,
+    "min_roll": 1,
+    "max_roll": 90,
+    "sexual_attraction": "Straight",
+    "short_form": null
+  },
+  {
+    "id": 2,
+    "min_roll": 91,
+    "max_roll": 94,
+    "sexual_attraction": "Gay/Lesbian",
+    "short_form": "Gay/Les"
+  },
+  {
+    "id": 3,
+    "min_roll": 95,
+    "max_roll": 99,
+    "sexual_attraction": "Bisexual/Pansexual",
+    "short_form": "Bi/Pan"
+  },
+  {
+    "id": 4,
+    "min_roll": 100,
+    "max_roll": 100,
+    "sexual_attraction": "Asexual",
+    "short_form": "Asex"
+  }
+]

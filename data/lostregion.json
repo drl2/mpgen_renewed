@@ -1,0 +1,44 @@
+[
+  {
+    "id": 1,
+    "min_roll": 1,
+    "max_roll": 15,
+    "region_name": "The Secret Land"
+  },
+  {
+    "id": 2,
+    "min_roll": 16,
+    "max_roll": 30,
+    "region_name": "Atlantis"
+  },
+  {
+    "id": 3,
+    "min_roll": 31,
+    "max_roll": 40,
+    "region_name": "Haven"
+  },
+  {
+    "id": 4,
+    "min_roll": 41,
+    "max_roll": 55,
+    "region_name": "Lemuria"
+  },
+  {
+    "id": 5,
+    "min_roll": 56,
+    "max_roll": 75,
+    "region_name": "Subternia"
+  },
+  {
+    "id": 6,
+    "min_roll": 76,
+    "max_roll": 80,
+    "region_name": "The Enclave"
+  },
+  {
+    "id": 7,
+    "min_roll": 81,
+    "max_roll": 100,
+    "region_name": "Other"
+  }
+]

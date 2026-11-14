@@ -1,0 +1,23 @@
+[
+  {
+    "id": 1,
+    "min_roll": 1,
+    "max_roll": 95,
+    "biological_sex": "Cisgender",
+    "short_form": "Cis"
+  },
+  {
+    "id": 2,
+    "min_roll": 96,
+    "max_roll": 99,
+    "biological_sex": "Transgender",
+    "short_form": "Trans"
+  },
+  {
+    "id": 3,
+    "min_roll": 100,
+    "max_roll": 100,
+    "biological_sex": "Intersex",
+    "short_form": "Inter"
+  }
+]

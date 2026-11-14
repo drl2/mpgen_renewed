@@ -1,0 +1,138 @@
+[
+  {
+    "id": 1,
+    "min_roll": 1,
+    "max_roll": 20,
+    "culture_id": null,
+    "species_id": 8,
+    "world_id": 1
+  },
+  {
+    "id": 2,
+    "min_roll": 21,
+    "max_roll": 70,
+    "culture_id": null,
+    "species_id": 1,
+    "world_id": 1
+  },
+  {
+    "id": 3,
+    "min_roll": 71,
+    "max_roll": 100,
+    "culture_id": null,
+    "species_id": 18,
+    "world_id": 1
+  },
+  {
+    "id": 4,
+    "min_roll": 1,
+    "max_roll": 100,
+    "culture_id": null,
+    "species_id": 15,
+    "world_id": 2
+  },
+  {
+    "id": 5,
+    "min_roll": 1,
+    "max_roll": 20,
+    "culture_id": null,
+    "species_id": 8,
+    "world_id": 3
+  },
+  {
+    "id": 6,
+    "min_roll": 21,
+    "max_roll": 70,
+    "culture_id": null,
+    "species_id": 1,
+    "world_id": 3
+  },
+  {
+    "id": 7,
+    "min_roll": 71,
+    "max_roll": 100,
+    "culture_id": null,
+    "species_id": 18,
+    "world_id": 3
+  },
+  {
+    "id": 8,
+    "min_roll": 1,
+    "max_roll": 20,
+    "culture_id": 5,
+    "species_id": 20,
+    "world_id": 4
+  },
+  {
+    "id": 9,
+    "min_roll": 21,
+    "max_roll": 40,
+    "culture_id": 5,
+    "species_id": 4,
+    "world_id": 4
+  },
+  {
+    "id": 10,
+    "min_roll": 41,
+    "max_roll": 60,
+    "culture_id": 5,
+    "species_id": 6,
+    "world_id": 4
+  },
+  {
+    "id": 11,
+    "min_roll": 61,
+    "max_roll": 80,
+    "culture_id": 3,
+    "species_id": 7,
+    "world_id": 4
+  },
+  {
+    "id": 12,
+    "min_roll": 81,
+    "max_roll": 100,
+    "culture_id": 5,
+    "species_id": 14,
+    "world_id": 4
+  },
+  {
+    "id": 13,
+    "min_roll": 1,
+    "max_roll": 100,
+    "culture_id": null,
+    "species_id": 5,
+    "world_id": 5
+  },
+  {
+    "id": 14,
+    "min_roll": 1,
+    "max_roll": 100,
+    "culture_id": null,
+    "species_id": 11,
+    "world_id": 6
+  },
+  {
+    "id": 15,
+    "min_roll": 1,
+    "max_roll": 100,
+    "culture_id": null,
+    "species_id": 18,
+    "world_id": 7
+  },
+  {
+    "id": 16,
+    "min_roll": 1,
+    "max_roll": 100,
+    "culture_id": null,
+    "species_id": 1,
+    "world_id": 8
+  },
+  {
+    "id": 17,
+    "min_roll": 1,
+    "max_roll": 100,
+    "culture_id": null,
+    "species_id": 8,
+    "world_id": 9
+  }
+]

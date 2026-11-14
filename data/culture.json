@@ -1,0 +1,34 @@
+[
+  {
+    "id": 1,
+    "culture_name": "Fantasy"
+  },
+  {
+    "id": 2,
+    "culture_name": "Primitive"
+  },
+  {
+    "id": 3,
+    "culture_name": "Mixed"
+  },
+  {
+    "id": 4,
+    "culture_name": "Modern"
+  },
+  {
+    "id": 5,
+    "culture_name": "High Tech"
+  },
+  {
+    "id": 6,
+    "culture_name": "Choose (Lost Region)"
+  },
+  {
+    "id": 7,
+    "culture_name": "Choose (Other World)"
+  },
+  {
+    "id": 8,
+    "culture_name": "Choose (Other Dimension)"
+  }
+]

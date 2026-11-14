@@ -1,0 +1,184 @@
+[
+  {
+    "id": 1,
+    "min_roll": 1,
+    "max_roll": 9,
+    "motivation": "Penance",
+    "side_id": 1
+  },
+  {
+    "id": 2,
+    "min_roll": 10,
+    "max_roll": 18,
+    "motivation": "Vengeance",
+    "side_id": 1
+  },
+  {
+    "id": 3,
+    "min_roll": 19,
+    "max_roll": 27,
+    "motivation": "Utopian",
+    "side_id": 1
+  },
+  {
+    "id": 4,
+    "min_roll": 28,
+    "max_roll": 36,
+    "motivation": "Thrill Seeker",
+    "side_id": 1
+  },
+  {
+    "id": 5,
+    "min_roll": 37,
+    "max_roll": 45,
+    "motivation": "Duty Bound",
+    "side_id": 1
+  },
+  {
+    "id": 6,
+    "min_roll": 46,
+    "max_roll": 54,
+    "motivation": "Need to Know",
+    "side_id": 1
+  },
+  {
+    "id": 7,
+    "min_roll": 55,
+    "max_roll": 63,
+    "motivation": "For Hire",
+    "side_id": 1
+  },
+  {
+    "id": 8,
+    "min_roll": 64,
+    "max_roll": 72,
+    "motivation": "Self-Defense",
+    "side_id": 1
+  },
+  {
+    "id": 9,
+    "min_roll": 73,
+    "max_roll": 81,
+    "motivation": "Glory Hound",
+    "side_id": 1
+  },
+  {
+    "id": 10,
+    "min_roll": 82,
+    "max_roll": 90,
+    "motivation": "Carnage",
+    "side_id": 1
+  },
+  {
+    "id": 11,
+    "min_roll": 91,
+    "max_roll": 100,
+    "motivation": "Justice",
+    "side_id": 1
+  },
+  {
+    "id": 12,
+    "min_roll": 1,
+    "max_roll": 7,
+    "motivation": "Insanity",
+    "side_id": 2
+  },
+  {
+    "id": 13,
+    "min_roll": 8,
+    "max_roll": 13,
+    "motivation": "Vengeance",
+    "side_id": 2
+  },
+  {
+    "id": 14,
+    "min_roll": 14,
+    "max_roll": 20,
+    "motivation": "Dystopian",
+    "side_id": 2
+  },
+  {
+    "id": 15,
+    "min_roll": 21,
+    "max_roll": 27,
+    "motivation": "Thrill Seeker",
+    "side_id": 2
+  },
+  {
+    "id": 16,
+    "min_roll": 28,
+    "max_roll": 33,
+    "motivation": "Anarchist",
+    "side_id": 2
+  },
+  {
+    "id": 17,
+    "min_roll": 34,
+    "max_roll": 40,
+    "motivation": "Prejudice",
+    "side_id": 2
+  },
+  {
+    "id": 18,
+    "min_roll": 41,
+    "max_roll": 47,
+    "motivation": "Mercenary/Servitor",
+    "side_id": 2
+  },
+  {
+    "id": 19,
+    "min_roll": 48,
+    "max_roll": 53,
+    "motivation": "Greedy/Egotist",
+    "side_id": 2
+  },
+  {
+    "id": 20,
+    "min_roll": 54,
+    "max_roll": 60,
+    "motivation": "Publicity Seeker",
+    "side_id": 2
+  },
+  {
+    "id": 21,
+    "min_roll": 61,
+    "max_roll": 67,
+    "motivation": "Belligerent/Carnage",
+    "side_id": 2
+  },
+  {
+    "id": 22,
+    "min_roll": 68,
+    "max_roll": 73,
+    "motivation": "Survival",
+    "side_id": 2
+  },
+  {
+    "id": 23,
+    "min_roll": 74,
+    "max_roll": 80,
+    "motivation": "Dupe",
+    "side_id": 2
+  },
+  {
+    "id": 24,
+    "min_roll": 81,
+    "max_roll": 87,
+    "motivation": "Conquest",
+    "side_id": 2
+  },
+  {
+    "id": 25,
+    "min_roll": 88,
+    "max_roll": 93,
+    "motivation": "Twisted Honor",
+    "side_id": 2
+  },
+  {
+    "id": 26,
+    "min_roll": 94,
+    "max_roll": 100,
+    "motivation": "Opportunist",
+    "side_id": 2
+  }
+]
