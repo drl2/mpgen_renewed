@@ -1170,6 +1170,12 @@ class Application {
       }
     }
     
+    // Disable load button if no characters left
+    const loadBtn = document.getElementById('loadBtn');
+    if (loadBtn) {
+      loadBtn.disabled = savedCharacters.length === 0;
+    }
+    
     this.showSuccess(`Character "${characterName}" deleted`);
     console.log('✅ Character deleted:', characterName);
   }
