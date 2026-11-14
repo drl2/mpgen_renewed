@@ -1,59 +1,17 @@
 /**
  * Excel Exporter Module
- * Converts character objects to Excel workbooks using CharTemplate.xlsx
+ * Converts character objects to Excel workbooks matching legacy MPGEN format
  * Uses SheetJS library for Excel generation
  */
 
 export class ExcelExporter {
-  static templateCache = null;
-
-  /**
-   * Load template file with fetch and timeout
-   * @returns {Promise<Object>} XLSX workbook
-   */
-  static async loadTemplate() {
-    try {
-      // Return cached template if available
-      if (this.templateCache) {
-        console.log('📋 Using cached template');
-        return this.templateCache;
-      }
-
-      console.log('📋 Loading CharTemplate.xlsx...');
-      
-      const controller = new AbortController();
-      const timeoutId = setTimeout(() => controller.abort(), 5000); // 5 second timeout
-
-      const response = await fetch('templates/CharTemplate.xlsx', {
-        signal: controller.signal
-      });
-
-      clearTimeout(timeoutId);
-
-      if (!response.ok) {
-        throw new Error(`HTTP ${response.status}`);
-      }
-
-      const arrayBuffer = await response.arrayBuffer();
-      const workbook = XLSX.read(arrayBuffer, { type: 'array' });
-      
-      // Cache the workbook
-      this.templateCache = workbook;
-      console.log('✅ Template loaded and cached. Sheets:', workbook.SheetNames);
-      return workbook;
-    } catch (error) {
-      console.error('Template load failed:', error);
-      throw new Error('Could not load CharTemplate.xlsx: ' + error.message);
-    }
-  }
-
   /**
    * Export character to Excel file
    * @param {Object} character - Character object with all properties
    * @param {string} characterName - Name for the exported file
-   * @returns {Promise<Object>}
+   * @returns {Object}
    */
-  static async exportCharacter(character, characterName = 'MPGen_Character') {
+  static exportCharacter(character, characterName = 'MPGen_Character') {
     try {
       // Check if XLSX library is available
       if (typeof XLSX === 'undefined') {
@@ -62,43 +20,18 @@ export class ExcelExporter {
 
       console.log('📊 Exporting character to Excel:', { characterName, character });
 
-      // Load template (cached or fresh)
-      const workbook = await this.loadTemplate();
+      // Create new workbook
+      const workbook = XLSX.utils.book_new();
 
-      // Create data arrays for both sheets
-      const sheet1Data = this.createExcelRecordSheet(character);
-      const sheet3Data = this.createMPGenCharacterSheet(character);
+      // Create both sheets
+      const sheet1 = this.createExcelRecordSheet(character);
+      const sheet2 = this.createMPGenCharacterSheet(character);
 
-      // Create new worksheets from data
-      const ws1 = XLSX.utils.aoa_to_sheet(sheet1Data);
-      const ws3 = XLSX.utils.aoa_to_sheet(sheet3Data);
+      console.log('📋 Sheets created');
 
-      // Apply column widths
-      ws1['!cols'] = [
-        { wch: 3 }, { wch: 3 }, { wch: 3 }, { wch: 15 }, { wch: 3 },
-        { wch: 15 }, { wch: 15 }, { wch: 3 }, { wch: 3 }, { wch: 3 },
-        { wch: 3 }, { wch: 3 }, { wch: 3 }, { wch: 3 }, { wch: 3 },
-        { wch: 3 }, { wch: 20 }
-      ];
-
-      ws3['!cols'] = [
-        { wch: 3 }, { wch: 3 }, { wch: 3 }, { wch: 15 }, { wch: 3 },
-        { wch: 15 }, { wch: 15 }, { wch: 3 }, { wch: 3 }, { wch: 3 },
-        { wch: 3 }, { wch: 3 }, { wch: 3 }, { wch: 3 }, { wch: 3 },
-        { wch: 3 }, { wch: 20 }
-      ];
-
-      // Get sheet names from template
-      const sheet1Name = workbook.SheetNames[0];
-      const sheet3Name = workbook.SheetNames[2] || workbook.SheetNames[0];
-
-      console.log(`📝 Replacing sheets: "${sheet1Name}" and "${sheet3Name}"`);
-
-      // Replace sheets in workbook with formatted data
-      workbook.Sheets[sheet1Name] = ws1;
-      if (workbook.SheetNames.length > 2) {
-        workbook.Sheets[sheet3Name] = ws3;
-      }
+      // Add sheets to workbook
+      XLSX.utils.book_append_sheet(workbook, sheet1, 'Excel Record Sheet');
+      XLSX.utils.book_append_sheet(workbook, sheet2, 'MPGen Character');
 
       // Generate filename with timestamp
       const timestamp = new Date().toISOString().split('T')[0];
