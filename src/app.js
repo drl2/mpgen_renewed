@@ -869,7 +869,7 @@ class Application {
       const originalText = generateBtn.textContent;
       generateBtn.disabled = true;
       generateBtn.textContent = 'Generating...';
-      
+
       // Collect all 18 form parameters
       const params = this.collectFormParameters();
       
@@ -895,6 +895,12 @@ class Application {
       const saveBtn = document.getElementById('saveBtn');
       if (saveBtn) {
         saveBtn.disabled = false;
+      }
+
+      // Enable export button
+      const exportBtn = document.getElementById('exportBtn');
+      if (exportBtn) {
+        exportBtn.disabled = false;
       }
       
       // Always enable load button
