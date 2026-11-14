@@ -16,12 +16,24 @@ function getXlsxPopulate() {
 
 /**
  * Standard styling for labels and headers
+ * Matches template: bold, no borders on labels themselves
  */
 const LABEL_STYLE = {
   bold: true,
   fontSize: 11,
   fontFamily: 'Calibri',
-  // NO fill/background color for labels - they should be plain white
+  // NO borders or fill - labels are plain
+  horizontalAlignment: 'left',
+  verticalAlignment: 'center'
+};
+
+/**
+ * Styling for data cells with full borders
+ * Matches template: borders on all 4 sides
+ */
+const DATA_CELL_STYLE = {
+  fontSize: 11,
+  fontFamily: 'Calibri',
   border: {
     top: { style: 'thin', color: '000000' },
     bottom: { style: 'thin', color: '000000' },
@@ -32,7 +44,11 @@ const LABEL_STYLE = {
   verticalAlignment: 'center'
 };
 
-const DATA_CELL_STYLE = {
+/**
+ * Styling for data cells with borders on all sides
+ * Used in merged cell data regions
+ */
+const MERGED_DATA_STYLE = {
   fontSize: 11,
   fontFamily: 'Calibri',
   border: {
@@ -90,7 +106,7 @@ export async function exportCharacter(character) {
  */
 function configureSheet1(sheet, character) {
   const { strings, sheet1: sheet1Config } = TEMPLATE_LABELS;
-  const { columnWidths, labels } = sheet1Config;
+  const { columnWidths, labels, mergedCells } = sheet1Config;
   
   // Set column widths
   columnWidths.forEach((width, index) => {
@@ -100,8 +116,18 @@ function configureSheet1(sheet, character) {
   // Set default row height
   sheet.row(1).height(18);
   
-  // Apply labels and data to cells based on template mapping
+  // Apply merged cells from template
+  if (mergedCells && Array.isArray(mergedCells)) {
+    mergedCells.forEach(range => {
+      try {
+        sheet.mergeCells(range);
+      } catch (error) {
+        console.warn(`Warning: Could not merge cells ${range}:`, error.message);
+      }
+    });
+  }
   
+  // Apply labels (without borders - they are plain text)
   for (const [cellAddress, labelIndex] of Object.entries(labels)) {
     const labelText = strings[labelIndex];
     const cell = sheet.cell(cellAddress);
@@ -109,7 +135,7 @@ function configureSheet1(sheet, character) {
     // Set label text
     cell.value(labelText);
     
-    // Apply label styling
+    // Apply label styling (bold, no borders)
     applyStyle(cell, LABEL_STYLE);
     
     // Auto-fit height for wrapped labels
@@ -120,6 +146,7 @@ function configureSheet1(sheet, character) {
   }
   
   // Populate character data next to labels
+  // These data cells get borders on all sides
   const dataMapping = {
     'B1': character.name,
     'L1': character.player,
@@ -162,13 +189,46 @@ function configureSheet1(sheet, character) {
   };
   
   // Apply data to cells
+  // Only add borders to cells that are actual data cells (not part of a merged range's middle)
+  const cellsWithBorders = new Set([
+    'B1', 'L1', 'B3', 'J3', 'N3', 'B4', 'J4', 'N4', 'B5', 'J5', 'B6', 'J6',
+    'B8', 'B9', 'B10', 'B13', 'D13', 'E13', 'G13', 'J13', 'N13', 'D14', 'J14', 'N14',
+    'D15', 'J15', 'N15', 'D16', 'J16', 'N16', 'D17', 'J17', 'N17', 'D18', 'J18',
+    'D21', 'N21', 'N22'
+  ]);
+  
   for (const [cellAddress, value] of Object.entries(dataMapping)) {
     if (value !== undefined && value !== null) {
       const cell = sheet.cell(cellAddress);
       cell.value(value);
-      applyStyle(cell, DATA_CELL_STYLE);
+      
+      // Apply data styling with borders
+      if (cellsWithBorders.has(cellAddress)) {
+        applyStyle(cell, DATA_CELL_STYLE);
+      }
     }
   }
+  
+  // Apply borders to merged cell ranges (border on first cell only)
+  const mergedDataRanges = [
+    'E1:I1',      // Character Name
+    'D3:G3',      // Side data
+    'I3:J3',      // Birthplace
+    'D4:G4',      // Species data
+    'I4:J4',      // Culture
+    'D5:G5',      // Age data
+    'I5:J5',      // Gender
+    'D6:G6',      // Weight data
+    'I6:J6',      // Mass
+    'D8:K8',      // Motivation
+    'D9:K9',      // Background
+    'D10:K10'     // Origin Type
+  ];
+  
+  mergedDataRanges.forEach(range => {
+    const firstCell = sheet.cell(range.split(':')[0]);
+    applyStyle(firstCell, DATA_CELL_STYLE);
+  });
 }
 
 /**

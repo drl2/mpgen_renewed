@@ -98,6 +98,43 @@ export const TEMPLATE_LABELS = {
       'C21': 35,  // Ability
       'M22': 37   // Move (Leap) - has formula
     },
+    // Merged cells from template: ranges where data should span multiple columns
+    mergedCells: [
+      'E1:I1',      // Character Name data span
+      'A3:C3',      // Side label span
+      'D3:G3',      // Side data span
+      'I3:J3',      // Birthplace span
+      'A4:C4',      // Species label span
+      'D4:G4',      // Species data span
+      'I4:J4',      // Culture span
+      'A5:C5',      // Age label span
+      'D5:G5',      // Age data span
+      'I5:J5',      // Gender span
+      'A6:C6',      // Weight label span
+      'D6:G6',      // Weight data span (no bottom border in template)
+      'I6:J6',      // Mass span
+      'D8:K8',      // Motivation data span
+      'D9:K9',      // Background data span
+      'D10:K10',    // Origin Type data span
+      'I13:J13',    // Power data span
+      'I14:J14',    // Hits data span
+      'I15:J15',    // Initiative data span
+      'C22:K22',    // Skills/abilities section spans
+      'C23:K23',
+      'C24:K24',
+      'C25:K25',
+      'C26:K26',
+      'C27:K27',
+      'C28:K28',
+      'C29:K29',
+      'C30:K30',
+      'C31:K31',
+      'C32:K32',
+      'C33:K33',
+      'C34:K34',
+      'C35:K35',
+      'C36:K36'
+    ],
     // Column widths from template XML (columns 1-14 have specific widths)
     columnWidths: [5.28, 1.66, 6.23, 6.67, 2.36, 7.92, 4.86, 2.08, 7.36, 4.71, 13.47, 3.05, 16.81, 5.42]
   },
