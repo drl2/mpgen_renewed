@@ -1134,7 +1134,7 @@ class Application {
     const character = this.storage.getCharacter(id);
     if (!character) {
       console.error('❌ Character not found. Available characters:', this.storage.getCharacters().map(c => ({ id: c.id, type: typeof c.id })));
-      this.showError('Character not found');
+      this.ui.showError('Character not found');
       return;
     }
     
@@ -1147,7 +1147,7 @@ class Application {
     this.state.setState({ savedCharacters });
     
     // Refresh both character lists
-    this.renderCharactersList(); // Main "My Characters" section
+    this.ui.renderCharactersList(); // Main "My Characters" section
     
     // Also refresh modal list if it's open
     const modalList = document.getElementById('savedCharactersList');
@@ -1170,7 +1170,7 @@ class Application {
       }
     }
     
-    this.showSuccess(`Character "${characterName}" deleted`);
+    this.ui.showSuccess(`Character "${characterName}" deleted`);
     console.log('✅ Character deleted:', characterName);
   }
 
