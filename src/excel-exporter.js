@@ -74,7 +74,8 @@ export async function exportCharacter(character) {
     const fileName = `${character.name || 'Character'}_${timestamp}.xlsx`;
     
     // Write file and trigger download
-    const buffer = await workbook.toFileAsync();
+    // Use outputAsync() for browser (not toFileAsync() which is Node.js only)
+    const buffer = await workbook.outputAsync();
     triggerDownload(buffer, fileName);
     
     console.log('✅ Excel export completed:', fileName);
