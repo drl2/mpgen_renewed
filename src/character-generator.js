@@ -54,6 +54,7 @@ export class CharacterGenerator {
     const character = {};
 
     // === STEP 1: Power Level ===
+    console.log('🎲 Phase 1: Power Level');
     character.powerlevelId = params.powerlevelId || null;
     if (!character.powerlevelId) {
       character.powerlevelId = DiceRoller.roll(1, 4); // d4
@@ -78,6 +79,7 @@ export class CharacterGenerator {
     character.bcStart = bcStart;
 
     // === STEP 2: Side ===
+    console.log('🎲 Phase 2: Side');
     character.sideId = params.sideId || null;
     if (!character.sideId) {
       character.sideId = DiceRoller.roll(1, 3); // d3
@@ -88,46 +90,60 @@ export class CharacterGenerator {
     character.side = sideRecord.side;
 
     // === STEP 3: Birthplace (Complex cascading logic) ===
+    console.log('🎲 Phase 3: Birthplace');
     this._generateBirthplace(character, params);
 
     // === STEP 4: Species ===
+    console.log('🎲 Phase 4: Species');
     this._generateSpecies(character, params);
     character.cpPerAbility += (this.dataLoader.findById('species', character.speciesId)?.cp_adjustment || 0);
     character.cpPerAbility = Math.max(0, character.cpPerAbility);
 
     // === STEP 5: Culture ===
+    console.log('🎲 Phase 5: Culture');
     this._generateCulture(character, params);
 
     // === STEP 6: Age (rolled here in Python code) ===
+    console.log('🎲 Phase 6: Age');
     character.age = DiceRoller.rollMultiple(2, 10) + 10; // 2d10 + 10
 
     // === STEP 7: Gender & Sexuality (4 independent characteristics) ===
+    console.log('🎲 Phase 7: Gender & Sexuality');
     this._generateGender(character, params);
 
     // === STEP 8: Basic Stats (5 characteristics chosen by rolling) ===
+    console.log('🎲 Phase 8: Basic Stats');
     this._generateStats(character);
 
     // === STEP 9: Derived Stats (calculated from Basic Characteristics) ===
+    console.log('🎲 Phase 9: Derived Stats');
     this._generateDerivedStats(character);
 
     // === STEP 10: Weight & Mass ===
+    console.log('🎲 Phase 10: Weight & Mass');
     this._generateWeight(character);
 
     // === STEP 11: Backgrounds (3 selections) ===
+    console.log('🎲 Phase 11: Backgrounds');
     this._generateBackgrounds(character, params);
 
     // === STEP 12: Motivations ===
+    console.log('🎲 Phase 12: Motivations');
     this._generateMotivations(character, params);
 
     // === STEP 13: Origin Type ===
+    console.log('🎲 Phase 13: Origin Type');
     this._generateOriginType(character, params);
 
     // === STEP 14: Abilities & Weaknesses ===
+    console.log('🎲 Phase 14: Abilities & Weaknesses');
     this._generateAbilities(character);
 
     // === STEP 15: Caps & To-Hit Calculations ===
+    console.log('🎲 Phase 15: Caps & To-Hit');
     this._generateCapsAndToHit(character);
 
+    console.log('✅ Generation complete');
     return character;
   }
 
@@ -372,7 +388,8 @@ export class CharacterGenerator {
     const statsDone = [];
     let bcStart = character.bcStart;
 
-    while (statsDone.length < 5) {
+    let statAttempts = 0;
+    while (statsDone.length < 5 && statAttempts < 1000) {
       const roll = DiceRoller.roll(1, 10); // d10
       const statRecord = this.dataLoader.findByRoll('stat', roll);
       if (statRecord && !statsDone.includes(statRecord.abbrev)) {
@@ -380,6 +397,7 @@ export class CharacterGenerator {
         stats[statRecord.abbrev] = bcStart;
         bcStart -= 2;
       }
+      statAttempts++;
     }
 
     character.strength = stats.ST;
@@ -390,9 +408,19 @@ export class CharacterGenerator {
   }
 
   _generateDerivedStats(character) {
-    const findBCDetail = (bc) => this.dataLoader.findByField('bcdetail', 'bc_score', bc)[0] || 
-                                 this.dataLoader.getTable('bcdetail').find(r => 
-                                   r.bc_score_min <= bc && bc <= r.bc_score_max);
+    const findBCDetail = (bc) => {
+      // Try exact match first
+      const matching = this.dataLoader.filterByField('bcdetail', 'bc_score', bc);
+      if (matching.length > 0) return matching[0];
+      
+      // Otherwise scan all records for range match
+      const bcTable = this.dataLoader.cache['bcdetail'];
+      if (!bcTable || !Array.isArray(bcTable)) return null;
+      return bcTable.find(r => 
+        typeof r.bc_score_min === 'number' && typeof r.bc_score_max === 'number' &&
+        r.bc_score_min <= bc && bc <= r.bc_score_max
+      ) || null;
+    };
 
     const stStats = findBCDetail(character.strength);
     const enStats = findBCDetail(character.endurance);
@@ -432,7 +460,7 @@ export class CharacterGenerator {
     character.weight = DiceRoller.rollMultiple(wdCount, weightDie) * 10;
 
     const halfMassed = character.weight / 2;
-    const bcDetails = this.dataLoader.getTable('bcdetail');
+    const bcDetails = this.dataLoader.cache['bcdetail'] || [];
     const closestLower = bcDetails.filter(r => r.carrying_capacity_st <= halfMassed)
       .sort((a, b) => b.carrying_capacity_st - a.carrying_capacity_st)[0];
     const closestHigher = bcDetails.filter(r => r.carrying_capacity_st >= halfMassed)
@@ -447,12 +475,14 @@ export class CharacterGenerator {
 
   _generateBackgrounds(character, params) {
     character.backgrounds = [];
-    while (character.backgrounds.length < 3) {
+    let bgAttempts = 0;
+    while (character.backgrounds.length < 3 && bgAttempts < 1000) {
       const roll = DiceRoller.rollD100();
       const bg = this.dataLoader.findByRoll('background', roll);
-      if (params.keepDuplicates || !character.backgrounds.includes(bg.background)) {
+      if (bg && (params.keepDuplicates || !character.backgrounds.includes(bg.background))) {
         character.backgrounds.push(bg.background);
       }
+      bgAttempts++;
     }
   }
 
@@ -462,14 +492,18 @@ export class CharacterGenerator {
 
     if (params.motivationId) {
       const mot = this.dataLoader.findById('motivation', params.motivationId);
-      character.motivations.push(mot.motivation);
+      if (mot) {
+        character.motivations.push(mot.motivation);
+      }
     } else {
-      while (character.motivations.length < 2) {
+      let motAttempts = 0;
+      while (character.motivations.length < 2 && motAttempts < 1000) {
         const roll = DiceRoller.rollD100();
         const mot = this.dataLoader.findByContextAndRoll('motivation', character.sideId, roll);
-        if (params.keepDuplicates || !character.motivations.includes(mot.motivation)) {
+        if (mot && (params.keepDuplicates || !character.motivations.includes(mot.motivation))) {
           character.motivations.push(mot.motivation);
         }
+        motAttempts++;
       }
     }
   }
@@ -491,39 +525,47 @@ export class CharacterGenerator {
     if (character.powerlevelId === 1) return; // Normal power level has no powers
 
     // Offensive abilities (type_id = 1)
-    while (character.abilities.length < 2) {
+    let abAttempts = 0;
+    while (character.abilities.length < 2 && abAttempts < 1000) {
       const roll = DiceRoller.rollD100();
       const ability = this.dataLoader.findByContextAndRoll('ability', 1, roll);
       if (ability && !character.abilities.includes(ability.ability)) {
         character.abilities.push(ability.ability);
       }
+      abAttempts++;
     }
 
     // Defensive abilities (type_id = 2)
-    while (character.abilities.length < 4) {
+    abAttempts = 0;
+    while (character.abilities.length < 4 && abAttempts < 1000) {
       const roll = DiceRoller.rollD100();
       const ability = this.dataLoader.findByContextAndRoll('ability', 2, roll);
       if (ability && !character.abilities.includes(ability.ability)) {
         character.abilities.push(ability.ability);
       }
+      abAttempts++;
     }
 
     // Miscellaneous abilities (type_id = 4)
-    while (character.abilities.length < 6) {
+    abAttempts = 0;
+    while (character.abilities.length < 6 && abAttempts < 1000) {
       const roll = DiceRoller.rollD100();
       const ability = this.dataLoader.findByContextAndRoll('ability', 4, roll);
       if (ability && !character.abilities.includes(ability.ability)) {
         character.abilities.push(ability.ability);
       }
+      abAttempts++;
     }
 
     // Weaknesses (type_id = 3)
-    while (character.weaknesses.length < 2) {
+    abAttempts = 0;
+    while (character.weaknesses.length < 2 && abAttempts < 1000) {
       const roll = DiceRoller.rollD100();
       const ability = this.dataLoader.findByContextAndRoll('ability', 3, roll);
       if (ability && !character.weaknesses.includes(ability.ability)) {
         character.weaknesses.push(ability.ability);
       }
+      abAttempts++;
     }
   }
 

@@ -993,6 +993,197 @@ label {
 }
 
 // ============================================================================
+// 16. NOTIFICATIONS
+// ============================================================================
+
+.notification {
+  position: fixed;
+  top: @spacing-xl;
+  right: @spacing-xl;
+  padding: @spacing-md @spacing-lg;
+  border-radius: @border-radius-md;
+  font-weight: 600;
+  z-index: 1000;
+  animation: slideInUp @transition-base ease-out;
+  max-width: 400px;
+  box-shadow: @shadow-md;
+  
+  &.notification-success {
+    background-color: #4caf50;
+    color: white;
+  }
+  
+  &.notification-error {
+    background-color: #f44336;
+    color: white;
+  }
+  
+  &.notification-info {
+    background-color: #2196f3;
+    color: white;
+  }
+  
+  &.notification-warning {
+    background-color: #ff9800;
+    color: white;
+  }
+}
+
+// ============================================================================
+// 16b. CHARACTER DISPLAY STYLES
+// ============================================================================
+
+.character-display {
+  background-color: @bg-secondary;
+  border-radius: @border-radius-md;
+  overflow-y: auto;
+  max-height: 600px;
+  
+  .character-section {
+    padding: @spacing-md;
+    border-bottom: @border-width solid @border-color;
+    
+    h4 {
+      margin: 0 0 @spacing-md 0;
+      color: @primary-color;
+      font-size: @font-size-lg;
+      font-weight: 700;
+    }
+    
+    &:last-child {
+      border-bottom: none;
+    }
+  }
+}
+
+.character-header {
+  background: linear-gradient(135deg, @primary-color, @secondary-color);
+  color: white;
+  padding: @spacing-lg;
+  
+  .character-name {
+    margin: 0 0 @spacing-xs 0;
+    font-size: @font-size-xl;
+    font-weight: 700;
+  }
+  
+  .character-meta {
+    margin: 0;
+    font-size: @font-size-sm;
+    opacity: 0.9;
+  }
+}
+
+.character-stats-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(80px, 1fr));
+  gap: @spacing-md;
+  margin: @spacing-md 0;
+}
+
+.stat-block {
+  background-color: @bg-primary;
+  border: @border-width solid @border-color;
+  border-radius: @border-radius-sm;
+  padding: @spacing-md;
+  text-align: center;
+  transition: @transition-base all;
+  
+  &:hover {
+    background-color: @bg-secondary;
+    transform: translateY(-2px);
+    box-shadow: @shadow-sm;
+  }
+}
+
+.stat-label {
+  font-size: @font-size-sm;
+  color: @text-secondary;
+  text-transform: uppercase;
+  letter-spacing: 0.5px;
+  font-weight: 600;
+  margin-bottom: @spacing-xs;
+}
+
+.stat-value {
+  font-size: @font-size-lg;
+  font-weight: 700;
+  color: @primary-color;
+}
+
+.character-info {
+  display: grid;
+  gap: @spacing-sm;
+  
+  p {
+    margin: 0;
+    font-size: @font-size-sm;
+    
+    strong {
+      color: @primary-color;
+      margin-right: @spacing-xs;
+    }
+  }
+}
+
+.derived-stats {
+  display: grid;
+  gap: @spacing-sm;
+  
+  p {
+    margin: 0;
+    font-size: @font-size-sm;
+    
+    strong {
+      color: @primary-color;
+      margin-right: @spacing-xs;
+    }
+  }
+}
+
+.weight-info {
+  display: grid;
+  gap: @spacing-sm;
+  
+  p {
+    margin: 0;
+    font-size: @font-size-sm;
+    
+    strong {
+      color: @primary-color;
+      margin-right: @spacing-xs;
+    }
+  }
+}
+
+.ability-list,
+.background-list,
+.motivation-list {
+  list-style: none;
+  padding: 0;
+  margin: 0;
+  
+  li {
+    padding: @spacing-sm @spacing-md;
+    margin-bottom: @spacing-xs;
+    background-color: @bg-primary;
+    border-left: 4px solid @primary-color;
+    border-radius: @border-radius-sm;
+    font-size: @font-size-sm;
+  }
+}
+
+.empty-abilities,
+.empty-backgrounds,
+.empty-motivations {
+  color: @text-secondary;
+  font-style: italic;
+  margin: 0;
+  padding: @spacing-md;
+  text-align: center;
+}
+
+// ============================================================================
 // 17. PRINT STYLES
 // ============================================================================
 

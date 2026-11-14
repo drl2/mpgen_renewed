@@ -3,6 +3,10 @@
 // Vanilla JavaScript SPA
 // ============================================================================
 
+// Import modules (using ES6 modules)
+import { DiceRoller } from './diceroller.js';
+import { CharacterGenerator } from './character-generator.js';
+
 /**
  * Application State Manager
  * Centralized state with observer pattern for reactivity
@@ -260,9 +264,9 @@ class DataLoader {
     const table = this.cache[tableName];
     if (!table || !Array.isArray(table)) return null;
     
-    // Try common context field names
-    const contextFields = ['region_id', 'world_id', 'dimension_id', 'birthplace_id', 
-                           'species_id', 'culture_id', 'timeperiod_id', 'side_id'];
+    // Try common context field names (order matters - check table-specific names first)
+    const contextFields = ['ability_type_id', 'region_id', 'world_id', 'dimension_id', 'birthplace_id', 
+                           'species_id', 'culture_id', 'timeperiod_id', 'side_id', 'type_id'];
     
     for (const fieldName of contextFields) {
       const match = table.find(record => 
@@ -301,11 +305,37 @@ class DataLoader {
     const table = this.cache[tableName];
     if (!table || !Array.isArray(table)) return null;
     
+    // Map table names to their name/display fields
+    const nameFields = {
+      powerlevel: 'power_level',
+      side: 'side',
+      motivation: 'motivation',
+      origintype: 'origin_type',
+      birthplace: 'birthplace',
+      knownregion: 'region',
+      lostregion: 'region',
+      timeperiod: 'time_period',
+      otherworld: 'world',
+      otherdimension: 'dimension',
+      species: 'species_name',
+      culture: 'culture_name',
+      genderidentity: 'gender_identity',
+      genderexpression: 'gender_expression',
+      biologicalsex: 'biological_sex',
+      sexualattraction: 'sexual_attraction',
+      ability: 'ability_name',
+      abilitytype: 'ability_type',
+      background: 'background_name',
+      bodytype: 'body_type',
+      stat: 'stat_name',
+      bcdetail: 'stat_name'
+    };
+    
+    const nameField = nameFields[tableName] || 'name';
     const nameLower = name.toLowerCase();
+    
     return table.find(record => {
-      // Try common name field names
-      const nameValue = record.name || record.ability_type || record.side || 
-                        record.power_level || record.stat_name || '';
+      const nameValue = record[nameField] || '';
       return nameValue.toLowerCase() === nameLower;
     }) || null;
   }
@@ -323,55 +353,6 @@ class DataLoader {
 
 /**
  * Character Generator
- * Handles character generation logic
- */
-class CharacterGenerator {
-  constructor(data) {
-    this.data = data;
-  }
-  
-  generate(options = {}) {
-    // This is where the complex character generation algorithm will be implemented
-    // For Phase 2, this is a placeholder
-    const character = {
-      id: this.generateId(),
-      name: this.generateName(options),
-      world: options.world || null,
-      timePeriod: options.timePeriod || null,
-      species: options.species || null,
-      culture: options.culture || null,
-      birthplace: options.birthplace || null,
-      ability: options.ability || null,
-      dimension: options.dimension || null,
-      attributes: {
-        strength: Math.floor(Math.random() * 10) + 1,
-        dexterity: Math.floor(Math.random() * 10) + 1,
-        constitution: Math.floor(Math.random() * 10) + 1,
-        intelligence: Math.floor(Math.random() * 10) + 1,
-        wisdom: Math.floor(Math.random() * 10) + 1,
-        charisma: Math.floor(Math.random() * 10) + 1
-      },
-      createdAt: new Date().toISOString()
-    };
-    
-    return character;
-  }
-  
-  generateId() {
-    return 'char_' + Date.now() + '_' + Math.random().toString(36).substr(2, 9);
-  }
-  
-  generateName(options) {
-    // Placeholder name generation
-    const firstNames = ['Aria', 'Kai', 'Zephyr', 'Nova', 'Orion', 'Lyric', 'Sage', 'Atlas'];
-    const lastNames = ['Starborne', 'Skywalker', 'Fireheart', 'Shadowblade', 'Stormwind'];
-    
-    return firstNames[Math.floor(Math.random() * firstNames.length)] + ' ' +
-           lastNames[Math.floor(Math.random() * lastNames.length)];
-  }
-}
-
-/**
  * Local Storage Manager
  * Handles saving and loading characters from localStorage
  */
@@ -492,10 +473,8 @@ class UIController {
   }
   
   attachEventListeners() {
-    this.elements.generateBtn.addEventListener('click', () => this.handleGenerate());
-    this.elements.randomBtn.addEventListener('click', () => this.handleRandom());
-    this.elements.saveBtn.addEventListener('click', () => this.handleSave());
-    this.elements.exportBtn.addEventListener('click', () => this.handleExport());
+    // Event listeners now handled by Application.setupFormHandlers()
+    // This method is deprecated but kept for compatibility
   }
   
   handleGenerate() {
@@ -606,26 +585,61 @@ class UIController {
   }
   
   populateSelects(data) {
+    // Map select field IDs to data table names
     const selects = {
-      worldSelect: data.worlds,
-      timeperiodSelect: data.timePeriods,
-      speciesSelect: data.species,
-      cultureSelect: data.cultures,
-      birthplaceSelect: data.birthplaces,
-      abilitySelect: data.abilities,
-      dimensionSelect: data.dimensions
+      powerlevelSelect: 'powerlevel',
+      sideSelect: 'side',
+      motivationSelect: 'motivation',
+      origintypeSelect: 'origintype',
+      birthplaceSelect: 'birthplace',
+      knownregionSelect: 'knownregion',
+      lostregionSelect: 'lostregion',
+      timeperiodSelect: 'timeperiod',
+      otherworldSelect: 'otherworld',
+      otherdimensionSelect: 'otherdimension',
+      speciesSelect: 'species',
+      cultureSelect: 'culture',
+      genderidentitySelect: 'genderidentity',
+      genderexpressionSelect: 'genderexpression',
+      biologicalsexSelect: 'biologicalsex',
+      sexualattractionSelect: 'sexualattraction'
     };
     
-    Object.entries(selects).forEach(([selectId, items]) => {
+    // Map table names to display field names
+    const displayFields = {
+      powerlevel: 'power_level',
+      side: 'side',
+      motivation: 'motivation',
+      origintype: 'origin_type',
+      birthplace: 'birthplace',
+      knownregion: 'region',
+      lostregion: 'region',
+      timeperiod: 'time_period',
+      otherworld: 'world',
+      otherdimension: 'dimension',
+      species: 'species_name',
+      culture: 'culture',
+      genderidentity: 'gender_identity',
+      genderexpression: 'gender_expression',
+      biologicalsex: 'biological_sex',
+      sexualattraction: 'sexual_attraction'
+    };
+    
+    Object.entries(selects).forEach(([selectId, tableName]) => {
       const select = this.elements[selectId];
-      if (select && items.length > 0) {
-        items.forEach(item => {
-          const option = document.createElement('option');
-          option.value = typeof item === 'string' ? item : item.name || item.id;
-          option.textContent = typeof item === 'string' ? item : item.name || item.id;
-          select.appendChild(option);
-        });
-      }
+      if (!select) return;
+      
+      const items = data[tableName];
+      if (!items || !Array.isArray(items)) return;
+      
+      const displayField = displayFields[tableName];
+      
+      items.forEach(item => {
+        const option = document.createElement('option');
+        option.value = item.id;
+        option.textContent = displayField ? (item[displayField] || `ID: ${item.id}`) : `ID: ${item.id}`;
+        select.appendChild(option);
+      });
     });
   }
 }
@@ -653,8 +667,8 @@ class Application {
       const data = await this.dataLoader.loadAll();
       this.state.setState({ data });
       
-      // Initialize generator
-      this.generator = new CharacterGenerator(data);
+      // Initialize generator with dataLoader
+      this.generator = new CharacterGenerator(this.dataLoader);
       
       // Initialize UI
       this.ui = new UIController(this.state, this.generator, this.storage);
@@ -663,6 +677,9 @@ class Application {
       
       // Initialize router
       this.router = new Router(this.state);
+      
+      // Setup form event listeners
+      this.setupFormHandlers();
       
       // Subscribe to state changes
       this.state.subscribe((state) => {
@@ -680,6 +697,400 @@ class Application {
         error: 'Failed to initialize application: ' + error.message 
       });
     }
+  }
+
+  /**
+   * Setup form event listeners
+   */
+  setupFormHandlers() {
+    const generateBtn = document.getElementById('generateBtn');
+    const randomBtn = document.getElementById('randomBtn');
+    const saveBtn = document.getElementById('saveBtn');
+
+    if (generateBtn) {
+      generateBtn.addEventListener('click', () => this.handleGenerateClick());
+    }
+
+    if (randomBtn) {
+      randomBtn.addEventListener('click', () => this.handleRandomClick());
+    }
+
+    if (saveBtn) {
+      saveBtn.addEventListener('click', () => this.handleSaveClick());
+    }
+
+    console.log('✓ Form handlers attached');
+  }
+
+  /**
+   * Handle Generate button click - collect form parameters and generate character
+   */
+  async handleGenerateClick() {
+    try {
+      console.log('🎲 Generating character with selected presets...');
+      
+      // Show loading state
+      const generateBtn = document.getElementById('generateBtn');
+      const originalText = generateBtn.textContent;
+      generateBtn.disabled = true;
+      generateBtn.textContent = 'Generating...';
+      
+      // Collect all 18 form parameters
+      const params = this.collectFormParameters();
+      
+      // Validate parameters
+      this.validateParameters(params);
+      
+      // Generate character with 5-second timeout
+      const generateWithTimeout = Promise.race([
+        this.generator.generate(params),
+        new Promise((_, reject) => 
+          setTimeout(() => reject(new Error('Character generation timed out after 5 seconds')), 5000)
+        )
+      ]);
+      const character = await generateWithTimeout;
+      
+      // Update state with generated character
+      this.state.setState({ currentCharacter: character });
+      
+      // Display character
+      this.displayCharacter(character);
+      
+      // Enable save button
+      const saveBtn = document.getElementById('saveBtn');
+      if (saveBtn) {
+        saveBtn.disabled = false;
+      }
+      
+      console.log('✅ Character generated successfully:', character);
+      
+      // Restore button
+      generateBtn.disabled = false;
+      generateBtn.textContent = originalText;
+      
+    } catch (error) {
+      console.error('❌ Error generating character:', error);
+      this.showError(`Failed to generate character: ${error.message}`);
+      
+      // Restore button
+      const generateBtn = document.getElementById('generateBtn');
+      generateBtn.disabled = false;
+      generateBtn.textContent = 'Generate Character';
+    }
+  }
+
+  /**
+   * Handle All Random button click - generate with all random values
+   */
+  async handleRandomClick() {
+    try {
+      console.log('🎰 Generating character with all random values...');
+      
+      // Clear all form fields
+      const selects = document.querySelectorAll('.preset-column select');
+      selects.forEach(select => {
+        select.value = '';
+      });
+      
+      // Uncheck duplicates
+      const dupesCheckbox = document.getElementById('allowDupesCheckbox');
+      if (dupesCheckbox) {
+        dupesCheckbox.checked = false;
+      }
+      
+      // Generate with empty parameters (all random)
+      await this.handleGenerateClick();
+      
+    } catch (error) {
+      console.error('❌ Error generating random character:', error);
+      this.showError(`Failed to generate random character: ${error.message}`);
+    }
+  }
+
+  /**
+   * Handle Save button click - save character to localStorage
+   */
+  async handleSaveClick() {
+    try {
+      const character = this.state.state.currentCharacter;
+      
+      if (!character) {
+        this.showError('No character to save');
+        return;
+      }
+      
+      // Add timestamp
+      character.createdAt = new Date().toISOString();
+      
+      // Save to localStorage
+      this.storage.saveCharacter(character);
+      
+      // Update state
+      const savedCharacters = this.storage.getCharacters();
+      this.state.setState({ savedCharacters });
+      
+      // Refresh character list
+      this.ui.renderCharactersList();
+      
+      this.showSuccess('Character saved successfully!');
+      console.log('✅ Character saved:', character);
+      
+    } catch (error) {
+      console.error('❌ Error saving character:', error);
+      this.showError(`Failed to save character: ${error.message}`);
+    }
+  }
+
+  /**
+   * Collect all 18 form parameters from form fields
+   * @returns {Object} - Parameters object for character generation
+   */
+  collectFormParameters() {
+    const params = {
+      powerlevelId: this.getFormValue('powerlevelSelect'),
+      sideId: this.getFormValue('sideSelect'),
+      birthplaceId: this.getFormValue('birthplaceSelect'),
+      speciesId: this.getFormValue('speciesSelect'),
+      cultureId: this.getFormValue('cultureSelect'),
+      genderIdentityId: this.getFormValue('genderIdentitySelect'),
+      genderExpressionId: this.getFormValue('genderExpressionSelect'),
+      biologicalSexId: this.getFormValue('biologicalSexSelect'),
+      sexualAttractionId: this.getFormValue('sexualAttractionSelect'),
+      motivationId: this.getFormValue('motivationSelect'),
+      originTypeId: this.getFormValue('originTypeSelect'),
+      keepDuplicates: document.getElementById('allowDupesCheckbox')?.checked || false,
+      lostRegionId: this.getFormValue('lostRegionSelect'),
+      knownRegionId: this.getFormValue('knownRegionSelect'),
+      otherWorldId: this.getFormValue('otherWorldSelect'),
+      otherDimensionId: this.getFormValue('otherDimensionSelect'),
+      timePeriodId: this.getFormValue('timePeriodSelect')
+    };
+
+    console.log('📋 Collected parameters:', params);
+    return params;
+  }
+
+  /**
+   * Get form value and convert to integer or null
+   * @param {string} elementId - Form element ID
+   * @returns {number|null} - Integer value or null if empty
+   */
+  getFormValue(elementId) {
+    const element = document.getElementById(elementId);
+    if (!element) {
+      console.warn(`Form element not found: ${elementId}`);
+      return null;
+    }
+
+    const value = element.value;
+    
+    // Return null if empty (means random)
+    if (value === '' || value === null) {
+      return null;
+    }
+
+    // Try to parse as integer
+    const intValue = parseInt(value, 10);
+    if (isNaN(intValue)) {
+      console.warn(`Invalid value for ${elementId}: ${value}`);
+      return null;
+    }
+
+    return intValue;
+  }
+
+  /**
+   * Validate parameters before generation
+   * @param {Object} params - Parameters to validate
+   * @throws {Error} - If validation fails
+   */
+  validateParameters(params) {
+    // All parameters are optional (null means random)
+    // Just verify they're either null or positive integers
+    
+    const numericFields = [
+      'powerlevelId', 'sideId', 'birthplaceId', 'speciesId', 'cultureId',
+      'genderIdentityId', 'genderExpressionId', 'biologicalSexId', 'sexualAttractionId',
+      'motivationId', 'originTypeId', 'lostRegionId', 'knownRegionId',
+      'otherWorldId', 'otherDimensionId', 'timePeriodId'
+    ];
+
+    for (const field of numericFields) {
+      const value = params[field];
+      if (value !== null && (typeof value !== 'number' || value <= 0)) {
+        throw new Error(`Invalid ${field}: must be positive integer or null`);
+      }
+    }
+
+    if (typeof params.keepDuplicates !== 'boolean') {
+      throw new Error('Invalid keepDuplicates: must be boolean');
+    }
+
+    console.log('✓ Parameters validated');
+  }
+
+  /**
+   * Display generated character in UI
+   * @param {Object} character - Generated character object
+   */
+  displayCharacter(character) {
+    const characterCard = document.getElementById('characterCard');
+    if (!characterCard) {
+      console.warn('Character card element not found');
+      return;
+    }
+
+    // Create character display HTML
+    const html = this.createCharacterHTML(character);
+    characterCard.innerHTML = html;
+
+    console.log('✓ Character displayed');
+  }
+
+  /**
+   * Create HTML for character display
+   * @param {Object} character - Character object
+   * @returns {string} - HTML string
+   */
+  createCharacterHTML(character) {
+    // Format statistics nicely
+    const statsHtml = `
+      <div class="character-stats-grid">
+        <div class="stat-block">
+          <div class="stat-label">Strength</div>
+          <div class="stat-value">${character.strength || 'N/A'}</div>
+        </div>
+        <div class="stat-block">
+          <div class="stat-label">Endurance</div>
+          <div class="stat-value">${character.endurance || 'N/A'}</div>
+        </div>
+        <div class="stat-block">
+          <div class="stat-label">Agility</div>
+          <div class="stat-value">${character.agility || 'N/A'}</div>
+        </div>
+        <div class="stat-block">
+          <div class="stat-label">Intelligence</div>
+          <div class="stat-value">${character.intelligence || 'N/A'}</div>
+        </div>
+        <div class="stat-block">
+          <div class="stat-label">Cool</div>
+          <div class="stat-value">${character.cool || 'N/A'}</div>
+        </div>
+      </div>
+    `;
+
+    // Format abilities
+    const abilitiesHtml = character.abilities && character.abilities.length > 0
+      ? `<ul class="ability-list">${character.abilities.map(a => `<li>${a}</li>`).join('')}</ul>`
+      : '<p class="empty-abilities">No abilities</p>';
+
+    // Format background
+    const backgroundHtml = character.backgrounds && character.backgrounds.length > 0
+      ? `<ul class="background-list">${character.backgrounds.map(b => `<li>${b}</li>`).join('')}</ul>`
+      : '<p class="empty-backgrounds">No backgrounds</p>';
+
+    return `
+      <div class="character-display">
+        <div class="character-header">
+          <h3 class="character-name">${character.species || 'Character'}</h3>
+          <p class="character-meta">${character.culture || 'Unknown Culture'} | ${character.side || 'Neutral'}</p>
+        </div>
+
+        <div class="character-section">
+          <h4>Basic Info</h4>
+          <div class="character-info">
+            <p><strong>Birthplace:</strong> ${character.birthplace || 'Unknown'}</p>
+            <p><strong>Age:</strong> ${character.age || 'Unknown'}</p>
+            <p><strong>Gender:</strong> ${character.gender || 'Unknown'}</p>
+            <p><strong>Power Level:</strong> ${character.powerlevel || 'Normal'}</p>
+            <p><strong>Origin:</strong> ${character.originType || 'Unknown'}</p>
+          </div>
+        </div>
+
+        <div class="character-section">
+          <h4>Base Characteristics</h4>
+          ${statsHtml}
+        </div>
+
+        <div class="character-section">
+          <h4>Derived Stats</h4>
+          <div class="derived-stats">
+            <p><strong>Hit Points:</strong> ${character.hits || 0}</p>
+            <p><strong>Power:</strong> ${character.power || 0}</p>
+            <p><strong>Physical Defense:</strong> ${character.physicalDefense || 0}</p>
+            <p><strong>Mental Defense:</strong> ${character.mentalDefense || 0}</p>
+            <p><strong>Move:</strong> ${character.move || 0}</p>
+          </div>
+        </div>
+
+        <div class="character-section">
+          <h4>Backgrounds</h4>
+          ${backgroundHtml}
+        </div>
+
+        ${character.abilities && character.abilities.length > 0 ? `
+          <div class="character-section">
+            <h4>Abilities</h4>
+            ${abilitiesHtml}
+          </div>
+        ` : ''}
+
+        ${character.motivations && character.motivations.length > 0 ? `
+          <div class="character-section">
+            <h4>Motivations</h4>
+            <ul class="motivation-list">
+              ${character.motivations.map(m => `<li>${m}</li>`).join('')}
+            </ul>
+          </div>
+        ` : ''}
+
+        <div class="character-section">
+          <h4>Weight & Capacity</h4>
+          <div class="weight-info">
+            <p><strong>Weight:</strong> ${character.weight || 0} lbs</p>
+            <p><strong>Carrying Capacity:</strong> ${character.carryingCapacity || 0} lbs</p>
+          </div>
+        </div>
+      </div>
+    `;
+  }
+
+  /**
+   * Show error message to user
+   * @param {string} message - Error message
+   */
+  showError(message) {
+    console.error('⚠️ Error:', message);
+    
+    // Create and show error notification
+    const notification = document.createElement('div');
+    notification.className = 'notification notification-error';
+    notification.textContent = message;
+    document.body.appendChild(notification);
+
+    // Auto-remove after 5 seconds
+    setTimeout(() => {
+      notification.remove();
+    }, 5000);
+  }
+
+  /**
+   * Show success message to user
+   * @param {string} message - Success message
+   */
+  showSuccess(message) {
+    console.log('✅ Success:', message);
+    
+    // Create and show success notification
+    const notification = document.createElement('div');
+    notification.className = 'notification notification-success';
+    notification.textContent = message;
+    document.body.appendChild(notification);
+
+    // Auto-remove after 3 seconds
+    setTimeout(() => {
+      notification.remove();
+    }, 3000);
   }
 }
 
