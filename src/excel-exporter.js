@@ -1,16 +1,16 @@
 /**
- * Excel Export Module - Uses SheetJS (XLSX) to load and modify template
- * Loads CharTemplate.xlsx, inserts character data, preserves all formatting
+ * Excel Export Module - Simple SheetJS approach
+ * Loads CharTemplate.xlsx, updates cell values, and exports.
+ * Note: SheetJS doesn't preserve complex formatting, but data export works.
  */
 
 /**
- * Main export function - loads template and inserts character data
+ * Main export function
  * @param {Object} character - Character data object
  * @returns {Promise<void>}
  */
 export async function exportCharacter(character) {
   try {
-    // Check if SheetJS is available
     if (typeof window === 'undefined' || !window.XLSX) {
       throw new Error('SheetJS library not loaded. Check that the CDN script is included in HTML.');
     }
@@ -22,10 +22,10 @@ export async function exportCharacter(character) {
     }
 
     const templateBuffer = await templateResponse.arrayBuffer();
-    const workbook = window.XLSX.read(new Uint8Array(templateBuffer), { type: 'array' });
-
-    // Get Sheet 1 (MPGen Character)
-    const sheet1 = workbook.Sheets[workbook.SheetNames[0]];
+    
+    // Read the template into SheetJS format
+    const template = window.XLSX.read(new Uint8Array(templateBuffer), { type: 'array' });
+    const sheet1 = template.Sheets[template.SheetNames[0]];
 
     // Insert character data into sheet1
     insertCharacterData(sheet1, character);
@@ -34,8 +34,8 @@ export async function exportCharacter(character) {
     const timestamp = new Date().toISOString().slice(0, 10);
     const fileName = `${character.name || 'Character'}_${timestamp}.xlsx`;
 
-    // Write and download
-    window.XLSX.writeFile(workbook, fileName);
+    // Write the workbook
+    window.XLSX.writeFile(template, fileName);
 
     console.log('✅ Excel export completed:', fileName);
   } catch (error) {
@@ -46,11 +46,10 @@ export async function exportCharacter(character) {
 
 /**
  * Insert character data into template sheet
- * Maps character fields to template cell addresses
+ * Updates only cell values to preserve formatting references
  */
 function insertCharacterData(sheet, character) {
   const cellMapping = {
-    // Sheet 1 data cells (adjacent to labels)
     'B1': character.name,
     'L1': character.player,
     'B3': character.side,
@@ -91,10 +90,13 @@ function insertCharacterData(sheet, character) {
     'N22': character.moveLeap
   };
 
-  // Insert data into cells
   for (const [cellAddress, value] of Object.entries(cellMapping)) {
     if (value !== undefined && value !== null) {
-      sheet[cellAddress] = { v: value, t: 's' };
+      if (sheet[cellAddress]) {
+        sheet[cellAddress].v = value;
+      } else {
+        sheet[cellAddress] = { v: value, t: 's' };
+      }
     }
   }
 }
