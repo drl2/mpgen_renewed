@@ -74,7 +74,7 @@ li {
 .app-header {
   background-color: #1a1a1a;
   color: #ecf0f1;
-  padding: 2rem 1.5rem;
+  padding: 0.5rem 1.5rem;
   box-shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.1);
   position: sticky;
   top: 0;
@@ -82,15 +82,34 @@ li {
 }
 .header-content {
   max-width: 1400px;
-  margin: 0 auto 1.5rem;
-  text-align: center;
+  margin: 0 auto;
+  display: flex;
+  align-items: center;
+  gap: 1rem;
+}
+.header-support {
+  display: flex;
+  align-items: center;
+  justify-content: flex-end;
+  gap: 0.5rem;
+  margin-left: auto;
+  color: #ecf0f1;
+  font-size: 0.75rem;
+  font-weight: 400;
+  text-align: right;
+}
+.support-links {
+  display: flex;
+  align-items: center;
+  justify-content: flex-end;
+  gap: 0.5rem;
 }
 .app-title {
-  font-size: 2rem;
+  font-size: 1.125rem;
   color: #ecf0f1;
-  margin-bottom: 0.5rem;
+  margin-bottom: 0;
   font-weight: 800;
-  letter-spacing: 2px;
+  letter-spacing: 0;
 }
 .app-subtitle {
   font-size: 0.875rem;
@@ -127,21 +146,31 @@ li {
   max-width: 1400px;
   margin: 0 auto;
   width: 100%;
-  padding: 3rem 1.5rem;
+  padding: 1rem 1.5rem 3rem;
   display: grid;
   grid-template-columns: 1fr 300px;
-  gap: 3rem;
+  gap: 1.5rem;
+  row-gap: 1rem;
+}
+.app-main > section {
+  margin-bottom: 0;
 }
 @media (max-width: 992px) {
   .app-main {
-    padding: 2rem 1rem;
+    padding: 1rem 1rem 2rem;
     gap: 1.5rem;
   }
 }
 @media (max-width: 768px) {
   .app-main {
     display: block;
-    padding: 1.5rem;
+    padding: 1rem 1.5rem 1.5rem;
+  }
+  .app-main > section {
+    margin-bottom: 1.5rem;
+  }
+  .app-main > section:last-child {
+    margin-bottom: 0;
   }
 }
 @media (max-width: 768px) {
@@ -231,6 +260,10 @@ section:last-child {
   display: flex;
   flex-direction: column;
 }
+.panel-input > h2 {
+  margin-bottom: 0;
+  padding-bottom: 0.25rem;
+}
 .panel-output {
   display: flex;
   flex-direction: column;
@@ -238,7 +271,7 @@ section:last-child {
 .preset-help {
   color: #7f8c8d;
   font-size: 0.875rem;
-  margin-bottom: 1.5rem;
+  margin-bottom: 0.5rem;
   font-style: italic;
 }
 .preset-column {
@@ -251,7 +284,8 @@ section:last-child {
   .panel-input {
     display: grid;
     grid-template-columns: 1fr 1fr 1fr;
-    gap: 1.5rem;
+    column-gap: 1.5rem;
+    row-gap: 0.5rem;
   }
   .panel-input > h2 {
     grid-column: 1 / -1;
@@ -265,6 +299,10 @@ section:last-child {
     margin-bottom: 0;
   }
   .panel-input > .form-actions {
+    grid-column: 1 / -1;
+    align-items: flex-start;
+  }
+  .panel-input > .preset-notes {
     grid-column: 1 / -1;
   }
 }
@@ -321,6 +359,17 @@ textarea {
   cursor: pointer;
   vertical-align: middle;
 }
+.preset-notes {
+  width: 100%;
+  box-sizing: border-box;
+  padding: 1rem;
+  background-color: #f5f5f5;
+  border-radius: 0.5rem;
+}
+.preset-notes p {
+  margin: 0;
+  color: #7f8c8d;
+}
 label:has(.form-checkbox) {
   display: flex;
   align-items: center;
@@ -330,7 +379,7 @@ label:has(.form-checkbox) {
   display: inline-block;
   padding: 0.5rem 1.5rem;
   border-radius: 0.5rem;
-  font-size: 1rem;
+  font-size: 0.875rem;
   cursor: pointer;
   text-decoration: none;
   user-select: none;
@@ -470,6 +519,20 @@ label:has(.form-checkbox) {
 .character-actions .btn {
   flex: 1;
 }
+.whats-next {
+  margin-top: 1.5rem;
+  padding: 1rem;
+  background-color: #f5f5f5;
+  border-radius: 0.5rem;
+  color: #7f8c8d;
+}
+.whats-next h3 {
+  margin-bottom: 0.5rem;
+  color: #2c3e50;
+}
+.whats-next p:last-child {
+  margin-bottom: 0;
+}
 .form-actions {
   display: flex;
   gap: 1rem;
@@ -484,10 +547,42 @@ label:has(.form-checkbox) {
   flex: 1;
 }
 @media (max-width: 768px) {
-  .section-characters,
+  .characters-column,
   .section-blog,
   .section-about {
     grid-column: 1 / -1;
+  }
+}
+.characters-column {
+  grid-column: 1;
+  grid-row: 2;
+  display: grid;
+  align-content: start;
+  gap: 1rem;
+}
+.characters-column > section {
+  margin-bottom: 0;
+}
+.section-blog {
+  grid-column: 2;
+  grid-row: 2;
+}
+.section-site-info {
+  padding: 1rem 1.5rem;
+  background-color: #f5f5f5;
+  border-radius: 0.5rem;
+  color: #7f8c8d;
+}
+.section-site-info p {
+  margin-bottom: 0.5rem;
+}
+.section-site-info p:last-child {
+  margin-bottom: 0;
+}
+@media (max-width: 768px) {
+  .characters-column,
+  .section-blog {
+    grid-row: auto;
   }
 }
 .characters-container,
@@ -512,7 +607,7 @@ label:has(.form-checkbox) {
   padding: 1rem;
   box-shadow: 0 1px 2px 0 rgba(0, 0, 0, 0.05);
   display: flex;
-  flex-direction: column;
+  align-items: flex-start;
   gap: 0.5rem;
   transition: all 300ms ease-in-out;
   cursor: pointer;
@@ -521,6 +616,10 @@ label:has(.form-checkbox) {
   box-shadow: 0 10px 15px -3px rgba(0, 0, 0, 0.1);
   transform: translateY(-4px);
 }
+.character-card-content {
+  min-width: 0;
+  flex: 1;
+}
 .character-card-name {
   font-weight: 700;
   color: #2c3e50;
@@ -528,6 +627,49 @@ label:has(.form-checkbox) {
 .character-card-meta {
   font-size: 0.875rem;
   color: #7f8c8d;
+}
+.character-card-load,
+.character-card-delete {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  flex: 0 0 auto;
+  width: 2rem;
+  height: 2rem;
+  padding: 0.25rem;
+  border: none;
+  background: transparent;
+  cursor: pointer;
+}
+.character-card-load:hover,
+.character-card-delete:hover,
+.character-card-load:focus,
+.character-card-delete:focus {
+  background: transparent;
+}
+.character-card-load {
+  margin-left: auto;
+  color: #2c3e50;
+}
+.character-card-load:hover,
+.character-card-load:focus {
+  color: #1a242f;
+}
+.character-card-delete {
+  color: #e74c3c;
+}
+.character-card-delete:hover,
+.character-card-delete:focus {
+  color: #d62c1a;
+}
+.character-action-icon {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  width: 1.25rem;
+  height: 1.25rem;
+  font-size: 1rem;
+  line-height: 1;
 }
 .empty-state {
   text-align: center;
@@ -539,6 +681,39 @@ label:has(.form-checkbox) {
   flex-direction: column;
   gap: 1.5rem;
   margin-top: 1.5rem;
+}
+.blog-post-list {
+  list-style: none;
+  margin: 0;
+  padding: 0;
+}
+.blog-post-list li {
+  margin: 0;
+  padding: 0.5rem 0;
+  border-bottom: 1px solid #bdc3c7;
+}
+.blog-post-list li:last-child {
+  border-bottom: 0;
+}
+.blog-post-list a {
+  display: block;
+  color: #2c3e50;
+}
+.blog-post-list a:hover {
+  color: #3498db;
+}
+.blog-error {
+  margin: 0;
+  color: #7f8c8d;
+}
+.blog-retry {
+  align-self: flex-start;
+  padding: 0.25rem 0.5rem;
+  border: 1px solid #bdc3c7;
+  border-radius: 0.25rem;
+  background-color: #f5f5f5;
+  color: #2c3e50;
+  cursor: pointer;
 }
 .blog-post {
   background-color: #f5f5f5;
@@ -710,14 +885,17 @@ label:has(.form-checkbox) {
     display: none;
   }
   .app-header {
-    padding: 1.5rem 1rem;
+    padding: 0.5rem 1rem;
   }
   .app-main {
     padding: 1rem;
     grid-template-columns: 1fr;
   }
   .app-title {
-    font-size: 1.5rem;
+    font-size: 1rem;
+  }
+  .header-content {
+    flex-wrap: wrap;
   }
 }
 @keyframes fadeIn {
@@ -751,6 +929,55 @@ label:has(.form-checkbox) {
 }
 .slide-in-up {
   animation: slideInUp 300ms ease-in-out ease-in-out;
+}
+.modal {
+  position: fixed;
+  inset: 0;
+  z-index: 1100;
+  align-items: center;
+  justify-content: center;
+  padding: 1.5rem;
+  overflow-y: auto;
+  background-color: rgba(0, 0, 0, 0.6);
+}
+.modal-content {
+  width: 100%;
+  max-width: 500px;
+  max-height: 100%;
+  overflow-y: auto;
+  background-color: #ffffff;
+  border-radius: 0.5rem;
+  box-shadow: 0 10px 15px -3px rgba(0, 0, 0, 0.1);
+}
+.modal-content.modal-wide {
+  max-width: 800px;
+}
+.modal-header {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  padding: 1rem 1.5rem;
+  border-bottom: 1px solid #bdc3c7;
+}
+.modal-header h3 {
+  margin: 0;
+}
+.modal-close {
+  padding: 0;
+  border: 0;
+  background: transparent;
+  color: #7f8c8d;
+  font-size: 2rem;
+  line-height: 1;
+  cursor: pointer;
+}
+.modal-body {
+  padding: 1.5rem;
+}
+.modal-actions {
+  display: flex;
+  justify-content: flex-end;
+  gap: 0.5rem;
 }
 .spin {
   animation: spin 1s linear infinite;
@@ -811,6 +1038,7 @@ label:has(.form-checkbox) {
   margin: 0 0 0.25rem 0;
   font-size: 1.5rem;
   font-weight: 700;
+  color: #ffffff;
 }
 .character-header .character-meta {
   margin: 0;
@@ -860,6 +1088,81 @@ label:has(.form-checkbox) {
 .character-info p strong {
   color: #2c3e50;
   margin-right: 0.25rem;
+}
+.character-table-wrapper {
+  overflow-x: auto;
+}
+.character-data-table {
+  width: 100%;
+  border-collapse: collapse;
+  font-size: 0.875rem;
+}
+.character-data-table th,
+.character-data-table td {
+  padding: 0.25rem 0.5rem;
+  border-bottom: 1px solid #bdc3c7;
+  text-align: left;
+  vertical-align: top;
+}
+.character-data-table th {
+  color: #2c3e50;
+  font-weight: 700;
+}
+.character-empty {
+  color: #7f8c8d;
+  font-style: italic;
+  margin: 0;
+}
+.background-selection,
+.motivation-selection,
+.ability-selection {
+  display: grid;
+  gap: 0.25rem;
+}
+#characterCard .background-option,
+#characterCard .motivation-option,
+#characterCard .ability-option {
+  display: flex;
+  align-items: center;
+  justify-content: flex-start;
+  gap: 0.5rem;
+  width: 100%;
+  box-sizing: border-box;
+  margin: 0;
+  padding: 0.5rem 1rem;
+  background-color: #ffffff;
+  border-left: 4px solid #2c3e50;
+  border-radius: 0.25rem;
+  font-size: 0.875rem;
+  text-align: left;
+  cursor: pointer;
+}
+#characterCard .background-option input[type="checkbox"],
+#characterCard .motivation-option input[type="checkbox"],
+#characterCard .ability-option input[type="checkbox"] {
+  flex: 0 0 auto;
+  width: auto;
+  margin: 0;
+  padding: 0;
+  border: 0;
+  border-radius: 0;
+}
+#characterCard .background-option span,
+#characterCard .motivation-option span,
+#characterCard .ability-option span {
+  flex: 1;
+  text-align: left;
+}
+#characterCard .background-option .ability-cost,
+#characterCard .motivation-option .ability-cost,
+#characterCard .ability-option .ability-cost {
+  flex: 0 0 3em;
+  color: #7f8c8d;
+}
+#characterCard .background-option input[type="checkbox"]:disabled,
+#characterCard .motivation-option input[type="checkbox"]:disabled,
+#characterCard .ability-option input[type="checkbox"]:disabled {
+  cursor: not-allowed;
 }
 .derived-stats {
   display: grid;

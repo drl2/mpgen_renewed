@@ -5,21 +5,21 @@
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <meta name="description" content="MPGEN - Mighty Protectors Character Quickstart. Create unique characters with species, cultures, abilities, and more.">
   <meta name="theme-color" content="#1a1a1a">
-  
-  <title>Mighty Protectors Character Quickstart</title>
+
+  <title>MPGEN - Mighty Protectors Character Quickstart</title>
   
   <!-- Stylesheets -->
   <link rel="stylesheet" href="mpgen.css">
   
   <!-- Preconnect to external services -->
   <link rel="preconnect" href="https://gaming.drl2.com">
+  <link rel="preconnect" href="https://pagead2.googlesyndication.com">
+  <script async src="https://pagead2.googlesyndication.com/pagead/js/adsbygoogle.js?client=ca-pub-9961840260002856" crossorigin="anonymous"></script>
   
   <!-- External Libraries -->
-  <!-- xlsx-populate - Full-featured Excel generation with complete styling support -->
+  <!-- xlsx-populate edits the existing template without rebuilding its formatting -->
   <script src="https://cdn.jsdelivr.net/npm/jszip@3/dist/jszip.min.js"></script>
   <script src="https://cdn.jsdelivr.net/npm/xlsx-populate@1.21.0/browser/xlsx-populate.min.js"></script>
-  <!-- SheetJS (xlsx) - Fallback for basic Excel functionality -->
-  <script src="https://cdn.jsdelivr.net/npm/xlsx@0.18.5/dist/xlsx.full.min.js"></script>
 </head>
 <body>
   <!-- Main Application Container -->
@@ -27,16 +27,17 @@
     <!-- Navigation Header -->
     <header class="app-header">
       <div class="header-content">
-        <h1 class="app-title">Mighty Protectors Character Quickstart</h1>
+        <h1 class="app-title">MPGEN - Mighty Protectors Character Quickstart</h1>
+        <div class="header-support">
+          <span>Support this site:</span>
+          <div class="support-links" aria-label="Ways to support this site">
+            <a href='https://ko-fi.com/S6S4CU7DC' target='_blank'><img src='images/kofi_symbol.webp' alt='Buy Me a Coffee at ko-fi.com' title='Buy Me a Coffee at ko-fi.com' style='width:30px;height:auto' /></a>
+            <a href="https://www.drivethrurpg.com/en/publisher/25220?affiliate_id=1692486" target="_blank" rel=" noopener"><img loading="lazy" decoding="async" src="https://gaming.drl2.com/wp-content/uploads/2026/11/dtrpglogo-e1794528627318.png" alt="View products on DriveThruRPG" title="View products on DriveThruRPG" style="width:30px;height:auto"/></a>
+            <a href="https://drl2.itch.io" target="_blank" rel=" noopener"><img loading="lazy" decoding="async" src="https://gaming.drl2.com/wp-content/uploads/2026/11/itch_white.webp" alt="View products on Itch.io" title="View products on Itch.io" style="width:30px;height:auto"/></a>
+            <a href="https://rpg-trader.com/creator/793/drl2" target="_blank" rel=" noopener"><img loading="lazy" decoding="async" src="https://gaming.drl2.com/wp-content/uploads/2026/11/rpg-trader-seller-find-me-on-e1794528498938.png" alt="Find this creator on RPG Trader" title="Find this creator on RPG Trader" style="width:30px;height:auto"/></a>
+          </div>
+        </div>
       </div>
-      <!-- <nav class="app-nav">
-        <ul class="nav-menu">
-          <li><a href="#generator" class="nav-link active">Generator</a></li>
-          <li><a href="#characters" class="nav-link">Characters</a></li>
-          <li><a href="#blog" class="nav-link">Blog</a></li>
-          <li><a href="#about" class="nav-link">About</a></li>
-        </ul>
-      </nav> -->
     </header>
 
     <!-- Main Content Area -->
@@ -167,11 +168,14 @@
               <button id="generateBtn" class="btn btn-primary">Generate Character</button>
               <button id="randomBtn" class="btn btn-secondary">All Random</button>
             </div>
+            <aside class="preset-notes">
+              <p>Non-random selections for Birthplace (and its related location options), Culture, and Species may override the default MP character generation rules and result in characters that don't occur "naturally"—e.g. a high-tech-culture Saurid from Pakistan, or a hero motivated by a desire for conquest. Please use this power responsibly!</p>
+            </aside>
           </div>
 
           <!-- Right Panel: Character Display -->
           <div class="panel panel-output">
-            <h2>Generated Character</h2>
+            <h2 id="characterSectionTitle">Generated Character</h2>
             <div id="characterCard" class="character-card">
               <div class="character-placeholder">
                 <p>Character will appear here...</p>
@@ -183,29 +187,47 @@
               <button id="loadBtn" class="btn btn-info" disabled>Load Character</button>
               <button id="exportBtn" class="btn btn-info" disabled>Export to Excel</button>
             </div>
-          </div>
-        </div>
-      </section>
-
-      <!-- Characters Section (Saved Characters) -->
-      <section id="characters" class="section-characters">
-        <div class="characters-container">
-          <h2>My Characters</h2>
-          <p class="section-description">Your saved characters are stored locally in your browser.</p>
-          
-          <div id="charactersList" class="characters-list">
-            <div class="empty-state">
-              <p>No saved characters yet. Generate and save your first character!</p>
+            <div id="whatsNext" class="whats-next" hidden>
+              <h3>Character Creation Next Steps</h3>
+              <p>Starting with section 2.1.16 in the
+                <a href="https://www.drivethrurpg.com/product/220501/VV-30-Mighty-Protectors?affiliate_id=1692486" target="_blank" rel="noopener noreferrer">Mighty Protectors manual</a>,
+                develop a character concept, determine the specifics of your abilities and weaknesses, record any stat changes related to your selections, and create a backstory.
+              </p>
             </div>
           </div>
         </div>
       </section>
 
+      <div class="characters-column">
+        <!-- Characters Section (Saved Characters) -->
+        <section id="characters" class="section-characters">
+          <div class="characters-container">
+            <h2>My Characters</h2>
+            <p class="section-description">Your saved characters are stored locally in your browser.</p>
+            <div id="charactersList" class="characters-list">
+              <div class="empty-state">
+                <p>No saved characters yet. Generate and save your first character!</p>
+              </div>
+            </div>
+          </div>
+        </section>
+
+        <section class="section-site-info" aria-label="Site information">
+          <p>This site is not affiliated with <a href="https://monkeyhousegames.com/" target="_blank" rel="noopener noreferrer">Monkey House Games</a>.</p>
+          <p>Official character sheets can be found in the back of the MP manual, or for free download from the
+            <a href="https://monkeyhousegames.com/downloads/" target="_blank" rel="noopener noreferrer">Monkey House Games downloads page</a>.
+            <i>Highly</i> recommended is the
+            <a href="https://www.drivethrurpg.com/product/222459/Mighty-Protectors-Excel-Record-Sheet-Pack?affiliate_id=1692486" target="_blank" rel="noopener noreferrer">Excel Record Sheet Pack</a>
+            (also compatible with Google Sheets, OpenOffice, etc.), which performs many of the necessary calculations for you as your character evolves.
+          </p>
+        </section>
+      </div>
+
       <!-- Blog Section -->
       <section id="blog" class="section-blog">
         <div class="blog-container">
-          <h2>MPGEN Blog</h2>
-          <p class="section-description">Latest updates and articles from the MPGEN blog.</p>
+          <h2>Recent Blog Posts</h2>
+          <p class="section-description">From <a href="https://gaming.drl2.com/" target="_blank" rel="noopener noreferrer">(Re)turning (to) the Tables</a></p>
           
           <div id="blogFeed" class="blog-feed">
             <div class="loading">Loading blog posts...</div>
@@ -214,14 +236,6 @@
       </section>
 
     </main>
-
-    <!-- Sidebar: Advertisement -->
-    <aside class="app-sidebar">
-      <div id="adContainer" class="ad-container">
-        <!-- Google AdSense will be injected here -->
-        <div class="ad-placeholder">Advertisement</div>
-      </div>
-    </aside>
 
     <!-- Footer -->
     <footer class="app-footer">
@@ -280,11 +294,5 @@
 
   <!-- Scripts -->
   <script src="src/app.js" type="module"></script>
-  
-  <!-- Google AdSense (will be configured during Phase 4) -->
-  <script async src="https://pagead2.googlesyndication.com/pagead/js/adsbygoogle.js?client=ca-pub-xxxxxxxxxxxxxxxx"></script>
-  
-  <!-- WordPress Blog Integration (will be configured during Phase 4) -->
-  <!-- Blog feed will be loaded via /wp-json/wp/v2/posts from gaming.drl2.com -->
 </body>
 </html>

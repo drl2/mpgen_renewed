@@ -65,6 +65,31 @@ lessc --watch less/ .
 
 ---
 
+## Production Build and Deployment
+
+Create a minified static-site build:
+
+```bash
+npm ci
+npm run build:prod
+```
+
+The production build is written to `dist/`. It bundles and minifies the app JavaScript, minifies LESS output and HTML, copies the JSON data, Ko-fi image, Excel template, and local spreadsheet libraries, and rewrites the production HTML to use those built files. It does not modify the development `index.html` or `mpgen.css`. The generated `dist/` folder is ignored by Git.
+
+Preview the production build locally over HTTP:
+
+```bash
+npm run preview:prod
+```
+
+Open `http://localhost:8000`. Verify that preset lists load, character generation/save/load works, the blogroll loads, and Excel export downloads a workbook.
+
+For deployment, upload the **contents of `dist/`** to the web server's document root (or the intended subdirectory). Configure the server to serve `index.html` for the site root and serve `.js`, `.css`, `.json`, `.xlsx`, and `.webp` files with their standard MIME types. This app uses `fetch()` for local data and the workbook template, so serve it over HTTP/HTTPS; opening `index.html` directly from disk will not work.
+
+The blog feed and Google AdSense still depend on their respective external services. Use HTTPS, authorize the deployed domain in AdSense, and apply the site's required privacy/cookie disclosures before enabling ads. Do not upload `node_modules/` or the project source folders; deploy the generated `dist/` contents.
+
+---
+
 ## VS Code Task Details
 
 ### Task 1: Build LESS to CSS
@@ -347,4 +372,3 @@ See:
 - SETUP.md - Project setup and architecture
 - PLAN.md - Phase timeline and roadmap
 - PHASE1_ANALYSIS.md - Technical details
-

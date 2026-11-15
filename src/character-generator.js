@@ -441,7 +441,6 @@ export class CharacterGenerator {
     character.hits += agStats.hit_points_ag;
 
     character.inSave = inStats.save_numbers_en_ag_in_cl;
-    character.hits += inStats.hit_points_in;
 
     character.clSave = clStats.save_numbers_en_ag_in_cl;
     character.initiative = clStats.initiative_cl;

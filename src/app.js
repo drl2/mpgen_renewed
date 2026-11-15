@@ -464,6 +464,7 @@ class UIController {
       exportBtn: document.getElementById('exportBtn'),
       characterCard: document.getElementById('characterCard'),
       charactersList: document.getElementById('charactersList'),
+      blogFeed: document.getElementById('blogFeed'),
       powerlevelSelect: document.getElementById('powerlevelSelect'),
       sideSelect: document.getElementById('sideSelect'),
       birthplaceSelect: document.getElementById('birthplaceSelect'),
@@ -580,15 +581,25 @@ class UIController {
       return;
     }
     
+    const escapeHtml = value => String(value ?? '').replace(/[&<>"']/g, character => ({
+      '&': '&amp;',
+      '<': '&lt;',
+      '>': '&gt;',
+      '"': '&quot;',
+      "'": '&#39;'
+    })[character]);
     const html = characters.map(char => `
-      <div class="character-card-preview">
+      <div class="character-card-preview"${char.notes ? ` title="${escapeHtml(char.notes)}"` : ''}>
         <div class="character-card-content">
-          <div class="character-card-name">${char.name}</div>
-          <div class="character-card-meta">${char.species || 'Unknown'}</div>
+          <div class="character-card-name">${escapeHtml(char.name)}</div>
+          <div class="character-card-meta">${escapeHtml(char.species || 'Unknown')}</div>
           <div class="character-card-meta">${new Date(char.createdAt).toLocaleDateString()}</div>
         </div>
-        <button class="character-card-delete" onclick="window.deleteCharacterById(${char.id})" title="Delete character">
-          <span class="trash-icon">🗑️</span>
+        <button type="button" class="character-card-load" onclick="window.loadCharacterById(${Number(char.id)})" title="Load character" aria-label="Load ${escapeHtml(char.name)}">
+          <span class="character-action-icon" aria-hidden="true">📂</span>
+        </button>
+        <button type="button" class="character-card-delete" onclick="window.deleteCharacterById(${Number(char.id)})" title="Delete character" aria-label="Delete ${escapeHtml(char.name)}">
+          <span class="character-action-icon" aria-hidden="true">🗑️</span>
         </button>
       </div>
     `).join('');
@@ -597,8 +608,75 @@ class UIController {
   }
   
   loadBlog() {
-    // Placeholder for blog loading (Phase 4)
-    this.elements.blogFeed.innerHTML = '<div class="loading">Blog integration coming in Phase 4</div>';
+    const blogFeed = this.elements.blogFeed;
+    if (!blogFeed) {
+      console.error('Blog feed element not found');
+      return;
+    }
+
+    blogFeed.innerHTML = '<div class="loading">Loading blog posts...</div>';
+
+    fetch('https://gaming.drl2.com/wp-json/wp/v2/posts?per_page=5&context=embed')
+      .then(response => {
+        if (!response.ok) {
+          throw new Error(`Blog request failed: HTTP ${response.status}`);
+        }
+        return response.json();
+      })
+      .then(posts => {
+        if (!Array.isArray(posts)) {
+          throw new Error('Blog response did not contain a post list');
+        }
+
+        const postList = document.createElement('ul');
+        postList.className = 'blog-post-list';
+        posts.forEach(post => {
+          if (!post || typeof post.title?.rendered !== 'string' || typeof post.link !== 'string') {
+            return;
+          }
+
+          const postUrl = new URL(post.link);
+          if (postUrl.protocol !== 'https:' || postUrl.hostname !== 'gaming.drl2.com') {
+            return;
+          }
+
+          const titleDocument = new DOMParser().parseFromString(post.title.rendered, 'text/html');
+          const title = titleDocument.body.textContent.replace(/\u2013/g, '-').trim();
+          if (!title) {
+            return;
+          }
+
+          const item = document.createElement('li');
+          const link = document.createElement('a');
+          link.href = postUrl.href;
+          link.target = '_blank';
+          link.rel = 'noopener noreferrer';
+          link.textContent = title;
+          item.appendChild(link);
+          postList.appendChild(item);
+        });
+
+        blogFeed.replaceChildren(
+          postList.childElementCount
+            ? postList
+            : Object.assign(document.createElement('p'), {
+                className: 'character-empty',
+                textContent: 'No recent blog posts are available.'
+              })
+        );
+      })
+      .catch(error => {
+        console.error('Failed to load recent blog posts:', error);
+        const message = document.createElement('p');
+        message.className = 'blog-error';
+        message.textContent = 'Recent blog posts could not be loaded.';
+        const retryButton = document.createElement('button');
+        retryButton.type = 'button';
+        retryButton.className = 'blog-retry';
+        retryButton.textContent = 'Try again';
+        retryButton.addEventListener('click', () => this.loadBlog(), { once: true });
+        blogFeed.replaceChildren(message, retryButton);
+      });
   }
   
   populateSelects(data) {
@@ -732,6 +810,7 @@ class Application {
       this.ui = new UIController(this.state, this.generator, this.storage);
       this.ui.populateSelects(data);
       this.ui.renderCharactersList();
+      this.ui.loadBlog();
       
       // Initialize router
       this.router = new Router(this.state);
@@ -795,6 +874,11 @@ class Application {
     const exportBtn = document.getElementById('exportBtn');
     if (exportBtn) {
       exportBtn.addEventListener('click', () => this.handleExportClick());
+    }
+
+    const characterCard = document.getElementById('characterCard');
+    if (characterCard) {
+      characterCard.addEventListener('change', event => this.handleCharacterSelection(event));
     }
 
     // Setup birthplace cascading logic
@@ -897,6 +981,8 @@ class Application {
       
       // Display character
       this.displayCharacter(character);
+      this.setWhatsNextVisibility(true);
+      this.updateCharacterSectionTitle('Generated Character');
       
       // Enable save button
       const saveBtn = document.getElementById('saveBtn');
@@ -974,6 +1060,11 @@ class Application {
     
     // Clear form
     form.reset();
+    const currentCharacter = this.state.state.currentCharacter;
+    if (currentCharacter?.id) {
+      nameInput.value = currentCharacter.name || '';
+      notesInput.value = currentCharacter.notes || '';
+    }
     nameInput.focus();
     
     // Show modal
@@ -1012,6 +1103,7 @@ class Application {
         
         // Refresh character list
         this.ui.renderCharactersList();
+        this.updateCharacterSectionTitle(character.name);
         
         // Close modal
         if (modal) modal.style.display = 'none';
@@ -1102,6 +1194,8 @@ class Application {
     
     this.state.setState({ currentCharacter: character });
     this.displayCharacter(character);
+    this.setWhatsNextVisibility(true);
+    this.updateCharacterSectionTitle(character.name);
     
     // Enable save/export/load buttons
     const saveBtn = document.getElementById('saveBtn');
@@ -1185,6 +1279,72 @@ class Application {
     console.log('✅ Character deleted:', characterName);
   }
 
+  handleCharacterSelection(event) {
+    const checkbox = event.target.closest(
+      '[data-background-selection], [data-motivation-selection], [data-ability-selection]'
+    );
+    const characterCard = document.getElementById('characterCard');
+    if (!checkbox || !characterCard?.contains(checkbox)) {
+      return;
+    }
+
+    const scrollPosition = characterCard.querySelector('.character-display')?.scrollTop || 0;
+    const renderCharacterAtScrollPosition = character => {
+      this.displayCharacter(character);
+      const characterDisplay = characterCard.querySelector('.character-display');
+      if (characterDisplay) {
+        characterDisplay.scrollTop = scrollPosition;
+      }
+    };
+
+    const character = this.state.state.currentCharacter;
+    if (!character) {
+      return;
+    }
+
+    if (checkbox.hasAttribute('data-background-selection')) {
+      const selectedBackgrounds = character.selectedBackgrounds || [];
+      if (checkbox.checked && !selectedBackgrounds.includes(checkbox.value)) {
+        if (selectedBackgrounds.length >= 2) {
+          renderCharacterAtScrollPosition(character);
+          this.showWarning('You can select up to two backgrounds.');
+          return;
+        }
+        selectedBackgrounds.push(checkbox.value);
+      } else if (!checkbox.checked) {
+        character.selectedBackgrounds = selectedBackgrounds.filter(
+          background => background !== checkbox.value
+        );
+      }
+
+      if (checkbox.checked) {
+        character.selectedBackgrounds = selectedBackgrounds;
+      }
+    } else if (checkbox.hasAttribute('data-motivation-selection')) {
+      character.selectedMotivation = checkbox.checked ? checkbox.value : '';
+    } else {
+      const selectedAbilities = character.selectedAbilities || [];
+      if (checkbox.checked && !selectedAbilities.includes(checkbox.value)) {
+        if (selectedAbilities.length >= 4) {
+          renderCharacterAtScrollPosition(character);
+          this.showWarning('You can select up to four abilities.');
+          return;
+        }
+        selectedAbilities.push(checkbox.value);
+      } else if (!checkbox.checked) {
+        character.selectedAbilities = selectedAbilities.filter(
+          ability => ability !== checkbox.value
+        );
+      }
+
+      if (checkbox.checked) {
+        character.selectedAbilities = selectedAbilities;
+      }
+    }
+
+    renderCharacterAtScrollPosition(character);
+  }
+
   /**
    * Handle character export to Excel
    */
@@ -1193,7 +1353,6 @@ class Application {
       this.showError('No character to export. Please generate a character first.');
       return;
     }
-
     try {
       const character = this.state.state.currentCharacter;
 
@@ -1322,8 +1481,23 @@ class Application {
     // Create character display HTML
     const html = this.createCharacterHTML(character);
     characterCard.innerHTML = html;
+    this.setWhatsNextVisibility(Boolean(character));
 
     console.log('✓ Character displayed');
+  }
+
+  setWhatsNextVisibility(visible) {
+    const whatsNext = document.getElementById('whatsNext');
+    if (whatsNext) {
+      whatsNext.hidden = !visible;
+    }
+  }
+
+  updateCharacterSectionTitle(title) {
+    const sectionTitle = document.getElementById('characterSectionTitle');
+    if (sectionTitle) {
+      sectionTitle.textContent = title || 'Generated Character';
+    }
   }
 
   /**
@@ -1332,103 +1506,197 @@ class Application {
    * @returns {string} - HTML string
    */
   createCharacterHTML(character) {
-    // Format statistics nicely
-    const statsHtml = `
-      <div class="character-stats-grid">
-        <div class="stat-block">
-          <div class="stat-label">Strength</div>
-          <div class="stat-value">${character.strength || 'N/A'}</div>
-        </div>
-        <div class="stat-block">
-          <div class="stat-label">Endurance</div>
-          <div class="stat-value">${character.endurance || 'N/A'}</div>
-        </div>
-        <div class="stat-block">
-          <div class="stat-label">Agility</div>
-          <div class="stat-value">${character.agility || 'N/A'}</div>
-        </div>
-        <div class="stat-block">
-          <div class="stat-label">Intelligence</div>
-          <div class="stat-value">${character.intelligence || 'N/A'}</div>
-        </div>
-        <div class="stat-block">
-          <div class="stat-label">Cool</div>
-          <div class="stat-value">${character.cool || 'N/A'}</div>
-        </div>
+    const escapeHtml = value => String(value ?? '').replace(/[&<>"']/g, character => ({
+      '&': '&amp;',
+      '<': '&lt;',
+      '>': '&gt;',
+      '"': '&quot;',
+      "'": '&#39;'
+    })[character]);
+    const displayValue = value => value === undefined || value === null || value === ''
+      ? '—'
+      : escapeHtml(value);
+    const renderList = (items, emptyText, className) => items.length
+      ? `<ul class="${className}">${items.map(item => `<li>${escapeHtml(item)}</li>`).join('')}</ul>`
+      : `<p class="character-empty">${escapeHtml(emptyText)}</p>`;
+    const renderTable = (headers, rows) => `
+      <div class="character-table-wrapper">
+        <table class="character-data-table">
+          <thead><tr>${headers.map(header => `<th>${escapeHtml(header)}</th>`).join('')}</tr></thead>
+          <tbody>${rows.map(row => `<tr>${row.map(value => `<td>${value}</td>`).join('')}</tr>`).join('')}</tbody>
+        </table>
       </div>
     `;
-
-    // Format abilities
-    const abilitiesHtml = character.abilities && character.abilities.length > 0
-      ? `<ul class="ability-list">${character.abilities.map(a => `<li>${a}</li>`).join('')}</ul>`
-      : '<p class="empty-abilities">No abilities</p>';
-
-    // Format background
-    const backgroundHtml = character.backgrounds && character.backgrounds.length > 0
-      ? `<ul class="background-list">${character.backgrounds.map(b => `<li>${b}</li>`).join('')}</ul>`
-      : '<p class="empty-backgrounds">No backgrounds</p>';
+    const valueTable = rows => renderTable(['', ''], rows.map(([label, value]) => [
+      `<strong>${escapeHtml(label)}</strong>`,
+      displayValue(value)
+    ]));
+    const statsTable = renderTable(
+      ['BC', 'Score', 'Save'],
+      [
+        ['ST', character.strength, '—'],
+        ['EN', character.endurance, character.enSave === undefined ? '—' : `${escapeHtml(character.enSave)}-`],
+        ['AG', character.agility, character.agSave === undefined ? '—' : `${escapeHtml(character.agSave)}-`],
+        ['IN', character.intelligence, character.inSave === undefined ? '—' : `${escapeHtml(character.inSave)}-`],
+        ['CL', character.cool, character.clSave === undefined ? '—' : `${escapeHtml(character.clSave)}-`]
+      ].map(([stat, score, save]) => [escapeHtml(stat), displayValue(score), save])
+    );
+    const speciesAbilityRows = (character.racialAbilities || []).map(value => {
+        const [cost, ...description] = String(value).split('@@');
+        return [displayValue(cost), escapeHtml(description.join('@@'))];
+    });
+    const selectedAbilities = character.selectedAbilities || [];
+    const weaknessRows = [
+      ...(character.weaknesses || []).map(weakness => ['—', escapeHtml(weakness)]),
+      ...(character.racialWeaknesses || []).map(value => {
+        const [cost, ...description] = String(value).split('@@');
+        return [displayValue(cost), `${escapeHtml(description.join('@@'))} (Racial)`];
+      })
+    ];
+    const totalCp = Number(character.totalCp) || 0;
+    const moveLeap = Number(character.weight) > 0 && Number.isFinite(Number(character.carryingCapacity))
+      ? (Number(character.carryingCapacity) / Number(character.weight)).toFixed(2)
+      : '—';
+    const motivations = character.motivations || (character.motivation ? [character.motivation] : []);
+    const backgrounds = character.backgrounds || [];
+    const selectedBackgrounds = character.selectedBackgrounds || [];
+    const selectedMotivation = character.selectedMotivation || (motivations.length === 1 ? motivations[0] : '');
+    const backgroundSelectionHtml = backgrounds.length
+      ? `<div class="background-selection">
+          ${backgrounds.map((background, index) => {
+            const checked = selectedBackgrounds.includes(background);
+            const disabled = !checked && selectedBackgrounds.length >= 2;
+            return `<label class="background-option">
+              <input
+                type="checkbox"
+                data-background-selection
+                value="${escapeHtml(background)}"
+                ${checked ? 'checked' : ''}
+                ${disabled ? 'disabled' : ''}
+                aria-label="Select background ${index + 1}: ${escapeHtml(background)}">
+              <span>${escapeHtml(background)}</span>
+            </label>`;
+          }).join('')}
+        </div>`
+      : '<p class="character-empty">No backgrounds</p>';
+    const motivationSelectionHtml = motivations.length
+      ? `<div class="motivation-selection">
+          ${motivations.map((motivation, index) => `
+            <label class="motivation-option">
+              <input
+                type="checkbox"
+                data-motivation-selection
+                value="${escapeHtml(motivation)}"
+                ${selectedMotivation === motivation ? 'checked' : ''}
+                aria-label="Select motivation ${index + 1}: ${escapeHtml(motivation)}">
+              <span>${escapeHtml(motivation)}</span>
+            </label>
+          `).join('')}
+        </div>`
+      : '<p class="character-empty">No motivations</p>';
+    const randomAbilitySelectionHtml = character.abilities?.length
+      ? `<div class="ability-selection">
+          ${character.abilities.map((ability, index) => `
+            <label class="ability-option">
+              <input
+                type="checkbox"
+                data-ability-selection
+                value="${escapeHtml(ability)}"
+                ${selectedAbilities.includes(ability) ? 'checked' : ''}
+                ${!selectedAbilities.includes(ability) && selectedAbilities.length >= 4 ? 'disabled' : ''}
+                aria-label="Select ability ${index + 1}: ${escapeHtml(ability)}">
+              <span class="ability-cost">${displayValue(character.cpPerAbility)}</span>
+              <span>${escapeHtml(ability)}</span>
+            </label>
+          `).join('')}
+        </div>`
+      : `<p class="character-empty">${
+          character.powerlevelId === 1
+            ? 'None at Normal power level'
+            : 'No random abilities were generated'
+        }</p>`;
 
     return `
       <div class="character-display">
         <div class="character-header">
-          <h3 class="character-name">${character.species || 'Character'}</h3>
-          <p class="character-meta">${character.culture || 'Unknown Culture'} | ${character.side || 'Neutral'}</p>
+          <h3 class="character-name">${displayValue(character.name || character.species || 'Character')}</h3>
         </div>
 
         <div class="character-section">
           <h4>Basic Info</h4>
-          <div class="character-info">
-            <p><strong>Birthplace:</strong> ${character.birthplace || 'Unknown'}</p>
-            <p><strong>Age:</strong> ${character.age || 'Unknown'}</p>
-            <p><strong>Gender:</strong> ${character.gender || 'Unknown'}</p>
-            <p><strong>Power Level:</strong> ${character.powerlevel || 'Normal'}</p>
-            <p><strong>Origin:</strong> ${character.originType || 'Unknown'}</p>
-          </div>
+          ${valueTable([
+            ['Side', character.side],
+            ['Species', character.species],
+            ['Age', character.age],
+            ['Weight', character.weight],
+            ['Birthplace', character.birthplace],
+            ['Culture', character.culture],
+            ['Gender', character.gender],
+            ['Mass', character.mass],
+            ['Origin Type', character.originType],
+            ['Wealth', character.wealth],
+            ['Luck', character.luck],
+            ['Power Level', character.powerlevel]
+          ])}
         </div>
 
         <div class="character-section">
           <h4>Base Characteristics</h4>
-          ${statsHtml}
+          ${statsTable}
         </div>
 
         <div class="character-section">
           <h4>Derived Stats</h4>
-          <div class="derived-stats">
-            <p><strong>Hit Points:</strong> ${character.hits || 0}</p>
-            <p><strong>Power:</strong> ${character.power || 0}</p>
-            <p><strong>Physical Defense:</strong> ${character.physicalDefense || 0}</p>
-            <p><strong>Mental Defense:</strong> ${character.mentalDefense || 0}</p>
-            <p><strong>Move:</strong> ${character.move || 0}</p>
-          </div>
+          ${valueTable([
+            ['Power', character.power],
+            ['Hit Pts', character.hits],
+            ['Initiative', character.initiative],
+            ['Base HTH', character.baseHth],
+            ['Carrying Capacity', character.carryingCapacity],
+            ['Defenses (Phys/Mental)', `${character.physicalDefense ?? '—'} / ${character.mentalDefense ?? '—'}`],
+            ['Move (Ground)', character.move],
+            ['Move (Leap)', moveLeap],
+            ['Healing', character.healingRate],
+            ['Inventing Points', character.inventingPoints]
+          ])}
         </div>
 
         <div class="character-section">
-          <h4>Backgrounds</h4>
-          ${backgroundHtml}
+          <h4>Background (Pick 2)</h4>
+          ${backgroundSelectionHtml}
         </div>
 
-        ${character.abilities && character.abilities.length > 0 ? `
-          <div class="character-section">
-            <h4>Abilities</h4>
-            ${abilitiesHtml}
-          </div>
-        ` : ''}
-
-        ${character.motivations && character.motivations.length > 0 ? `
-          <div class="character-section">
-            <h4>Motivations</h4>
-            <ul class="motivation-list">
-              ${character.motivations.map(m => `<li>${m}</li>`).join('')}
-            </ul>
-          </div>
-        ` : ''}
+        <div class="character-section">
+          <h4>Motivation (Pick 1)</h4>
+          ${motivationSelectionHtml}
+        </div>
 
         <div class="character-section">
-          <h4>Weight & Capacity</h4>
-          <div class="weight-info">
-            <p><strong>Weight:</strong> ${character.weight || 0} lbs</p>
-            <p><strong>Carrying Capacity:</strong> ${character.carryingCapacity || 0} lbs</p>
-          </div>
+          <h4>Abilities</h4>
+          ${speciesAbilityRows.length ? `
+            <h5>Species Abilities</h5>
+            ${renderTable(['CPs', 'Ability'], speciesAbilityRows)}
+          ` : ''}
+          <h5>Randomly Generated Abilities (Pick 4)</h5>
+          ${randomAbilitySelectionHtml}
+        </div>
+
+        <div class="character-section">
+          <h4>Weaknesses</h4>
+          ${renderTable(['CPs', 'Weaknesses'], weaknessRows.length ? weaknessRows : [['—', 'No weaknesses']])}
+        </div>
+
+        <div class="character-section">
+          <h4>Caps</h4>
+          ${renderTable(['Stat', 'Cap'], [
+            ['BCs', displayValue(character.bcCap)],
+            ['Ability', displayValue(character.abilityCap)],
+            ['Damage', displayValue(character.damageCap)],
+            ['Gear Break', String(Math.floor(totalCp / 25) + 5)],
+            ['Gear Take', String(Math.floor(totalCp / 25) + 6)],
+            ['Disarm', String(Math.floor(totalCp / 25) + 3)],
+            ['GBC', String(Math.floor(totalCp / 15) + 6)]
+          ])}
         </div>
       </div>
     `;
